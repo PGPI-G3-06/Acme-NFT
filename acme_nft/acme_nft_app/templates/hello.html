@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+	<title>Acme NFT</title>
+  <meta charset="utf-8" />
+	<link rel="stylesheet" href="{% static 'index.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="main" style="display: flex; flex-direction: column; align-content: center; justify-content: center;">  	
+		<h1 style="color: aliceblue; text-align: center;">Qué tal {{user.username}}</h1>
+        <a href="/"><button>Return</button></a>
+    </div>
+</body>
+</html>

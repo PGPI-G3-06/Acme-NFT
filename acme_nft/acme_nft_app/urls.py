@@ -1,0 +1,11 @@
+from django.urls import path
+from . import views
+
+app_name = "acme-nft"
+urlpatterns = [
+    path("", views.index, name="index"),
+    path("register", views.register, name="register"),
+    path("login", views.login, name="login"),
+    path("hello/<int:user_id>", views.hello, name="hello"),
+    path("error", views.error, name="error"),
+]
