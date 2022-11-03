@@ -5,20 +5,26 @@ from django.urls import reverse
 
 from acme_nft_app.models import User
 
+# ------------------------------------- Render views -------------------------------------
 
 def index(request):
     return render(request, "index.html", context={})
 
-def register(request):
+def login_page(request):
+    return render(request, "login.html", context={})
 
-    #Se puede modificar un usuario desde el registro xD
+def hello(request, user_id):
 
-    user_attrs = request.POST
+    user = get_object_or_404(User, pk=user_id)
 
-    user = User(username=user_attrs['username'], email=user_attrs['email'], password=make_password(user_attrs['password']))
-    user.save()
+    return render(request, "hello.html", context={'user': user})
 
-    return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
+def error(request):
+    return render(request, "error.html", context={})
+
+# ------------------------------------- API views -------------------------------------
+
+# ------------------------ Login page ------------------------
 
 def login(request):
 
@@ -32,11 +38,13 @@ def login(request):
     except:
         return HttpResponseRedirect(reverse("acme-nft:error"))
 
-def hello(request, user_id):
+def register(request):
 
-    user = get_object_or_404(User, pk=user_id)
+    #Se puede modificar un usuario desde el registro xD
 
-    return render(request, "hello.html", context={'user': user})
+    user_attrs = request.POST
 
-def error(request):
-    return render(request, "error.html", context={})
+    user = User(username=user_attrs['username'], email=user_attrs['email'], password=make_password(user_attrs['password']))
+    user.save()
+
+    return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
