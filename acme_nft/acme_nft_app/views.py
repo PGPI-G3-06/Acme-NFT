@@ -73,8 +73,7 @@ def register(request):
             user.save()
             print(user.id)
             return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
-
-        return
+            
     else:
         return render(request, "login.html")
 
