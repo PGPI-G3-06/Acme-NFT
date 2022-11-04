@@ -1,5 +1,4 @@
 asgiref==3.5.2
-backports.zoneinfo==0.2.1
 beautifulsoup4==4.11.1
 Django==4.1.2
 django-livereload-server==0.4

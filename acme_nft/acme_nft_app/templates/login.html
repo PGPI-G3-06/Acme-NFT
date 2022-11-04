@@ -15,9 +15,16 @@
 				<form action="/register" method="POST">
           			{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
-					<input type="text" name="username" placeholder="Username" required="">
-					<input type="email" name="email" placeholder="Email" required="">
-					<input type="password" name="password" placeholder="Password" required="">
+					{% for error in errors %}
+						<label class="error" for="chk" aria-hidden="true">
+							{{ error }}
+						</label>
+					{% endfor %}
+					<input type="text" name="name" placeholder="Name" required="True">
+					<input type="text" name="surname" placeholder="Surname" required="True">
+					<input type="text" name="username" placeholder="Username" required="True">
+					<input type="email" name="email" placeholder="Email" required="True">
+					<input type="password" name="password" placeholder="Password" required="True">
 					<button>Sign up</button>
 				</form>
 			</div>
