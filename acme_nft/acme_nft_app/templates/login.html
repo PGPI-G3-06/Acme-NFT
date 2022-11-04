@@ -15,11 +15,11 @@
 				<form action="/register" method="POST">
           			{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
-					<input type="text" name="name" placeholder="Name" required="True">
-					<input type="text" name="surname" placeholder="Surname" required="True">
-					<input type="text" name="username" placeholder="Username" required="True">
+					<input type="text" name="name" placeholder="Nombre" required="True">
+					<input type="text" name="surname" placeholder="Apellidos" required="True">
+					<input type="text" name="username" placeholder="Usuario" required="True">
 					<input type="email" name="email" placeholder="Email" required="True">
-					<input type="password" name="password" placeholder="Password" required="True">
+					<input type="password" name="password" placeholder="Contraseña" required="True">
 					<button>Sign up</button>
 				</form>
 			</div>
