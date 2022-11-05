@@ -4,12 +4,12 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse
 
 
-from acme_nft_app.models import User
+from acme_nft_app.models import User, Product
 
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-    return render(request, "index.html", context={})
+    return render(request, "index.html", context={"products": Product.objects.all()})
 
 def login_page(request):
     return render(request, "login.html", context={})
@@ -76,18 +76,3 @@ def register(request):
             
     else:
         return render(request, "login.html")
-
-
-    #user_attrs = request.POST
-
-    #if user_attrs['password'] != user_attrs['password2']:
-    #    return HttpResponseRedirect(reverse("acme-nft:error"))
-
-    #user = User(username=user_attrs['username'],
-    #           email=user_attrs['email'],
-    #           password=make_password(user_attrs['password']),
-    #           name=user_attrs['name'],
-    #          surname=user_attrs['surname'])
-    #user.save()
-
-    #return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
