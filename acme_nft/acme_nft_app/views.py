@@ -4,12 +4,48 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse
 
 
-from acme_nft_app.models import User, Product
+from acme_nft_app.models import User, Product, ProductEntry, EntryType
+
+# ------------------------------------- Constants -------------------------------------
+
+max_products_per_page = 10
 
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-    return render(request, "index.html", context={"products": Product.objects.all()})
+
+    products = Product.objects.all()
+    entries = ProductEntry.objects.all()
+    products_to_list = []
+    wishlist = []
+
+    page_number = int(request.GET['page'])
+    if len(products) % max_products_per_page == 0:
+        possible_pages = int(len(products) / max_products_per_page)
+    else:
+        possible_pages = int(len(products) / max_products_per_page) + 1
+        
+    user = get_object_or_404(User, pk=1)
+
+    # Load products to show in view
+
+    for i in range(page_number*max_products_per_page, page_number*max_products_per_page+max_products_per_page):
+        if(i < len(products)):
+            products_to_list.append(products[i])
+
+    # Load wishlist to render hearts
+
+    for product in products_to_list:
+        for entry in entries:
+            if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
+                wishlist.append(entry.product_id)
+
+    return render(request, "index.html", context={"products": products_to_list,
+                                                "wishlist": wishlist,
+                                                "pages_range": range(0, possible_pages),
+                                                "current_page": page_number
+                                                }
+                )
 
 def login_page(request):
     return render(request, "login.html", context={})
@@ -76,3 +112,23 @@ def register(request):
             
     else:
         return render(request, "login.html")
+
+# ------------------------ Wishlist ------------------------
+
+def add_to_wishlist(request, product_id):
+
+    try: 
+        user = User.objects.get(pk=1) # This will be the logged user
+        product = Product.objects.get(pk=product_id)
+        entry = ProductEntry.objects.get(product=product, entry_type='WISHLIST', user=user)
+        entry.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    except:
+    
+        product = get_object_or_404(Product, pk=product_id)
+        user = get_object_or_404(User, pk=1)
+        entry = ProductEntry(quantity=None, entry_type='WISHLIST', product=product, user=user)
+        entry.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
