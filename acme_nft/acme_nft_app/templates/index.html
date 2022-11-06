@@ -1,11 +1,36 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block extrahead %}
-    {% load static %}
-    <title>Acme NFT</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <div>Prueba de jinja</div>
+<section>
+    <div style="margin-top: 25px;">
+        <div className="class-grid-container">
+            {% for product in products %}
+            
+                <div className="class-card" onMouseOut={outCard}>
+                    <div className="class-img-box">
+                        <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                        <h2 style="text-align: center;">{{product.name}}</h2>
+                    </div>
+        
+                    <div className="class-content">
+                        <a href="/product/{{product.id}}" className="class-link">Ver producto</a>
+                        <div className="class-icons-row">
+                            <div className="class-lista-deseos">
+                                <img src="./images/heart.png" alt="Añadir a lista de deseos"></img>
+                            </div>
+                            <div className="class-carrito"><i class="fa fa-cart-plus" aria-hidden="true"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

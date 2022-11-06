@@ -18,7 +18,7 @@ class Status(Enum):
     on_transit = 'ON_TRANSIT'
     delivered = 'DELIVERED'
 
-# Create your models here.
+# Models.
 
 class User(models.Model):
     username = models.CharField(max_length=16, unique=True)
@@ -33,15 +33,15 @@ class User(models.Model):
 class Address(models.Model):
     street_name = models.CharField(max_length=60)
     number = models.IntegerField()
-    block = models.CharField(max_length=1, blank=True)
-    floor = models.IntegerField(blank=True, null=True)
+    block = models.IntegerField(null=True)
+    floor = models.IntegerField(null=True)
     door = models.CharField(max_length=1, blank=True)
     city = models.CharField(max_length=60)
     code_postal = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.street_name
+        return self.street_name + ", " + str(self.number) + ", Bloque " + str(self.block) + ", " + str(self.floor) + "º " + self.door + ", " + self.city + ", " + str(self.code_postal)
 
 
 class Complaint(models.Model):
@@ -54,24 +54,24 @@ class Complaint(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=60)
-    description = models.TextField()
+    collection = models.TextField()
     price = models.FloatField()
     stock = models.IntegerField()
     image_url = models.CharField(max_length=255, blank=True)
     offer_price = models.FloatField(blank=True, null=True)
-    categories = models.ManyToManyField('Category', related_name='products')
-    authors = models.ManyToManyField('Author', related_name='products')
+    category = models.ManyToManyField('Category', related_name='products')
+    author = models.ManyToManyField('Author', related_name='products')
     def __str__(self):
         return self.name
 
 class Category(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=60, unique=True)
 
     def __str__(self):
         return self.name
 
 class Author(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=60, unique=True)
 
     def __str__(self):
         return self.name
