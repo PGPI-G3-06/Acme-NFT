@@ -54,24 +54,24 @@ class Complaint(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=60)
-    description = models.TextField()
+    collection = models.TextField()
     price = models.FloatField()
     stock = models.IntegerField()
     image_url = models.CharField(max_length=255, blank=True)
     offer_price = models.FloatField(blank=True, null=True)
-    categories = models.ManyToManyField('Category', related_name='products')
-    authors = models.ManyToManyField('Author', related_name='products')
+    category = models.ManyToManyField('Category', related_name='products')
+    author = models.ManyToManyField('Author', related_name='products')
     def __str__(self):
         return self.name
 
 class Category(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=60, unique=True)
 
     def __str__(self):
         return self.name
 
 class Author(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=60, unique=True)
 
     def __str__(self):
         return self.name
