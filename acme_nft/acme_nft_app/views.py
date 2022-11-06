@@ -65,9 +65,24 @@ def register(request):
         if len(username) < 4:
             username_length = "El nombre de usuario debe tener al menos 4 caracteres"
             errors.append(username_length)
+        for user in User.objects.all():
+            if user.username == username:
+                username_exists = "El nombre de usuario ya existe"
+                errors.append(username_exists)
+            if user.email == email:
+                email_exists = "El email ya existe"
+                errors.append(email_exists)
         if len(errors) > 0:
+            are_errors = True
             return render(request, "login.html", {
-                "errors": errors})
+                "errors": errors,
+                "username": username,
+                "password": password,
+                "name": name,
+                "surname": surname,
+                "email": email,
+                "are_errors": are_errors
+            })
         else:
             user = User(username=username, password=make_password(password), name=name, surname=surname, email=email)
             user.save()
