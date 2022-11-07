@@ -6,7 +6,7 @@ section{
     flex-direction: column;
     padding: 100px 20px;
     min-height: 100vh;
-    background: linear-gradient(to bottom, #040405, #13121f, #050508);
+    background: #c8c8c8;
 }
 
 /* PRODUCT GRID */
@@ -32,7 +32,7 @@ section{
     align-items: center;
     flex-direction: column;
     background: rgba(255,255,255,0.05);
-    box-shadow: 0 10px 25px rgba(0, 255, 242, 1);
+    box-shadow: 0 10px 25px rgb(84, 22, 183);
     backdrop-filter: blur(15px);
     border-radius: 15px;
 }
@@ -88,7 +88,7 @@ section{
 
 .class-card .class-img-box h2{
 
-    color: white;
+    color: black;
     font-weight: 600;
 
 }
@@ -127,7 +127,7 @@ section{
 
 .class-card .class-content .class-link:hover{
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(to bottom, #ffbb3e, #ffda94);
+    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
     transition: 0.5s all;
 }
 
@@ -157,7 +157,7 @@ section{
 .class-lista-deseos:hover,
 .class-carrito:hover{
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(to bottom, #ffbb3e, #ffda94);
+    background: linear-gradient(to bottom, rgb(84, 22, 183), rgb(173, 138, 229));
     cursor: pointer;
     transition: 0.5s all;
 }
@@ -182,7 +182,7 @@ section{
     background: transparent;
     padding: 25px;
     border-radius: 3px;
-    box-shadow: -3px -3px 7px rgba(0, 255, 242, 1), 3px 3px 5px rgba(0, 255, 242, 1);
+    box-shadow: -3px -3px 7px rgb(84, 22, 183), 3px 3px 5px rgb(84, 22, 183);
   }
   .pagination {
     display: flex;
@@ -193,12 +193,12 @@ section{
     margin: 0px 5px;
     background: transparent;
     border-radius: 3px;
-    box-shadow: -3px -3px 7px rgba(0, 255, 242, 1), 3px 3px 5px rgba(0, 255, 242, 1);
+    box-shadow: -3px -3px 7px rgb(84, 22, 183), 3px 3px 5px rgb(84, 22, 183);
   }
   .pagination li a {
     font-size: 18px;
     text-decoration: none;
-    color: white;
+    color: black;
     height: 45px;
     width: 55px;
     display: block;
@@ -213,10 +213,10 @@ section{
   }
   
   .active {
-    box-shadow: inset -3px -3px 7px rgba(0, 255, 242, 1),
-      inset 3px 3px 5px rgba(94, 104, 121, 0.288) !important;
+    box-shadow: inset -3px -3px 7px rgb(84, 22, 183),
+      inset 3px 3px 5px rgb(84, 22, 183) !important;
     font-size: 17px !important;
-    color: rgba(0, 255, 242, 1) !important;
+    color: rgb(84, 22, 183) !important;
   }
 
   .pagination li:first-child {
