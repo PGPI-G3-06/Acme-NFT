@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+	<title>Acme NFT</title>
+  <meta charset="utf-8" />
+	<link rel="stylesheet" href="{% static 'css/address.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet"
+         href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet"
+         href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+    <script src="https://kit.fontawesome.com/53154f2da0.js" crossorigin="anonymous"></script>
+</head>
+<body >
+	<div class="list_address">
+		<div class="container">
+            <label for="chk" aria-hidden="true">Sus direcciones registradas son: </label>
+            <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
+            {% for address in list_address %}
+			<div class="address">
+				<div class="card w-75">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ address }}</h5>
+                    <a href="/update-address/{{ address.id }}" class="btn btn-primary">Editar dirección</a>
+                    <a href="/delete-address/{{ address.id }}" class="btn btn-primary">Eliminar dirección</a>
+                  </div>
+                </div>
+			</div>
+            <br>
+            <br>
+            {% endfor %}
+        </div>
+        <a class="btn btn-primary" href="/new-address" role="button">Crear un nueva dirección</a>
+        <br><br>
+        </div>
+    </div>
+
+</body>
+</html>
