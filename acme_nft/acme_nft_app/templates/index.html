@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load mathfilters %}
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
@@ -9,27 +10,46 @@
 {% block content %}
 <section>
     <div style="margin-top: 25px;">
-        <div className="class-grid-container">
+        <div class="class-grid-container">
             {% for product in products %}
             
-                <div className="class-card" onMouseOut={outCard}>
-                    <div className="class-img-box">
+                <div class="class-card">
+                    <div class="class-img-box">
                         <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
                         <h2 style="text-align: center;">{{product.name}}</h2>
                     </div>
         
-                    <div className="class-content">
-                        <a href="/product/{{product.id}}" className="class-link">Ver producto</a>
-                        <div className="class-icons-row">
-                            <div className="class-lista-deseos">
-                                <img src="./images/heart.png" alt="Añadir a lista de deseos"></img>
+                    <div class="class-content">
+                        <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+                        <div class="class-icons-row">
+                            <div class="class-lista-deseos">
+                                {% if product.id in wishlist %}
+                                <img src="{% static 'images/heart-lleno.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img"></img>
+                                {% else %}
+                                <img src="{% static 'images/heart.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img"></img>
+                                {% endif %}
                             </div>
-                            <div className="class-carrito"><i class="fa fa-cart-plus" aria-hidden="true"></i></div>
+                            <div class="class-carrito"><i class="fa fa-cart-plus" aria-hidden="true"></i></div>
                         </div>
                     </div>
                 </div>
 
             {% endfor %}
+        </div>
+        <div class="pagination-container">
+            <div class="pagination-box">
+                <ul class="pagination">
+                    <li><a href="#">Previous</a></li>
+                    {% for i in pages_range %}
+                        {% if i == current_page %}
+                        <li><a href="?page={{i}}" class="active">{{ i | addition:1 }}</a></li>
+                        {% else %}
+                        <li><a href="?page={{i}}">{{ i | addition:1 }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li><a href="#">Next</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </section>
