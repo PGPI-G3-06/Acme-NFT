@@ -57,8 +57,16 @@ def login_page(request):
 def product_detail(request, product_id):
     
     product = get_object_or_404(Product, pk=product_id)
-    
-    return render(request, "product_details.html", context={"product": product})
+    user = get_object_or_404(User, pk=1)
+
+    in_wishlist = False
+
+    for entry in ProductEntry.objects.all():
+        if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
+            in_wishlist = True
+            break
+
+    return render(request, "product_details.html", context={"product": product, "author": product.author.all()[0], "in_wishlist": in_wishlist})
 
 def hello(request, user_id):
 

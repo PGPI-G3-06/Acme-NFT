@@ -3,7 +3,7 @@
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/product_details.css' %}">
-    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/product_details.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,12 +14,29 @@
                     <img src="/static/{{ product.image_url }}" alt="{{product.name}}">
                 </div>
                 <div class="desc-div">
-                    <div class="desc-section">
+                    <div class="desc-section" style="flex-direction: column">
                         <h1>{{ product.name }}</h1>
+                        <h4 class="colecction-text">Colección: {{ product.collection }}</h4>
+                        <h4 class="author-text">Autor: {{ author }}</h4>
                     </div>
                     <div class="desc-section">
                         <h2>{{ product.price }} €</h2>
-                        <span>Cantidad:<input class="input-cantidad" type="number" value="1" min="1"></input></span>
+                        <form action="/wishlist/add/{{product.id}}" id="wishlist-form">
+                            <span>Cantidad:<input class="input-cantidad" type="number" value="1" min="1"></input></span>
+                        </form>
+                    </div>
+                    <div class="desc-section" id="buttons-section">
+                        <button id="wishlist-button">
+                            Añadir a lista de deseos
+                            {% if in_wishlist %}
+                                <i class="fa-regular fa-heart fa-lg heart" id="product-{{product.id}}-img"></i>
+                            {% else %}
+                                <i class="fa-solid fa-heart fa-lg heart" id="product-{{product.id}}-img"></class=>
+                            {% endif %}
+                        </button>
+                        <button>
+                            Añadir al carrito<i class="fa fa-cart-plus fa-lg cart" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
             </div>

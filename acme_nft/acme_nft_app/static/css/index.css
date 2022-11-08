@@ -31,7 +31,7 @@ section{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: rgba(255,255,255,0.05);
+    background: var(--card-background-color);
     box-shadow: 0 10px 25px var(--main-color);
     backdrop-filter: blur(15px);
     border-radius: 15px;
@@ -116,7 +116,7 @@ section{
     top: 10px;
     display: inline-block;
     padding: 12px 30px;
-    background: #ffffff;
+    background: var(--main-button-background-color);
     border-radius: 40px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -126,8 +126,8 @@ section{
 }
 
 .class-card .class-content .class-link:hover{
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(to bottom, var(--main-button-dark-color), var(--main-button-light-color));
+    box-shadow: 0 10px 25px var(--main-button-shadow-hover-color);
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
     transition: 0.5s all;
 }
 
@@ -148,7 +148,7 @@ section{
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #ffffff;
+    background: var(--main-button-background-color);
     border-radius: 50%;
     font-weight: bold;
     padding: 10px;
@@ -156,8 +156,8 @@ section{
 
 .class-lista-deseos:hover,
 .class-carrito:hover{
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(to bottom, var(--main-button-dark-color), var(--main-button-light-color));
+    box-shadow: 0 10px 25px var(--main-button-shadow-hover-color);
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
     cursor: pointer;
     transition: 0.5s all;
 }

@@ -1,8 +1,16 @@
 :root{
     --main-white: #c8c8c8;
     --main-color: rgb(84, 22, 183);
-    --main-button-dark-color: rgb(124, 72, 209);
-    --main-button-light-color: rgb(173, 138, 229);
+    --main-button-background-color: white;
+    --main-button-hover-dark-color: rgb(124, 72, 209);
+    --main-button-hover-light-color: rgb(173, 138, 229);
+    --main-button-shadow-hover-color: rgba(0,0,0,0.4);
+    --card-background-color: rgba(255,255,255,0.05);
+    --collection-text-background-color: rgba(193, 236, 40, 0.5);
+    --author-text-background-color: rgba(193, 236, 40, 0.5);
+    --collection-text-border-color: rgb(193, 236, 40);
+    --author-text-border-color: rgb(193, 236, 40);
+    --heart-color: red;
 }
 
 *{

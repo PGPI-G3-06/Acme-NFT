@@ -67,12 +67,47 @@
         font-size: 1.5rem;
     }
 
+    .colecction-text{
+        background: var(--collection-text-background-color);
+        border: solid 3px var(--collection-text-border-color);
+        padding: 2px 10px;
+    }
+
+    .author-text{
+        background: var(--author-text-background-color);
+        border: solid 3px var(--author-text-border-color);
+        padding: 2px 10px;
+    }
+
     .input-cantidad{
         box-shadow: -3px -3px 7px var(--main-color), 3px 3px 4px var(--main-color);
         border-radius: 10px;
         width: 60px;
         text-align: center;
         margin-left: 10px;
+    }
+
+    #buttons-section{
+        padding: 20px 20%;
+    }
+
+    .desc-section button{
+        padding: 10px 30px;
+        margin: 0 30px;
+        border-radius: 15px;
+        background: var(--main-button-background-color);
+    }
+
+    .desc-section button:hover{
+        background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
+    }
+
+    .desc-section button i{
+        margin-left: 10px;
+    }
+
+    .desc-section button .heart{
+        color: var(--heart-color);
     }
 
 }
