@@ -1,0 +1,12 @@
+:root{
+    --main-white: #c8c8c8;
+    --main-color: rgb(84, 22, 183);
+    --main-button-dark-color: rgb(124, 72, 209);
+    --main-button-light-color: rgb(173, 138, 229);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

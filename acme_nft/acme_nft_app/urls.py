@@ -3,7 +3,9 @@ from . import views
 
 app_name = "acme-nft"
 urlpatterns = [
-    path('', views.index, name="index"),
+    path('', views.index, name="index"), 
+    # Product detail
+    path('product/<int:product_id>', views.product_detail, name="product_detail"),
     # Login page
     path("login-page", views.login_page, name="login_page"),
     path("register", views.register, name="register"),

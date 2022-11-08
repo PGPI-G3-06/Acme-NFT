@@ -19,7 +19,11 @@ def index(request):
     products_to_list = []
     wishlist = []
 
-    page_number = int(request.GET['page'])
+    try:
+        page_number = int(request.GET['page'])
+    except:
+        page_number = 0
+    
     if len(products) % max_products_per_page == 0:
         possible_pages = int(len(products) / max_products_per_page)
     else:
@@ -49,6 +53,12 @@ def index(request):
 
 def login_page(request):
     return render(request, "login.html", context={})
+
+def product_detail(request, product_id):
+    
+    product = get_object_or_404(Product, pk=product_id)
+    
+    return render(request, "product_details.html", context={"product": product})
 
 def hello(request, user_id):
 

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/product_details.css' %}">
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="product-detail-page">
+        <div class="details-container">
+            <div class="img-and-desc-div">
+                <div class="img-div">
+                    <img src="/static/{{ product.image_url }}" alt="{{product.name}}">
+                </div>
+                <div class="desc-div">
+                    <div class="desc-section">
+                        <h1>{{ product.name }}</h1>
+                    </div>
+                    <div class="desc-section">
+                        <h2>{{ product.price }} €</h2>
+                        <span>Cantidad:<input class="input-cantidad" type="number" value="1" min="1"></input></span>
+                    </div>
+                </div>
+            </div>
+            <div class="comments-div">
+            </div>
+        </div>
+    </div>
+{% endblock %}
