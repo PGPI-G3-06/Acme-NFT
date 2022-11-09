@@ -1,0 +1,41 @@
+:root{
+    --main-white: #c8c8c8;
+    --main-color: rgb(84, 22, 183);
+    --main-button-background-color: white;
+    --main-button-hover-dark-color: rgb(124, 72, 209);
+    --main-button-hover-light-color: rgb(173, 138, 229);
+    --main-button-shadow-hover-color: rgba(0,0,0,0.4);
+    --card-background-color: rgba(255, 255, 255, 0.051);
+    --comment-separator-color: rgba(141, 141, 141, 0.525);
+    --heart-color: red;
+
+    /* Rarities */
+
+    --common-background-color: rgba(255, 255, 255, 0.5);
+    --rare-background-color: rgba(0, 106, 255, 0.5);
+    --epic-background-color: rgba(140, 0, 255, 0.5);
+    --legendary-background-color: rgba(255, 208, 0, 0.5);
+    --mythic-background-color: rgba(197, 42, 42, 0.5);
+
+    --common-border-color: #ffffff;
+    --rare-border-color: #006aff;
+    --epic-border-color: #8c00ff;
+    --legendary-border-color: #ffd000;
+    --mythic-border-color: #c52a2a;
+
+    /* Modal Add Comment */
+
+    --modal-comment-background-button-color: #875794;
+    --modal-comment-text-color: #fff;
+    --modal-comment-background-color: rgba(69, 69, 69, 0.7);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body{
+    height: 100%;
+}

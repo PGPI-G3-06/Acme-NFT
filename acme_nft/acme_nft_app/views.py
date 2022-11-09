@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse
 
 
-from acme_nft_app.models import User, Product, ProductEntry, EntryType
+from acme_nft_app.models import User, Product, ProductEntry, EntryType, Opinion
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -19,7 +19,11 @@ def index(request):
     products_to_list = []
     wishlist = []
 
-    page_number = int(request.GET['page'])
+    try:
+        page_number = int(request.GET['page'])
+    except:
+        page_number = 0
+    
     if len(products) % max_products_per_page == 0:
         possible_pages = int(len(products) / max_products_per_page)
     else:
@@ -49,6 +53,22 @@ def index(request):
 
 def login_page(request):
     return render(request, "login.html", context={})
+
+def product_detail(request, product_id):
+    
+    product = get_object_or_404(Product, pk=product_id)
+    user = get_object_or_404(User, pk=1)
+
+    in_wishlist = False
+
+    for entry in ProductEntry.objects.all():
+        if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
+            in_wishlist = True
+            break
+    
+    comments = Opinion.objects.filter(product=product)
+
+    return render(request, "product_details.html", context={"product": product, "comments": comments, "in_wishlist": in_wishlist})
 
 def hello(request, user_id):
 
@@ -147,3 +167,20 @@ def add_to_wishlist(request, product_id):
         entry.save()
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# ------------------------ Comments ------------------------
+
+def add_comment(request, product_id):
+    
+    if request.method == "POST":
+
+        user = User.objects.get(pk=1)
+        product = Product.objects.get(pk=product_id)
+        
+        comment_text = request.POST['comment']
+        
+        comment = Opinion(text=comment_text, product=product, user=user)
+        comment.save()
+        
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
