@@ -16,22 +16,23 @@
                 <div class="desc-div">
                     <div class="desc-section" style="flex-direction: column">
                         <h1>{{ product.name }}</h1>
+                        <h4 class="rarity-text {{product.rarity.lower}}">Rareza: {{ product.rarity }}</h4>
                         <h4 class="colecction-text">Colección: {{ product.collection }}</h4>
-                        <h4 class="author-text">Autor: {{ author }}</h4>
+                        <h4 class="author-text">Autor: {{ product.author.name }}</h4>
                     </div>
                     <div class="desc-section">
-                        <h2>{{ product.price }} €</h2>
                         <form action="/wishlist/add/{{product.id}}" id="wishlist-form">
                             <span>Cantidad:<input class="input-cantidad" type="number" value="1" min="1"></input></span>
                         </form>
+                        <h2>{{ product.price }} €</h2>
                     </div>
                     <div class="desc-section" id="buttons-section">
                         <button id="wishlist-button">
                             Añadir a lista de deseos
                             {% if in_wishlist %}
-                                <i class="fa-regular fa-heart fa-lg heart" id="product-{{product.id}}-img"></i>
+                                <i class="fa-solid fa-heart fa-lg heart" id="product-{{product.id}}-img"></i>
                             {% else %}
-                                <i class="fa-solid fa-heart fa-lg heart" id="product-{{product.id}}-img"></class=>
+                                <i class="fa-regular fa-heart fa-lg heart" id="product-{{product.id}}-img"></class=>
                             {% endif %}
                         </button>
                         <button>
@@ -41,6 +42,37 @@
                 </div>
             </div>
             <div class="comments-div">
+                <!-- <button class="new-comment-button"> Añadir comentario </button> -->
+                <button class="modal-flip-from-left">Flip from the left</button>
+                <div class="modal-background"></div>
+                <div id="modal-flip-from-left" class="modal">
+                    <div class="face-3d back-3d"></div>
+                    <div class="face-3d front-3d">
+                      <h2>¡Escribe tu comentario!</h2>
+                      <form action="/comments/add" method="POST" id="post-comment-form">
+                        {% csrf_token %}
+                        <textarea class="comment-input" name="comment" value="" placeholder="Escribe tu comentario..."></textarea>
+                        <button class="publish-comment-button"> Publicar</button>
+                      </form>
+                    </div>
+                </div>
+                <div class="comments-list">
+                    {% for comment in comments %}
+                        <div class="comment">
+                            <div class="comment-header">
+                                <h4 class="comment-author" style="margin-right: 40px;">@{{ comment.user.username }}</h4>
+                                <h4 class="comment-date">{{ comment.date }}</h4>
+                            </div>
+                            <div class="comment-body">
+                                <p class="comment-text">{{ comment.text }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="no-comment">
+                            <h3>No hay comentarios, ¡sé el primero en comentar!</h3>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>

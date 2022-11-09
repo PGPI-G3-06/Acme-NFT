@@ -5,16 +5,31 @@
     --main-button-hover-dark-color: rgb(124, 72, 209);
     --main-button-hover-light-color: rgb(173, 138, 229);
     --main-button-shadow-hover-color: rgba(0,0,0,0.4);
-    --card-background-color: rgba(255,255,255,0.05);
-    --collection-text-background-color: rgba(193, 236, 40, 0.5);
-    --author-text-background-color: rgba(193, 236, 40, 0.5);
-    --collection-text-border-color: rgb(193, 236, 40);
-    --author-text-border-color: rgb(193, 236, 40);
+    --card-background-color: rgba(255, 255, 255, 0.051);
+    --comment-separator-color: rgba(141, 141, 141, 0.525);
     --heart-color: red;
+
+    /* Rarities */
+
+    --common-background-color: rgba(255, 255, 255, 0.5);
+    --rare-background-color: rgba(0, 106, 255, 0.5);
+    --epic-background-color: rgba(140, 0, 255, 0.5);
+    --legendary-background-color: rgba(255, 208, 0, 0.5);
+    --mythic-background-color: rgba(197, 42, 42, 0.5);
+
+    --common-border-color: #ffffff;
+    --rare-border-color: #006aff;
+    --epic-border-color: #8c00ff;
+    --legendary-border-color: #ffd000;
+    --mythic-border-color: #c52a2a;
 }
 
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html, body{
+    height: 100%;
 }

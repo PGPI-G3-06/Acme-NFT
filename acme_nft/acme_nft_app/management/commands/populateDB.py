@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
 import random
 from pathlib import Path
-from ...models import Product, Category, Author
+from ...models import Product, Author, RarityType
 
 class Command(BaseCommand):
     help = 'Populates the database with some initial data'
@@ -12,19 +12,31 @@ class Command(BaseCommand):
         
         if choice == "yes":
             print("Starting Acme NFT population script...")
-
+            
+            def get_rarity(price, stock, mean):
+                
+                index = price/stock
+                
+                normaliced_index = index / mean
+                
+                if normaliced_index < 0.5:
+                    return RarityType.common
+                elif normaliced_index < 1:
+                    return RarityType.rare
+                elif normaliced_index < 1.5:
+                    return RarityType.epic
+                elif normaliced_index < 2:
+                    return RarityType.legendary
+                elif normaliced_index >= 2:
+                    return RarityType.mythic
+        
             path = Path(__file__).parent / "../../static/dataset/dataset.csv"
 
             datos = pd.read_csv(path, sep=",", header=0, names=["title", "name", "creator", "art_series", "price", "symbol", "type", "likes", "nsfw", "tokens", "year" , "rights", "royalty", "cid", "path"])
             
+            mean_price_per_stock = (datos["price"]/datos["tokens"]).mean()
+            
             for index, row in datos.iterrows():
-                
-                # Find or create the category
-                try:
-                    category = Category.objects.get(name=row["type"])
-                except:
-                    category = Category(name=row["type"])
-                    category.save()
 
                 # Find or create the author
                 try:
@@ -33,13 +45,14 @@ class Command(BaseCommand):
                     author = Author(name=row["creator"])
                     author.save()
                 
+                rarity = get_rarity(float(row["price"]), int(row["tokens"]), mean_price_per_stock)
+                
                 # Create and save the product
-                product = Product(name=row["name"], collection=row["title"], price=float(row["price"]), stock=int(row["tokens"]), image_url=row["path"].replace("./", ""), offer_price=None)
+                product = Product(name=row["name"], collection=row["title"], price=float(row["price"]), stock=int(row["tokens"]), image_url=row["path"].replace("./", ""), offer_price=None, rarity=rarity, author=author)
                 product.save()
-                product.category.add(category)
-                product.author.add(author)
         
             print("Done! Your product database is now populated with some initial data.")
         else:
             print("Exiting...")
             return
+    

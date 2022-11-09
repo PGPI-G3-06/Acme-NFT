@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse
 
 
-from acme_nft_app.models import User, Product, ProductEntry, EntryType
+from acme_nft_app.models import User, Product, ProductEntry, EntryType, Opinion
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -65,8 +65,10 @@ def product_detail(request, product_id):
         if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
             in_wishlist = True
             break
+    
+    comments = Opinion.objects.filter(product=product)
 
-    return render(request, "product_details.html", context={"product": product, "author": product.author.all()[0], "in_wishlist": in_wishlist})
+    return render(request, "product_details.html", context={"product": product, "comments": comments, "in_wishlist": in_wishlist})
 
 def hello(request, user_id):
 
