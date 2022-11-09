@@ -43,16 +43,16 @@
             </div>
             <div class="comments-div">
                 <!-- <button class="new-comment-button"> Añadir comentario </button> -->
-                <button class="modal-flip-from-left">Flip from the left</button>
+                <button class="new-comment-button">Añade tu comentario</button>
                 <div class="modal-background"></div>
                 <div id="modal-flip-from-left" class="modal">
                     <div class="face-3d back-3d"></div>
                     <div class="face-3d front-3d">
                       <h2>¡Escribe tu comentario!</h2>
-                      <form action="/comments/add" method="POST" id="post-comment-form">
+                      <form action="/comments/add/{{product.id}}" method="POST" id="post-comment-form">
                         {% csrf_token %}
-                        <textarea class="comment-input" name="comment" value="" placeholder="Escribe tu comentario..."></textarea>
-                        <button class="publish-comment-button"> Publicar</button>
+                        <textarea id="comment-input" name="comment" value="" placeholder="Escribe tu comentario..."></textarea>
+                        <button class="publish-comment-button">Publicar</button>
                       </form>
                     </div>
                 </div>

@@ -22,6 +22,12 @@
     --epic-border-color: #8c00ff;
     --legendary-border-color: #ffd000;
     --mythic-border-color: #c52a2a;
+
+    /* Modal Add Comment */
+
+    --modal-comment-background-button-color: #875794;
+    --modal-comment-text-color: #fff;
+    --modal-comment-background-color: rgba(69, 69, 69, 0.7);
 }
 
 *{

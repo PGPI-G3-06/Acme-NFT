@@ -3,17 +3,23 @@
 function configureModal(){
     let background = document.querySelector('.modal-background');
     let modalBody = document.querySelector('.modal');
-    let modal = document.querySelector('.modal-flip-from-left');
-    modal.addEventListener('click', function() {
-        console.log("Dentro");
+    let modalButton = document.querySelector('.new-comment-button');
+
+    modalButton.addEventListener('click', function() {
+        setTimeout(function(){
+            document.querySelector(".face-3d").style = "backface-visibility: hidden;"
+        }, 1000);
         document.querySelector('.modal-background').classList.add('show');
-        document.querySelector('.modal-background').classList.remove('hide');
         document.querySelector('.modal').classList.add('show');
+        document.querySelector('.modal-background').classList.remove('hide');
         document.querySelector('.modal').classList.remove('hide');
     });
     
     background.addEventListener('click', function(e) {
         e.preventDefault();
+        setTimeout(function(){
+            document.querySelector(".face-3d").style = "";
+        }, 1000);
         background.classList.remove('show');
         background.classList.add('hide');
         modalBody.classList.remove('show');
@@ -32,9 +38,13 @@ function configureModalForm(){
     
         let addCommentForm = document.getElementById("post-comment-form")
 
-        // Se podrían realizar validaciones del comentario aquí
+        let commentText = document.getElementById("comment-input").value;
 
-        addCommentForm.submit();
+        if (commentText.length >= 5){
+            addCommentForm.submit();
+        }else{
+            alert("No se puede publicar un comentario que tenga menos de 5 caracteres");
+        }
 
     });
 }

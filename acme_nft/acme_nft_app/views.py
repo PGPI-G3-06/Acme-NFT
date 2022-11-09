@@ -167,3 +167,20 @@ def add_to_wishlist(request, product_id):
         entry.save()
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# ------------------------ Comments ------------------------
+
+def add_comment(request, product_id):
+    
+    if request.method == "POST":
+
+        user = User.objects.get(pk=1)
+        product = Product.objects.get(pk=product_id)
+        
+        comment_text = request.POST['comment']
+        
+        comment = Opinion(text=comment_text, product=product, user=user)
+        comment.save()
+        
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        

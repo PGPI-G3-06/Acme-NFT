@@ -12,6 +12,8 @@ urlpatterns = [
     path("login", views.login, name="login"),
     # wishlist
     path("wishlist/add/<int:product_id>", views.add_to_wishlist, name="add_to_wishlist"),
+    # comments
+    path("comments/add/<int:product_id>", views.add_comment, name="add_comment"),
     # Others
     path("hello/<int:user_id>", views.hello, name="hello"),
     path("error", views.error, name="error"),
