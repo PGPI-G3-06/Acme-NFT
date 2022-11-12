@@ -1,10 +1,11 @@
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse
 
 
-from acme_nft_app.models import User, Product, ProductEntry, EntryType, Opinion
+from .models import  Product, ProductEntry, EntryType, Opinion
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -101,18 +102,18 @@ def register(request):
 
         username = request.POST['username']
         password = request.POST['password']
-        name = request.POST['name']
-        surname = request.POST['surname']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
         email = request.POST['email']
 
         errors = []
-        if username == " " or password == " " or name == " " or surname == " " or email == " ": # Check if any field is empty
+        if username == " " or password == " " or first_name == " " or last_name == " " or email == " ": # Check if any field is empty
             empty = "Todos los campos del formulario deben estar rellenos"
             errors.append(empty)
-        if name[0].islower():
+        if first_name[0].islower():
             first_letter_name = "La primera letra del nombre debe ser mayúscula"
             errors.append(first_letter_name)
-        if surname[0].islower():
+        if last_name[0].islower():
             first_letter_surname = "La primera letra del apellido debe ser mayúscula"
             errors.append(first_letter_surname)
         if len(password) < 8:
@@ -134,13 +135,13 @@ def register(request):
                 "errors": errors,
                 "username": username,
                 "password": password,
-                "name": name,
-                "surname": surname,
+                "first_name": first_name,
+                "last_name": last_name,
                 "email": email,
                 "are_errors": are_errors
             })
         else:
-            user = User(username=username, password=make_password(password), name=name, surname=surname, email=email)
+            user = User(username=username, password=make_password(password), first_name=first_name, last_name=last_name, email=email)
             user.save()
             print(user.id)
             return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))

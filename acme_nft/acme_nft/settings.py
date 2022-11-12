@@ -19,13 +19,13 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'acme_nft_app.apps.AcmeNftConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'acme_nft_app.apps.AcmeNftConfig',
     'livereload',
     'mathfilters'
 ]
