@@ -49,11 +49,17 @@
 
 .desc-section h1{
     font-size: 3rem;
+    text-align: center;
     text-transform: capitalize;
 }
 
 .desc-section h2{
     font-size: 2rem;
+    text-align: center;
+}
+
+.desc-section h4{
+    text-align: center;
 }
 
 #wishlist-form{
@@ -160,6 +166,11 @@
 
 .no-comment{
     padding: 30px 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 /* MODAL */

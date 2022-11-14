@@ -13,6 +13,8 @@ class Command(BaseCommand):
         if choice == "yes":
             print("Starting Acme NFT population script...")
             
+            # ----------------------------- Load NFTs -----------------------------
+            
             def get_rarity(price, stock, mean):
                 
                 index = price/stock

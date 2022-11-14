@@ -29,7 +29,10 @@ def index(request):
     else:
         possible_pages = int(len(products) / max_products_per_page) + 1
         
-    user = get_object_or_404(User, pk=1)
+    try:
+        user = User.objects.get(User, pk=1)
+    except:
+        user = User(username="anonymous")
 
     # Load products to show in view
 
@@ -44,7 +47,8 @@ def index(request):
             if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
                 wishlist.append(entry.product_id)
 
-    return render(request, "index.html", context={"products": products_to_list,
+    return render(request, "index.html", context={"user": user,
+                                                "products": products_to_list,
                                                 "wishlist": wishlist,
                                                 "pages_range": range(0, possible_pages),
                                                 "current_page": page_number
@@ -57,7 +61,10 @@ def login_page(request):
 def product_detail(request, product_id):
     
     product = get_object_or_404(Product, pk=product_id)
-    user = get_object_or_404(User, pk=1)
+    try:
+        user = get_object_or_404(User, pk=1)
+    except:
+        user = User(username="anonymous")
 
     in_wishlist = False
 
@@ -68,7 +75,7 @@ def product_detail(request, product_id):
     
     comments = Opinion.objects.filter(product=product)
 
-    return render(request, "product_details.html", context={"product": product, "comments": comments, "in_wishlist": in_wishlist})
+    return render(request, "product_details.html", context={"user": user, "product": product, "comments": comments, "in_wishlist": in_wishlist})
 
 def hello(request, user_id):
 
