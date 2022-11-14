@@ -1,12 +1,13 @@
-import django.contrib.auth
+from django.contrib import auth
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.hashers import make_password, check_password
-from django.urls import reverse
+from django.contrib.auth.hashers import check_password, make_password, is_password_usable
+from django.contrib.auth.models import AnonymousUser, User, UserManager
 from django.contrib.sessions.models import Session
-from .models import Product, Address, ProductEntry, EntryType, Opinion
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+
+from .models import Address, EntryType, Opinion, Product, ProductEntry
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -30,11 +31,6 @@ def index(request):
         possible_pages = int(len(products) / max_products_per_page)
     else:
         possible_pages = int(len(products) / max_products_per_page) + 1
-        
-    try:
-        user = User.objects.get(User, pk=1)
-    except:
-        user = User(username="anonymous")
 
     # Load products to show in view
 
@@ -46,10 +42,10 @@ def index(request):
 
     for product in products_to_list:
         for entry in entries:
-            if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
+            if entry.product == product and entry.user==request.user and entry.entry_type == 'WISHLIST':
                 wishlist.append(entry.product_id)
 
-    return render(request, "index.html", context={"user": user,
+    return render(request, "index.html", context={"user": request.user,
                                                 "products": products_to_list,
                                                 "wishlist": wishlist,
                                                 "pages_range": range(0, possible_pages),
@@ -63,21 +59,17 @@ def login_page(request):
 def product_detail(request, product_id):
     
     product = get_object_or_404(Product, pk=product_id)
-    try:
-        user = get_object_or_404(User, pk=1)
-    except:
-        user = User(username="anonymous")
 
     in_wishlist = False
 
     for entry in ProductEntry.objects.all():
-        if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
+        if entry.product == product and entry.user==request.user and entry.entry_type == 'WISHLIST':
             in_wishlist = True
             break
     
     comments = Opinion.objects.filter(product=product)
 
-    return render(request, "product_details.html", context={"user": user, "product": product, "comments": comments, "in_wishlist": in_wishlist})
+    return render(request, "product_details.html", context={"user": request.user, "product": product, "comments": comments, "in_wishlist": in_wishlist})
 
 def hello(request, user_id):
 
@@ -94,19 +86,18 @@ def error(request):
 
 def login(request):
 
-    try:
-        user = User.objects.get(email=request.POST['email'])
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
 
-
-        if check_password(request.POST['password'], user.password):
-            Session.session_key = user.id
-            return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
-        else:
-            return HttpResponseRedirect(reverse("acme-nft:error"))
-    except:
+    if user is not None:
+        auth.login(request, user)
+        return HttpResponseRedirect(reverse("acme-nft:index"))
+    else:
         return HttpResponseRedirect(reverse("acme-nft:error"))
+    
+def logout(request):
 
-
+    auth.logout(request)
+    return HttpResponseRedirect(reverse("acme-nft:index"))
 
 def register(request):
 
@@ -153,10 +144,10 @@ def register(request):
                 "are_errors": are_errors
             })
         else:
-            user = User(username=username, password=make_password(password), first_name=first_name, last_name=last_name, email=email)
+            user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
             user.save()
-            print(user.id)
-            return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
+            auth.login(request, user)
+            return HttpResponseRedirect(reverse("acme-nft:index"))
             
     else:
         return render(request, "login.html")
