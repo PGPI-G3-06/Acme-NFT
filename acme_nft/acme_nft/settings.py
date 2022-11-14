@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'acme_nft_app.apps.AcmeNftConfig',
     'livereload',
-    'mathfilters'
+    'mathfilters',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
