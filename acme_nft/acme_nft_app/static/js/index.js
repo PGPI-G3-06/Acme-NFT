@@ -6,52 +6,51 @@ function main(){
 
     let productCard = document.getElementsByClassName("class-card");
 
-    productCard.addEventListener("mouseover", function(){
-        document.querySelectorAll(".selectbox").forEach(input => {
-            input.style.opacity = "0";
-            input.style.transition = "all 1s";
-        })
-    });
-
-    productCard.addEventListener("mouseout", function(){
-        document.querySelectorAll(".selectbox").forEach(input => {
-            input.style.opacity = "1";
-            input.style.transition = "all 1s";
-        })
-    });
+    for (let product of productCard) {
+        product.addEventListener("mouseover", function(){
+            document.querySelectorAll(".selectbox").forEach(input => {
+                input.style.opacity = "0";
+                input.style.transition = "all 1s";
+            })
+        });
+    
+        product.addEventListener("mouseout", function(){
+            document.querySelectorAll(".selectbox").forEach(input => {
+                input.style.opacity = "1";
+                input.style.transition = "all 1s";
+            })
+        });   
+    }
 
     // Toogle heart
 
     let wishList = document.getElementsByClassName("class-lista-deseos");
-    let toggler = false; // Hay que inicializarlo según si está o no en la lista de deseos
 
-    wishList.addEventListener("click", function(){
-        if(toggler){
-            // Delete from wishlist
-            wishImg.current.src = "./images/heart.png";
-            toggler = false;
-            if(toggler !== undefined){
-                toggler = !toggler;
-            }
-        }else{
-            // Add to wishlist
-            wishImg.current.src = "./images/heart-lleno.png";
-            toggler = true;
-        }
-    });
+    for (let wishListIcon of wishList) {
+        wishListIcon.addEventListener("click", function(event){
+
+            let productId = wishListIcon.getElementsByTagName("img")[0].id.split("-")[1];
+
+            window.location.href = "/wishlist/add/" + productId;
+
+        });   
+    }
 
     // Add to cart
 
     let cart = document.getElementsByClassName("class-carrito");
-    let icon = cart.childNodes[0];
+    
 
-    cart.addEventListener("click", function(){
-        // Add to cart function
-        icon.classList.add("fa-spin");
-        setTimeout(()=>{
-            icon.classList.remove("fa-spin");
-        }, 2000);
-    });
+    for (let item of cart) { 
+        item.addEventListener("click", function(){
+            let icon = item.childNodes[0];   
+            // Add to cart function
+            icon.classList.add("fa-spin");
+            setTimeout(()=>{
+                icon.classList.remove("fa-spin");
+            }, 2000);
+        });
+    }
 
 }
 

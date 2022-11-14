@@ -17,6 +17,13 @@ class Status(Enum):
     sent = 'SENT'
     on_transit = 'ON_TRANSIT'
     delivered = 'DELIVERED'
+    
+class RarityType(models.TextChoices):
+    common = 'COMMON'
+    rare = 'RARE'
+    epic = 'EPIC'
+    legendary = 'LEGENDARY'
+    mythic = 'MYTHIC'
 
 # Models.
 
@@ -60,33 +67,27 @@ class Complaint(models.Model):
     def __str__(self):
         return self.title
 
-class Product(models.Model):
-    name = models.CharField(max_length=60)
-    collection = models.TextField()
-    price = models.FloatField()
-    stock = models.IntegerField()
-    image_url = models.CharField(max_length=255, blank=True)
-    offer_price = models.FloatField(blank=True, null=True)
-    category = models.ManyToManyField('Category', related_name='products')
-    author = models.ManyToManyField('Author', related_name='products')
-    def __str__(self):
-        return self.name
-
-class Category(models.Model):
-    name = models.CharField(max_length=60, unique=True)
-
-    def __str__(self):
-        return self.name
-
 class Author(models.Model):
     name = models.CharField(max_length=60, unique=True)
 
     def __str__(self):
         return self.name
 
-
+class Product(models.Model):
+        
+    name = models.CharField(max_length=60)
+    collection = models.TextField()
+    price = models.FloatField()
+    stock = models.IntegerField()
+    image_url = models.CharField(max_length=255, blank=True)
+    offer_price = models.FloatField(blank=True, null=True)
+    rarity = models.CharField(max_length=60, choices=[ (rarity, rarity.value) for rarity in RarityType], default=RarityType.common)
+    author = models.ForeignKey(Author, on_delete=models.DO_NOTHING, null=True)
+    
+    def __str__(self):
+        return self.name
 class Opinion(models.Model):
-    text = models.CharField(max_length=60)
+    text = models.CharField(max_length=2000)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

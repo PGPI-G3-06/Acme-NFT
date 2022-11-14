@@ -1,36 +1,15 @@
+/* BACKGROUND */
 section{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    min-height: 100vh;
-    background: #e6e6e6;
     padding: 100px 20px;
-    box-sizing: border-box;
-    overflow-x: hidden;
+    min-height: 100vh;
+    background: var(--main-white);
 }
 
-section::before{
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #ffbb3e;
-    clip-path: circle(65% at 100% -20%);
-}
-
-section::after{
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #ffda94;
-    clip-path: circle(35% at 0% 100%);
-}
+/* PRODUCT GRID */
 
 .class-grid-container{
     position: relative;
@@ -41,6 +20,8 @@ section::after{
     flex-wrap: wrap;
 }
 
+    /* PRODUCT GRID CARD */
+
 .class-card{
     position: relative;
     width: 300px;
@@ -50,9 +31,10 @@ section::after{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: rgba(255,255,255,0.05);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    background: var(--card-background-color);
+    box-shadow: 0 10px 25px var(--main-color);
     backdrop-filter: blur(15px);
+    border-radius: 15px;
 }
 
 .class-card .class-img-box{
@@ -106,7 +88,7 @@ section::after{
 
 .class-card .class-img-box h2{
 
-    color: #000000;
+    color: black;
     font-weight: 600;
 
 }
@@ -134,7 +116,7 @@ section::after{
     top: 10px;
     display: inline-block;
     padding: 12px 30px;
-    background: #ffffff;
+    background: var(--main-button-background-color);
     border-radius: 40px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -144,8 +126,8 @@ section::after{
 }
 
 .class-card .class-content .class-link:hover{
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(to bottom, #ffbb3e, #ffda94);
+    box-shadow: 0 10px 25px var(--main-button-shadow-hover-color);
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
     transition: 0.5s all;
 }
 
@@ -166,7 +148,7 @@ section::after{
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #ffffff;
+    background: var(--main-button-background-color);
     border-radius: 50%;
     font-weight: bold;
     padding: 10px;
@@ -174,8 +156,8 @@ section::after{
 
 .class-lista-deseos:hover,
 .class-carrito:hover{
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(to bottom, #ffbb3e, #ffda94);
+    box-shadow: 0 10px 25px var(--main-button-shadow-hover-color);
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
     cursor: pointer;
     transition: 0.5s all;
 }
@@ -185,101 +167,66 @@ section::after{
     width: 15px;
 }
 
+/* PAGINACIÓN */
 
-/* Estilos filtros */
-
-.class-filters-row{
-    width: 100%;
-    padding: 0 20px;
-}
-
-.class-inputs-form{
-    display: flex;
-    justify-content: center;
-}
-
-.selectbox {
-	width: 30%;
-	position: relative;
-    margin-right: 15px;
-    margin-left: 15px;
-}
-
-.select {
-	background: #fff;
-	width: 100%;
-	box-shadow: 0px 0px 0px rgba(0, 0, 0, .16);
-	border-radius: 10px;
-	cursor: pointer;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	transition: .2s ease all;
-	padding: 10px;
-	position: relative;
-	z-index: 200;
-	border: 2px solid transparent;
-    
+.pagination-container{
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 50px;
 }
 
-.select.active,
-.select:hover {
-	box-shadow: 0px 5px 10px rgba(0, 0, 0, .16);
-	border: 2px solid #ffbb3e;
-}
-
-.select.active:before {
-	content: "";
-	display: block;
-	height: 0;
-	width: 0;
-	border-top: 15px solid #ffbb3e;
-	border-right: 15px solid transparent;
-	border-bottom: 15px solid transparent;
-	border-left: 15px solid transparent;
-	position: absolute;
-	bottom: -30px;
-	left: calc(50% - 15px);
-}
-
-.select i {
-	font-size: 30px;
-	margin-left: 30px;
-	color: #ffbb3e;
-}
-
-.titulo {
-	color: #000;
-	font-weight: 600;
-    font-size: 20px;
+.pagination-box {
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    padding: 25px;
+    border-radius: 3px;
+    box-shadow: -3px -3px 7px var(--main-color), 3px 3px 5px var(--main-color);
+  }
+  .pagination {
+    display: flex;
+    list-style: none;
+  }
+  .pagination li {
+    flex: 1;
+    margin: 0px 5px;
+    background: transparent;
+    border-radius: 3px;
+    box-shadow: -3px -3px 7px var(--main-color), 3px 3px 5px var(--main-color);
+  }
+  .pagination li a {
+    font-size: 18px;
+    text-decoration: none;
+    color: black;
+    height: 45px;
+    width: 55px;
+    display: block;
+    line-height: 45px;
     text-align: center;
-}
+  }
+  .pagination li:first-child a {
+    width: 120px;
+  }
+  .pagination li:last-child a {
+    width: 100px;
+  }
+  
+  .active {
+    box-shadow: inset -3px -3px 7px var(--main-color),
+      inset 3px 3px 5px var(--main-color) !important;
+    font-size: 17px !important;
+    color: var(--main-color) !important;
+  }
 
-.descripcion {
-	font-size: 18px;
-	color: #434343;
-}
+  .pagination li:first-child {
+    margin: 0 15px 0 0;
+  }
+  .pagination li:last-child {
+    margin: 0 0 0 15px;
+  }
 
-.opciones {
-    margin-top: 30px;
-	background: #fff;
-    position: relative;
-	border-radius: 10px;
-	box-shadow: 0px 5px 10px rgba(0,0,0,.16);
-	max-height: 200px;
-	overflow: auto;
-	z-index: 100;
-	width: 100%;
-	display: none;
-}
-
-.opciones.active {
-	display: block;
-	animation: fadeIn .3s forwards;
-}
+/* KEY FRAMES */
 
 @keyframes fadeIn {
 	from {
@@ -289,6 +236,8 @@ section::after{
 		transform: translateY(0) scale(1);
 	}
 }
+
+/* MEDIA SCREENS */
 
 @media screen and (max-width: 800px){
 	.selectbox {

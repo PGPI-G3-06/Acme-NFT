@@ -5,15 +5,71 @@ from django.urls import reverse
 from .models import User, Product, Address
 
 
-from acme_nft_app.models import User, Product
+from acme_nft_app.models import User, Product, ProductEntry, EntryType, Opinion
+
+# ------------------------------------- Constants -------------------------------------
+
+max_products_per_page = 10
 
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-    return render(request, "index.html", context={"products": Product.objects.all()})
+
+    products = Product.objects.all()
+    entries = ProductEntry.objects.all()
+    products_to_list = []
+    wishlist = []
+
+    try:
+        page_number = int(request.GET['page'])
+    except:
+        page_number = 0
+    
+    if len(products) % max_products_per_page == 0:
+        possible_pages = int(len(products) / max_products_per_page)
+    else:
+        possible_pages = int(len(products) / max_products_per_page) + 1
+        
+    user = get_object_or_404(User, pk=1)
+
+    # Load products to show in view
+
+    for i in range(page_number*max_products_per_page, page_number*max_products_per_page+max_products_per_page):
+        if(i < len(products)):
+            products_to_list.append(products[i])
+
+    # Load wishlist to render hearts
+
+    for product in products_to_list:
+        for entry in entries:
+            if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
+                wishlist.append(entry.product_id)
+
+    return render(request, "index.html", context={"products": products_to_list,
+                                                "wishlist": wishlist,
+                                                "pages_range": range(0, possible_pages),
+                                                "current_page": page_number
+                                                }
+                )
 
 def login_page(request):
     return render(request, "login.html", context={})
+
+def product_detail(request, product_id):
+    
+    product = get_object_or_404(Product, pk=product_id)
+    user = get_object_or_404(User, pk=1)
+
+    in_wishlist = False
+
+    for entry in ProductEntry.objects.all():
+        if entry.product == product and entry.user==user and entry.entry_type == 'WISHLIST':
+            in_wishlist = True
+            break
+    
+    comments = Opinion.objects.filter(product=product)
+
+    return render(request, "product_details.html", context={"product": product, "comments": comments, "in_wishlist": in_wishlist})
 
 def hello(request, user_id):
 
@@ -66,9 +122,24 @@ def register(request):
         if len(username) < 4:
             username_length = "El nombre de usuario debe tener al menos 4 caracteres"
             errors.append(username_length)
+        for user in User.objects.all():
+            if user.username == username:
+                username_exists = "El nombre de usuario ya existe"
+                errors.append(username_exists)
+            if user.email == email:
+                email_exists = "El email ya existe"
+                errors.append(email_exists)
         if len(errors) > 0:
+            are_errors = True
             return render(request, "login.html", {
-                "errors": errors})
+                "errors": errors,
+                "username": username,
+                "password": password,
+                "name": name,
+                "surname": surname,
+                "email": email,
+                "are_errors": are_errors
+            })
         else:
             user = User(username=username, password=make_password(password), name=name, surname=surname, email=email)
             user.save()
@@ -77,6 +148,9 @@ def register(request):
             
     else:
         return render(request, "login.html")
+
+
+# ------------------------ Address ------------------------
 
 def show_adrress(request, user_id):
 
@@ -245,3 +319,38 @@ def check_errors(block, city, code_postal, door, errors, floor, number, street_n
         errors.append(city_length)
     return errors
 
+# ------------------------ Wishlist ------------------------
+
+def add_to_wishlist(request, product_id):
+
+    try: 
+        user = User.objects.get(pk=1) # This will be the logged user
+        product = Product.objects.get(pk=product_id)
+        entry = ProductEntry.objects.get(product=product, entry_type='WISHLIST', user=user)
+        entry.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    except:
+    
+        product = get_object_or_404(Product, pk=product_id)
+        user = get_object_or_404(User, pk=1)
+        entry = ProductEntry(quantity=None, entry_type='WISHLIST', product=product, user=user)
+        entry.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# ------------------------ Comments ------------------------
+
+def add_comment(request, product_id):
+    
+    if request.method == "POST":
+
+        user = User.objects.get(pk=1)
+        product = Product.objects.get(pk=product_id)
+        
+        comment_text = request.POST['comment']
+        
+        comment = Opinion(text=comment_text, product=product, user=user)
+        comment.save()
+        
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
