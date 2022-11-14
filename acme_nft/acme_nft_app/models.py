@@ -48,7 +48,15 @@ class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.street_name + ", " + str(self.number) + ", Bloque " + str(self.block) + ", " + str(self.floor) + "º " + self.door + ", " + self.city + ", " + str(self.code_postal)
+        address = ""
+        address+= self.street_name + ", " + str(self.number)+ " "
+        if self.block != None:
+            address+= ", Bloque " + str(self.block) + " "
+        if self.floor != None:
+            address += ", " + str(self.floor)  + "º "
+        if self.door != "":
+            address += self.door + " "
+        return   address  + self.city + ", " + str(self.code_postal)
 
 
 class Complaint(models.Model):
