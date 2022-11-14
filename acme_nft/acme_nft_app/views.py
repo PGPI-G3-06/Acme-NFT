@@ -105,34 +105,8 @@ def new_address(request):
         city = request.POST['city']
         code_postal = request.POST['code_postal']
 
-        if len(street_name) > 60:
-            street_name_length = "El nombre de la calle no puede tener más de 60 caracteres"
-            errors.append(street_name_length)
-        if len(door) > 1:
-            door_length = "La puerta no puede tener más de 1 caracter"
-            errors.append(door_length)
-        if code_postal.isdigit() == False:
-            code_postal_digit = "El código postal debe ser un número"
-            errors.append(code_postal_digit)
-        else:
-            code_postal = int(code_postal)
-
-        if block.isdigit() == False:
-            block_digit = "El bloque debe ser un número"
-            errors.append(block_digit)
-        else:
-            block = int(block)
-        if floor.isdigit() == False:
-            floor_digit = "El piso debe ser un número"
-            errors.append(floor_digit)
-        else:
-            floor = int(floor)
-        if number.isdigit() == False:
-            number_digit = "El número debe ser un número"
-            errors.append(number_digit)
-        if len(city) > 60:
-            city_length = "El nombre de la ciudad no puede tener más de 60 caracteres"
-            errors.append(city_length)
+        errors = check_errors(block, city, code_postal, door, errors, floor, number,
+                                                         street_name)
         if len(errors) > 0:
             are_errors = True
             return render(request, "new-address.html", {
@@ -183,34 +157,8 @@ def update_address(request, address_id):
         city = request.POST['city']
         code_postal = request.POST['code_postal']
 
-        if len(street_name) > 60:
-            street_name_length = "El nombre de la calle no puede tener más de 60 caracteres"
-            errors.append(street_name_length)
-        if len(door) > 1:
-            door_length = "La puerta no puede tener más de 1 caracter"
-            errors.append(door_length)
-        if code_postal.isdigit() == False:
-            code_postal_digit = "El código postal debe ser un número"
-            errors.append(code_postal_digit)
-        else:
-            code_postal = int(code_postal)
-
-        if block.isdigit() == False:
-            block_digit = "El bloque debe ser un número"
-            errors.append(block_digit)
-        else:
-            block = int(block)
-        if floor.isdigit() == False:
-            floor_digit = "El piso debe ser un número"
-            errors.append(floor_digit)
-        else:
-            floor = int(floor)
-        if number.isdigit() == False:
-            number_digit = "El número debe ser un número"
-            errors.append(number_digit)
-        if len(city) > 60:
-            city_length = "El nombre de la ciudad no puede tener más de 60 caracteres"
-            errors.append(city_length)
+        errors = check_errors(block, city, code_postal, door, errors, floor, number,
+                                                         street_name)
         if len(errors) > 0:
             are_errors = True
             return render(request, "new-address.html", {
@@ -260,4 +208,40 @@ def update_address(request, address_id):
                         "city": city,
                         "code_postal": code_postal,
                         "id": id,})
+
+
+def check_errors(block, city, code_postal, door, errors, floor, number, street_name):
+    if len(street_name) > 60:
+        street_name_length = "El nombre de la calle no puede tener más de 60 caracteres"
+        errors.append(street_name_length)
+    if len(door) > 1:
+        door_length = "La puerta no puede tener más de 1 caracter"
+        errors.append(door_length)
+    if code_postal.isdigit() == False:
+        code_postal_digit = "El código postal debe ser un número"
+        errors.append(code_postal_digit)
+    else:
+        code_postal = int(code_postal)
+    if block != None:
+        if block.isdigit() == False:
+            block_digit = "El bloque debe ser un número"
+            errors.append(block_digit)
+        else:
+            block = int(block)
+    if floor != None:
+        if floor.isdigit() == False:
+            floor_digit = "El piso debe ser un número"
+            errors.append(floor_digit)
+        else:
+            floor = int(floor)
+    if number != None:
+        if number.isdigit() == False:
+            number_digit = "El número debe ser un número"
+            errors.append(number_digit)
+        else:
+            number = int(number)
+    if len(city) > 60:
+        city_length = "El nombre de la ciudad no puede tener más de 60 caracteres"
+        errors.append(city_length)
+    return errors
 
