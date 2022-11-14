@@ -1,12 +1,12 @@
+import django.contrib.auth
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse
-from .models import User, Product, Address
-
-
-from .models import  Product, ProductEntry, EntryType, Opinion
+from django.contrib.sessions.models import Session
+from .models import Product, Address, ProductEntry, EntryType, Opinion
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -90,12 +90,16 @@ def login(request):
     try:
         user = User.objects.get(email=request.POST['email'])
 
+
         if check_password(request.POST['password'], user.password):
+            Session.session_key = user.id
             return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
         else:
             return HttpResponseRedirect(reverse("acme-nft:error"))
     except:
         return HttpResponseRedirect(reverse("acme-nft:error"))
+
+
 
 def register(request):
 
@@ -149,6 +153,32 @@ def register(request):
             
     else:
         return render(request, "login.html")
+        
+        
+def edit_user(request):
+
+    user = User.objects.get(id=2)
+    print(user.username)
+    if request.method == 'GET':
+
+
+        return render(request, "profile.html",{
+            'username': user.username,
+            'email': user.email,
+            'name': user.name,
+            'surname': user.surname,
+    })
+
+    else:
+
+        user_attrs = request.POST
+        user.name = user_attrs['name']
+        user.surname = user_attrs['surname']
+        user.username = user_attrs['username']
+        user.email = user_attrs['email']
+        user.save()
+
+    return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
 
 
 # ------------------------ Address ------------------------
@@ -345,7 +375,6 @@ def add_to_wishlist(request, product_id):
 def add_comment(request, product_id):
     
     if request.method == "POST":
-
         user = User.objects.get(pk=1)
         product = Product.objects.get(pk=product_id)
         

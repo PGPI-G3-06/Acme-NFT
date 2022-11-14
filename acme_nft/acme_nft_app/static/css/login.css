@@ -90,6 +90,14 @@ button:hover{
 	transform: scale(.6);
 }
 
+img.profile_photo{
+	width: 100px;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	margin: 20px auto;
+}
+
 .alert alert-primary{
 	color: #6d44b8;
 	text-decoration-color: white;

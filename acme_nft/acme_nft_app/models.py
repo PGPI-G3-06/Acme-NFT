@@ -77,6 +77,7 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+        
 class Opinion(models.Model):
     text = models.CharField(max_length=2000)
     date = models.DateTimeField(auto_now_add=True)
@@ -104,6 +105,6 @@ class ProductEntry(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
-
+    
     def __str__(self):
         return f'user_id: {self.user.id}, product_id: {self.product.id}, entry_type: {self.entry_type}'
