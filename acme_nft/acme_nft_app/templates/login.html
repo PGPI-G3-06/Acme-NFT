@@ -16,8 +16,8 @@
 				<form action="/register" method="POST">
           			{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
-					<input type="text" name="name" placeholder="Nombre" required="True" value="{{ name }}">
-					<input type="text" name="surname" placeholder="Apellidos" required="True" value="{{ surname }}">
+					<input type="text" name="first_name" placeholder="Nombre" required="True" value="{{ first_name }}">
+					<input type="text" name="last_name" placeholder="Apellidos" required="True" value="{{ last_name }}">
 					<input type="text" name="username" placeholder="Usuario" required="True" value="{{ username }}">
 					<input type="email" name="email" placeholder="Email" required="True" value="{{ email }}">
 					<input type="password" name="password" placeholder="Contraseña" required="True">
@@ -30,8 +30,8 @@
 				<form action="/register" method="POST">
           			{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
-					<input type="text" name="name" placeholder="Nombre" required="True">
-					<input type="text" name="surname" placeholder="Apellidos" required="True">
+					<input type="text" name="first_name" placeholder="Nombre" required="True">
+					<input type="text" name="last_name" placeholder="Apellidos" required="True">
 					<input type="text" name="username" placeholder="Usuario" required="True">
 					<input type="email" name="email" placeholder="Email" required="True">
 					<input type="password" name="password" placeholder="Contraseña" required="True">
