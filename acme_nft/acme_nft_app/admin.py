@@ -14,9 +14,13 @@ class ComplaintInline(admin.TabularInline):
     model = Complaint
     extra = 1
 
+class ProfilePictureInline(admin.TabularInline):
+    model = ProfilePicture
+    extra = 1
+
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'is_staff')
-    inlines = [AddressInline, ComplaintInline]
+    inlines = [AddressInline, ComplaintInline, ProfilePictureInline]
 
 
 class ProductInline(admin.StackedInline):
