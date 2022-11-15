@@ -50,7 +50,9 @@
                 </div>
             </div>
             <div class="comments-div">
+                {% if user.is_authenticated %}
                 <button class="new-comment-button">Añade tu comentario</button>
+                {% endif %}
                 <div class="modal-background"></div>
                 <div id="modal-flip-from-left" class="modal">
                     <div class="face-3d back-3d"></div>

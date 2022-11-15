@@ -356,6 +356,9 @@ def add_to_cart(request, product_id):
     
     if quantity > 0:
         user = request.user
+        
+        if not user.is_authenticated:
+            user = None
         product = Product.objects.get(id=product_id)
         try:
             entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
