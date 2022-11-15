@@ -51,17 +51,56 @@ function configureModalForm(){
 
 function main(){
 
-    let wishlistForm = document.getElementById('wishlist-form');
+    /* Wishlist button functionality */
 
     let wishlistButton = document.getElementById('wishlist-button');
 
-    wishlistButton.addEventListener('click', function(event){
+    if (wishlistButton != null){
+        wishlistButton.addEventListener('click', function(event){
         
-        let productId = wishlistButton.getElementsByTagName('i')[0].id.split("-")[1];
-
-        window.location.href='/wishlist/add/' + productId;
+            let productId = wishlistButton.getElementsByTagName('i')[0].id.split("-")[1];
     
+            window.location.href='/wishlist/add/' + productId;
+        
+        });
+    }
+
+    /* Cart functionality */
+
+    let addToCartBtn = document.getElementById('add-to-cart-btn');
+    let cartForm = document.getElementById('cart-form');
+    let quantityInput = document.getElementById('quantity');
+
+    addToCartBtn.addEventListener('click', function(event){
+        
+        event.preventDefault();
+
+        let cartError = document.getElementById('cart-error');
+        cartError.style.display = 'block';
+
+        let quantity = quantityInput.value;
+        if (quantity > 0){
+            cartForm.submit();
+        }else{
+            cartError.getElementsByTagName("span")[0].innerHTML = "La cantidad debe ser mayor a 0";
+        }
     });
+
+    let price = document.getElementById('price').innerHTML;
+    price.replace(" €", "");
+    price = parseFloat(price);
+    document.getElementById('price').innerHTML = price.toFixed(2) + " €";
+
+    quantityInput.addEventListener('change', function(event){
+
+        event.preventDefault();
+
+        let newPrice = (price * quantityInput.value).toFixed(2);
+
+        document.getElementById('price').innerHTML = newPrice + " €";
+    });
+
+    /* Modal functionality */
 
     configureModal();
     configureModalForm();

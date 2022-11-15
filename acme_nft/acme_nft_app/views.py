@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password, is_password_usable
 from django.contrib.auth.models import AnonymousUser, User, UserManager
 from django.contrib.sessions.models import Session
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -348,12 +348,34 @@ def check_errors(block, city, code_postal, door, errors, floor, number, street_n
         errors.append(city_length)
     return errors
 
+# -------------------------- Cart --------------------------
+
+def add_to_cart(request, product_id):
+    
+    quantity = int(request.POST['quantity'])
+    
+    if quantity > 0:
+        user = request.user
+        
+        if not user.is_authenticated:
+            user = None
+        product = Product.objects.get(id=product_id)
+        try:
+            entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
+            entry.quantity = entry.quantity + quantity
+        except:
+            entry = ProductEntry(product=product, entry_type='CART', user=user, quantity=quantity)
+        entry.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseNotFound("Invalid Quantity")
+
 # ------------------------ Wishlist ------------------------
 
 def add_to_wishlist(request, product_id):
 
     try: 
-        user = User.objects.get(pk=1) # This will be the logged user
+        user = request.user
         product = Product.objects.get(pk=product_id)
         entry = ProductEntry.objects.get(product=product, entry_type='WISHLIST', user=user)
         entry.delete()
@@ -362,7 +384,7 @@ def add_to_wishlist(request, product_id):
     except:
     
         product = get_object_or_404(Product, pk=product_id)
-        user = get_object_or_404(User, pk=1)
+        user = request.user
         entry = ProductEntry(quantity=None, entry_type='WISHLIST', product=product, user=user)
         entry.save()
 

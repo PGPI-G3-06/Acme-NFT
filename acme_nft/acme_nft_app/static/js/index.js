@@ -43,12 +43,18 @@ function main(){
 
     for (let item of cart) { 
         item.addEventListener("click", function(){
-            let icon = item.childNodes[0];   
-            // Add to cart function
+
+            let productId = item.getElementsByTagName("form")[0].id.replace("add-cart-", "");
+
+            let icon = item.getElementsByTagName("i")[0];   
+
+            let form = document.getElementById("add-cart-" + productId);
+
             icon.classList.add("fa-spin");
             setTimeout(()=>{
                 icon.classList.remove("fa-spin");
             }, 2000);
+            form.submit()
         });
     }
 

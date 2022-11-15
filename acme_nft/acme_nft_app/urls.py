@@ -11,6 +11,8 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("login", views.login, name="login"),
     path("logout", views.logout, name="logout"),
+    # cart
+    path("cart/add/<int:product_id>", views.add_to_cart, name="add_to_cart"),
     # wishlist
     path("wishlist/add/<int:product_id>", views.add_to_wishlist, name="add_to_wishlist"),
     # comments

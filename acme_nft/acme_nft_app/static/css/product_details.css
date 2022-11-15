@@ -54,12 +54,25 @@
 }
 
 .desc-section h2{
+    margin-left: 30px;
     font-size: 2rem;
     text-align: center;
 }
 
 .desc-section h4{
     text-align: center;
+}
+
+.desc-section #cart-error{
+    border-radius: 15px;
+    border: solid 2px var(--error-message-border-color);
+    background-color: var(--error-message-background-color);
+    padding: 20px;
+    text-align: center;
+}
+
+.desc-section #cart-error span{
+    font-size: 1rem !important;
 }
 
 #wishlist-form{

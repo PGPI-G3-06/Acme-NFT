@@ -28,6 +28,10 @@
     --modal-comment-background-button-color: #875794;
     --modal-comment-text-color: #fff;
     --modal-comment-background-color: rgba(69, 69, 69, 0.7);
+
+    /* Errors */
+    --error-message-background-color: rgba(239, 80, 80, 0.5);
+    --error-message-border-color: rgba(239, 80, 80, 1);
 }
 
 *{
