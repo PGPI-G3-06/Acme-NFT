@@ -27,7 +27,7 @@
                         <h2>{{ product.price }} €</h2>
                     </div>
                     <div class="desc-section" id="buttons-section">
-                        {% if user.username != "anonymous" %}
+                        {% if user.is_authenticated %}
                         <button id="wishlist-button">
                             Añadir a lista de deseos
                             {% if in_wishlist %}

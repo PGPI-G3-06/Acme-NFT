@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'acme_nft_app.apps.AcmeNftConfig',
     'livereload',
-    'mathfilters'
+    'mathfilters',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -95,6 +96,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Caches
+# https://docs.djangoproject.com/en/4.1/topics/cache/
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    }
+}
+
+# Session Engine
+# https://docs.djangoproject.com/en/4.1/topics/http/sessions/#using-database-backed-sessions
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

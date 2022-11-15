@@ -22,7 +22,7 @@
                     <div class="class-content">
                         <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
                         <div class="class-icons-row">
-                            {% if user.username != "anonymous" %}
+                            {% if user.is_authenticated %}
                             <div class="class-lista-deseos">
                                 {% if product.id in wishlist %}
                                 <img src="{% static 'images/heart-lleno.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img"></img>

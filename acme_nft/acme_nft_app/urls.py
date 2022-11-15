@@ -10,6 +10,7 @@ urlpatterns = [
     path("login-page", views.login_page, name="login_page"),
     path("register", views.register, name="register"),
     path("login", views.login, name="login"),
+    path("logout", views.logout, name="logout"),
     # wishlist
     path("wishlist/add/<int:product_id>", views.add_to_wishlist, name="add_to_wishlist"),
     # comments
