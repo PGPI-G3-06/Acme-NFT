@@ -40,6 +40,13 @@ class Address {
     city: String
 }
 
+enum RarityType {
+    COMMON
+    RARE
+    EPIC
+    LEGENDARY
+}
+
 class Product {
     name: String
     description: String
@@ -47,11 +54,9 @@ class Product {
     stock: Integer
     imageUrl: String
     offert_price: Double?
+    rarity: RarityType
 }
 
-class Category {
-    name: String
-}
 
 class Author {
     name: String
@@ -91,14 +96,13 @@ class Complaint {
 
 
 User *-- Address
-Product "*" - "*" Category
-Product "*" -d- "*" Author
-User "1" - "*" ProductEntry
-ProductEntry "*" - "1" Product
-Order "1" -d- "*" ProductEntry
-User "1" -u- "*" Order
-Product "1" -d- "*" Opinion
-Opinion "*" - "1" User
-User "1" -l- "*" Complaint
+Product "*" -d-> "1" Author
+User "1" <- "*" ProductEntry
+ProductEntry "*" -> "1" Product
+Order "1" <-d- "*" ProductEntry
+User "1" <-u- "*" Order
+Product "1" <-d- "*" Opinion
+Opinion "*" -> "1" User
+User "1" <-l- "*" Complaint
 
 @enduml
