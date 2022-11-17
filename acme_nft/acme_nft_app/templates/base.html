@@ -48,7 +48,7 @@
                             {% if user.is_authenticated %}
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img style="border-radius: 50px" width="30px" height="30px" alt="imagen de perfil" src={% static 'images/profile.png' %}/> Usuario
+                                    <img style="border-radius: 50px" width="30px" height="30px" alt="imagen de perfil" src={% static 'images/profile.png' %}/> {{request.user.username}}
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/profile">Perfil</a></li>
