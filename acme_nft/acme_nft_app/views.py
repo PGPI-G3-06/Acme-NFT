@@ -53,7 +53,7 @@ def index(request):
                                                 }
                 )
 
-def login_page(request):
+def signin(request):
     return render(request, "login.html", context={})
 
 def product_detail(request, product_id):
@@ -94,12 +94,12 @@ def login(request):
     else:
         return HttpResponseRedirect(reverse("acme-nft:error"))
     
-def logout(request):
+def signout(request):
 
     auth.logout(request)
     return HttpResponseRedirect(reverse("acme-nft:index"))
 
-def register(request):
+def signup(request):
 
     if request.method == "POST":
 

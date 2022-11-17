@@ -1,0 +1,42 @@
+.class-btn, .class-btn-reversed{
+    justify-content: center;
+    display: inline-block;
+    color: #fff;
+    background: #573b8a;
+    font-size: 1em;
+    font-weight: bold;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    transition: .2s ease-in;
+    cursor: pointer;
+    border: 1px solid #573b8a;
+    white-space: nowrap;
+    text-align: center;
+    margin-right: 5%;
+
+}
+
+.class-btn-reversed {
+    background: transparent;
+    color: #573b8a;
+    margin-left: 5%;
+}
+
+.class-btn:hover{
+    background: #6d44b8;
+    color: #fff;
+    border: 1px solid #573b8a;
+}
+
+.class-btn-reversed:hover{
+    background: white;
+    color: #573b8a;
+    border: 1px solid #573b8a;
+}
+
+@media screen and (max-width: 991px) {
+    .class-search-form{
+        width: 100%;
+    }
+}

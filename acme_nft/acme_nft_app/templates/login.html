@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   {% load static %}
 	<title>Acme NFT</title>
@@ -12,7 +12,7 @@
 		<input type="checkbox" id="chk" aria-hidden="true">
 
 			{% if are_errors %}
-				<div class="signup">
+			<div class="signup">
 				<form action="/register" method="POST">
           			{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
@@ -26,7 +26,7 @@
 			</div>
 
 			{% else %}
-				<div class="signup">
+			<div class="signup">
 				<form action="/register" method="POST">
           			{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
