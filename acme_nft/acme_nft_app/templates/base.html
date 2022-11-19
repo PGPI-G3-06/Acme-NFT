@@ -1,22 +1,82 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <title>Acme NFT</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
-    <link type="text/css" rel="stylesheet"
-         href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet"
-         href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
-    <script src="https://kit.fontawesome.com/53154f2da0.js" crossorigin="anonymous"></script>
+    <link type="text/css" rel="stylesheet"href="{% static 'css/bootstrap-vue.css' %}" />
+    <link href="{% static 'css/bootstrap-5.2.2-min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-docs.css'%}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="{% static 'js/fontawesome.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
     {% block extrahead %}
     {% endblock %}
 </head>
 <body>
+    <header id="header" style="position: sticky; z-index:100; top: 0; width: 100%">
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Acme NFT</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggler" style="justify-content: space-between; width: 100%">
+                    <div class="d-flex w-100 justify-content-center">
+                        <form class="d-flex class-search-form" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Buscar</button>
+                        </form>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <ul class="navbar-nav w-100">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img width="30px" height="30px" alt="imagen de perfil" src={% static 'images/cart.png' %}/>
+                                </a>
+                                <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Producto 1</a></li>
+                                <li><a class="dropdown-item" href="#">Producto 2</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Total/Comprar</a></li>
+                                </ul>
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img style="border-radius: 50px" width="30px" height="30px" alt="imagen de perfil" src={% static 'images/profile.png' %}/> {{request.user.username}}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/profile">Perfil</a></li>
+                                    <li><a class="dropdown-item" href="/addresses">Direcciones</a></li>
+                                    <li><a class="dropdown-item" href="/orders/live">Seguimiento</a></li>
+                                    <li><a class="dropdown-item" href="/orders">Historial</a></li>
+                                    <li><a class="dropdown-item" href="/wishlist">Lista de deseos</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/signout">Cerrar sesión</a></li>
+                                </ul>
+                            </li>
+                            {% else %}
+                            <div class="d-flex justify-content-between">
+                                <li class="nav-item">
+                                    <button type="button" class="btn class-btn" onclick="window.location.href='/signin'">Iniciar sesión</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn class-btn-reversed" onclick="window.location.href='/signup'">Registrarse</button>
+                                </li>
+                            </div>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
     {% block content %}
     {% endblock %}
 </body>
