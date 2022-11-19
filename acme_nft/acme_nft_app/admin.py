@@ -33,7 +33,22 @@ class OpinionInline(admin.StackedInline):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'price', 'rarity')
+    search_fields = ['name', 'author__name']
     inlines = [OpinionInline]
+
+class ProductEntryAdmin(admin.ModelAdmin):
+    list_display = ('user_display','product_display','stock_display','quantity')
+
+    def user_display(self, obj) -> str:
+        return obj.user.username
+
+    def product_display(self, obj) -> str:
+        return str(obj.product.id) + ' - ' + str(obj.product.name)
+
+    def stock_display(self, obj) -> str:
+        return obj.product.stock
+
+    stock_display.short_description = 'Stock'
 
 
 admin.site.unregister(User)
@@ -41,4 +56,4 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Order)
-admin.site.register(ProductEntry)
+admin.site.register(ProductEntry,ProductEntryAdmin)

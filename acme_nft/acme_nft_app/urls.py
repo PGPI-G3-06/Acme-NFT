@@ -13,6 +13,10 @@ urlpatterns = [
     path("logout", views.logout, name="logout"),
     # cart
     path("cart/add/<int:product_id>", views.add_to_cart, name="add_to_cart"),
+    path("cart", views.cart_view, name="cart"),
+    path("cart/update-quantity/<int:product_id>", views.edit_amount_cart, name="update_quantity"),
+    path("cart/delete/<int:product_id>", views.delete_from_cart, name="delete_from_cart"),
+    path("cart/resume", views.resume_cart_view, name="resume_cart"),
     # wishlist
     path("wishlist/add/<int:product_id>", views.add_to_wishlist, name="add_to_wishlist"),
     # comments
@@ -25,5 +29,4 @@ urlpatterns = [
     path("new-address", views.new_address, name="new-address"),
     path("delete-address/<int:address_id>", views.delete_address, name="delete-address"),
     path("update-address/<int:address_id>", views.update_address, name="update-address"),
-
 ]
