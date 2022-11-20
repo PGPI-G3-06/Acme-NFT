@@ -7,55 +7,66 @@
 	<link rel="stylesheet" href="{% static 'css/login.css' %}">
   	
 </head>
-<body>
-	<div class="main">  	
-		<input type="checkbox" id="chk" aria-hidden="true">
-
-			{% if are_errors %}
-			<div class="signup">
-				<form action="/register" method="POST">
-          			{% csrf_token %}
-					<label for="chk" aria-hidden="true">Sign up</label>
-					<input type="text" name="first_name" placeholder="Nombre" required="True" value="{{ first_name }}">
-					<input type="text" name="last_name" placeholder="Apellidos" required="True" value="{{ last_name }}">
-					<input type="text" name="username" placeholder="Usuario" required="True" value="{{ username }}">
-					<input type="email" name="email" placeholder="Email" required="True" value="{{ email }}">
-					<input type="password" name="password" placeholder="Contraseña" required="True">
-					<button>Sign up</button>
-				</form>
+<section>
+	<body>
+		
+			<div class="main">  	
+				<input type="checkbox" id="chk" aria-hidden="true">
+		
+					{% if are_errors %}
+						<div class="signup">
+						<form action="/register" method="POST">
+							{% csrf_token %}
+							<label for="chk" aria-hidden="true">Sign up</label>
+							<input type="text" name="first_name" placeholder="Nombre" required="True" value="{{ first_name }}">
+							<input type="text" name="last_name" placeholder="Apellidos" required="True" value="{{ last_name }}">
+							<input type="text" name="username" placeholder="Usuario" required="True" value="{{ username }}">
+							<input type="email" name="email" placeholder="Email" required="True" value="{{ email }}">
+							<input type="password" name="password" placeholder="Contraseña" required="True">
+							<div style="display: flex; justify-content: center;">
+								<button type="submit" class="class-link">Sign up</button>
+							</div>
+						</form>
+					</div>
+		
+					{% else %}
+						<div class="signup">
+						<form action="/register" method="POST">
+							{% csrf_token %}
+							<label for="chk" aria-hidden="true">Sign up</label>
+							<input type="text" name="first_name" placeholder="Nombre" required="True">
+							<input type="text" name="last_name" placeholder="Apellidos" required="True">
+							<input type="text" name="username" placeholder="Usuario" required="True">
+							<input type="email" name="email" placeholder="Email" required="True">
+							<input type="password" name="password" placeholder="Contraseña" required="True">
+							<div style="display: flex; justify-content: center;">
+								<button type="submit" class="class-link">Sign up</button>
+							</div>
+							
+						</form>
+					</div>
+					{% endif %}
+		
+					<div class="login">
+						<form action="/login" method="POST">
+							{% csrf_token %}
+							<label for="chk" aria-hidden="true">Login</label>
+							<input type="text" name="username" placeholder="Username" required="True">
+							<input type="password" name="password" placeholder="Password" required="True">
+							<div style="display: flex; justify-content: center;">
+								<button type="submit" class="class-link">Login</button>
+							</div>
+						</form>
+					</div>
 			</div>
-
-			{% else %}
-			<div class="signup">
-				<form action="/register" method="POST">
-          			{% csrf_token %}
-					<label for="chk" aria-hidden="true">Sign up</label>
-					<input type="text" name="first_name" placeholder="Nombre" required="True">
-					<input type="text" name="last_name" placeholder="Apellidos" required="True">
-					<input type="text" name="username" placeholder="Usuario" required="True">
-					<input type="email" name="email" placeholder="Email" required="True">
-					<input type="password" name="password" placeholder="Contraseña" required="True">
-					<button>Sign up</button>
-				</form>
+			<div class="errors-div">
+				{% for error in errors %}
+					<label class="error" for="chk" aria-hidden="true">
+						{{ error }}
+					</label>
+				{% endfor %}
 			</div>
-			{% endif %}
-
-			<div class="login">
-				<form action="/login" method="POST">
-          			{% csrf_token %}
-					<label for="chk" aria-hidden="true">Login</label>
-					<input type="text" name="username" placeholder="Username" required="True">
-					<input type="password" name="password" placeholder="Password" required="True">
-					<button>Login</button>
-				</form>
-			</div>
-	</div>
-	<div class="errors-div">
-		{% for error in errors %}
-			<label class="error" for="chk" aria-hidden="true">
-				{{ error }}
-			</label>
-		{% endfor %}
-	</div>
-</body>
+		
+	</body>
+</section>
 </html>

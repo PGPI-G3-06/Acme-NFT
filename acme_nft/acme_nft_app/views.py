@@ -154,24 +154,22 @@ def signup(request):
         
         
 def edit_user(request):
-
-    user = User.objects.get(id=2)
-    print(user.username)
+    user = User.objects.get(username=request.user)
     if request.method == 'GET':
 
 
         return render(request, "profile.html",{
             'username': user.username,
             'email': user.email,
-            'name': user.name,
-            'surname': user.surname,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
     })
 
     else:
 
         user_attrs = request.POST
-        user.name = user_attrs['name']
-        user.surname = user_attrs['surname']
+        user.first_name = user_attrs['first_name']
+        user.last_name = user_attrs['last_name']
         user.username = user_attrs['username']
         user.email = user_attrs['email']
         user.save()

@@ -1,13 +1,14 @@
-body{
-	margin: 0;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	font-family: 'Jost', sans-serif;
-	background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+/* BACKGROUND */
+section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 100px 20px;
+    min-height: 100vh;
+    background:  #c8c8c8;
 }
+
 .main{
 	width: 450px;
 	height: 600px;
@@ -15,7 +16,7 @@ body{
 	overflow: hidden;
 	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
 	border-radius: 10px;
-	box-shadow: 5px 20px 50px #000;
+	box-shadow: 5px 20px 50px rgb(124, 72, 209);
 }
 
 #chk{
@@ -27,7 +28,7 @@ body{
 	height: 100%;
 }
 label{
-	color: #fff;
+	color: #573b8a;
 	font-size: 2.3em;
 	justify-content: center;
 	display: flex;
@@ -39,7 +40,7 @@ label{
 input{
 	width: 60%;
 	height: 20px;
-	background: #e0dede;
+	background: white;
 	justify-content: center;
 	display: flex;
 	margin: 20px auto;
@@ -48,26 +49,26 @@ input{
 	outline: none;
 	border-radius: 5px;
 }
-button{
-	width: 60%;
-	height: 40px;
-	margin: 10px auto;
-	justify-content: center;
-	display: block;
-	color: #fff;
-	background: #573b8a;
-	font-size: 1em;
-	font-weight: bold;
-	margin-top: 20px;
-	outline: none;
-	border: none;
-	border-radius: 5px;
-	transition: .2s ease-in;
-	cursor: pointer;
+.class-link{
+    position: relative;
+    top: 10px;
+    display: inline-block;
+    padding: 12px 30px;
+    background: white;
+    border-radius: 40px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #111;
+    text-decoration: none;
+    text-transform: uppercase;
 }
-button:hover{
-	background: #6d44b8;
+
+.class-link:hover{
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    transition: 0.5s all;
 }
+
 .login{
 	height: 560px;
 	background: #eee;
@@ -91,6 +92,7 @@ button:hover{
 }
 
 img.profile_photo{
+	color: rgb(124, 72, 209);
 	width: 100px;
 	height: 100px;
 	display: flex;

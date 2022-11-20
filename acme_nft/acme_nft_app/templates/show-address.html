@@ -2,34 +2,42 @@
 <html lang="es">
 <head>
   {% load static %}
-	<title>Acme NFT</title>
+  <title>Acme NFT</title>
   <meta charset="utf-8" />
-	<link rel="stylesheet" href="{% static 'css/address.css' %}">
-  
-</head>
-<body >
-	<div class="list_address">
-		<div class="container">
-            <label for="chk" aria-hidden="true">Sus direcciones registradas son: </label>
-            <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
-            {% for address in list_address %}
-			<div class="address">
-				<div class="card w-75">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ address }}</h5>
-                    <a href="/update-address/{{ address.id }}" class="btn btn-primary">Editar dirección</a>
-                    <a href="/delete-address/{{ address.id }}" class="btn btn-primary">Eliminar dirección</a>
-                  </div>
-                </div>
-			</div>
-            <br>
-            <br>
-            {% endfor %}
-        </div>
-        <a class="btn btn-primary" href="/new-address" role="button">Crear un nueva dirección</a>
-        <br><br>
-        </div>
-    </div>
+  <link rel="stylesheet" href="{% static 'css/address.css' %}">
 
-</body>
+</head>
+
+
+  <body>
+    <section>
+    <div class="list_address">
+      <div class="container">
+        <label for="chk" aria-hidden="true">Sus direcciones registradas son: </label>
+        <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
+          {% for address in list_address %}
+          <div class="address">
+            <div class="card w-75">
+              <div class="card-body">
+                <h5 class="card-title">{{ address }}</h5>
+                <div style="display: flex; justify-content: center;">
+                  <a class="class-link" href="/update-address/{{ address.id }}" >Editar dirección</a>
+                  <a class="class-link" href="/delete-address/{{ address.id }}">Eliminar dirección</a>
+                </div>
+              </div>
+                
+            </div>
+          </div>
+          <br>
+          <br>
+          {% endfor %}
+          <div style="display: flex; justify-content: center;">
+            <a class="class-link" href="/new-address" role="button">Crear un nueva dirección</a>
+            <br><br>
+          </div>
+    </div>
+  </section>
+
+  </body>
+
 </html>
