@@ -108,3 +108,10 @@ class ProductEntry(models.Model):
     
     def __str__(self):
         return f'user_id: {self.user.id}, product_id: {self.product.id}, entry_type: {self.entry_type}'
+
+class ProfilePicture(models.Model):
+    image = models.ImageField(upload_to='profile_pictures')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username

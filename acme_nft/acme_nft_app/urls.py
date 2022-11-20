@@ -7,10 +7,10 @@ urlpatterns = [
     # Product detail
     path('product/<int:product_id>', views.product_detail, name="product_detail"),
     # Login page
-    path("login-page", views.login_page, name="login_page"),
-    path("register", views.register, name="register"),
+    path("signin", views.signin, name="signin"),
+    path("signup", views.signup, name="signup"),
     path("login", views.login, name="login"),
-    path("logout", views.logout, name="logout"),
+    path("signout", views.signout, name="signout"),
     # cart
     path("cart/add/<int:product_id>", views.add_to_cart, name="add_to_cart"),
     # wishlist
