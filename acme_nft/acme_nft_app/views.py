@@ -16,8 +16,15 @@ max_products_per_page = 10
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
+    print(request.path)
 
-    products = Product.objects.all()
+    if request.path == "/order-by-collections/":
+        products = Product.objects.order_by('collection')
+    elif request.path == "/order-by-author/":
+        products = Product.objects.order_by('author_id')
+    else:
+        products = Product.objects.all()
+
     entries = ProductEntry.objects.all()
     products_to_list = []
     wishlist = []
@@ -52,6 +59,9 @@ def index(request):
                                                 "current_page": page_number
                                                 }
                 )
+
+
+
 
 def signin(request):
     return render(request, "login.html", context={})
