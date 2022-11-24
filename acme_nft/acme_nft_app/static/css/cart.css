@@ -11,7 +11,6 @@
     border: 1px solid var(--main-color);
     height: auto;
     width: auto;
-    max-width: 35em;
 }
 
 .div-resumen {
@@ -64,4 +63,10 @@
     color: var(--main-color);
     padding: 3px;
 
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

@@ -225,10 +225,10 @@ def new_address(request):
                 "are_errors": are_errors,
             })
         else:
-            user = User.objects.get(id=2)
-            address = Address(user_id=user.id, street_name=street_name, number=number, block=block, floor=floor, door=door, city=city, code_postal=code_postal)
+
+            address = Address(user_id=request.user.id, street_name=street_name, number=number, block=block, floor=floor, door=door, city=city, code_postal=code_postal)
             address.save()
-            return HttpResponseRedirect(reverse("acme-nft:show-address", args=(user.id,)))
+            return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
     else:
         return render(request, "new-address.html")
 
@@ -236,7 +236,7 @@ def delete_address(request, address_id):
 
     address = Address.objects.get(id=address_id)
     address.delete()
-    return HttpResponseRedirect(reverse("acme-nft:show-address", args=(2,)))
+    return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
 
 
 def update_address(request, address_id):
@@ -372,7 +372,7 @@ def add_to_cart(request, product_id):
         return HttpResponseNotFound("Invalid Quantity")
 
 
-def cart_view(request):
+def cart_view(request, error=None):
     user = request.user
     if not user.is_authenticated:
         user = None
@@ -383,9 +383,11 @@ def cart_view(request):
     return render(request, "cart.html", {
         "cart": entries,
         "addresses": addresses,
+        'error': error
     })
 
 def resume_cart_view(request):
+
     user = request.user
     if not user.is_authenticated:
         user = None
@@ -394,11 +396,11 @@ def resume_cart_view(request):
     pay = request.POST.get('pagos')
     address_id = request.POST.get('envios')
 
+    if len(products_ids) == 0:
+        return cart_view(request, error="No has seleccionado ningún producto")
+
     products = ProductEntry.objects.filter(id__in=products_ids, user=user, entry_type='CART')
     address = Address.objects.get(id=address_id)
-
-    print(products)
-    print(address)
 
     return render(request, "resume-cart.html", {
         "products": products,
@@ -408,8 +410,6 @@ def resume_cart_view(request):
 
 
 def edit_amount_cart(request, product_id):
-
-    print('he llegado')
 
     user = request.user
     if not user.is_authenticated:
@@ -432,6 +432,26 @@ def delete_from_cart(request, product_id):
     product = Product.objects.get(id=product_id)
     entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
     entry.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def add_address_in_cart(request):
+
+    user = request.user
+    if not user.is_authenticated:
+        user = None
+
+    street_name = request.POST['street_name']
+    number = request.POST['number']
+    floor = request.POST['floor']
+    block = request.POST['block']
+    door = request.POST['door']
+    city = request.POST['city']
+    code_postal = request.POST['postal_code']
+
+    Address.objects.create(user=user, street_name=street_name, number=number, floor=floor, block=block, door=door, city=city, code_postal=code_postal)
+
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

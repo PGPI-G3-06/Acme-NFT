@@ -37,32 +37,34 @@ function calculateTotal(price, quantity, id) {
     total_doc.innerHTML = total + "€";
 }
 
+async function postData(url = '', data = {}) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json',
+            "X-CSRFToken": getCookie('csrftoken'),
+
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        }, redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: data, // body data type must match "Content-Type" header
+
+    },);
+
+
+    return response.json(); // parses JSON response into native JavaScript objects
+}
+
 async function updateQuantityDB(id, quantity, price) {
     let url = `cart/update-quantity/${id}`;
     const data = '{"quantity":' + quantity + '}';
 
-    async function postData(url = '', data = {}) {
-        // Default options are marked with *
-        const response = await fetch(url, {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-                'Content-Type': 'application/json',
-                "X-CSRFToken": getCookie('csrftoken'),
 
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }, redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            body: data, // body data type must match "Content-Type" header
-
-        },);
-
-        calculateTotal(price, quantity, id);
-
-        return response.json(); // parses JSON response into native JavaScript objects
-    }
+    calculateTotal(price, quantity, id);
 
     postData(url, data)
         .then((data) => {
@@ -113,4 +115,69 @@ function deleteProduct(id, itemId) {
             console.log(data); // JSON data parsed by `data.json()` call
         });
 }
+
+function addAddress() {
+
+    let addressForm = document.getElementById("address-form");
+    addressForm.onsubmit = addAddressSubmit;
+}
+
+function addAddressSubmit(event) {
+    event.preventDefault();
+
+    let form = event.target;
+    let formData = new FormData(form);
+
+    console.log(formData);
+}
+
+// function addAddressSubmit2(event) {
+//
+//     const addressForm = document.getElementById("address-form");
+//
+//     addressForm.addEventListener("submit", (event) => {
+//         event.preventDefault();
+//
+//         let form = event.target;
+//         let formData = new FormData(form);
+//
+//         let error = false;
+//
+//         let streetName = formData.get("street_name");
+//         let number = formData.get("number");
+//         let block = formData.get("block");
+//         let floor = formData.get("floor");
+//         let door = formData.get("door");
+//         let postalCode = formData.get("postal_code");
+//         let city = formData.get("city");
+//
+//         if (streetName === "") {
+//             error = true;
+//             addressForm.street_name.classList.add("is-invalid");
+//         }
+//
+//         if (!error) {
+//             return addressForm.submit();
+//         }
+//
+//
+//     });
+//
+//
+// }
+
+
+function checkSubmit(event) {
+    event.preventDefault();
+
+    let form = event.target;
+    let formData = new FormData(form);
+
+    console.log(formData.get("productos"));
+
+    console.log(formData.get("direccion"));
+    console.log(formData.get("metodo_pago"));
+
+}
+
 

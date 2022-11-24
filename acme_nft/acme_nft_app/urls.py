@@ -17,6 +17,7 @@ urlpatterns = [
     path("cart/update-quantity/<int:product_id>", views.edit_amount_cart, name="update_quantity"),
     path("cart/delete/<int:product_id>", views.delete_from_cart, name="delete_from_cart"),
     path("cart/resume", views.resume_cart_view, name="resume_cart"),
+    path("cart/add-address", views.add_address_in_cart, name="add_address_in_cart"),
     # wishlist
     path("wishlist/add/<int:product_id>", views.add_to_wishlist, name="add_to_wishlist"),
     # comments

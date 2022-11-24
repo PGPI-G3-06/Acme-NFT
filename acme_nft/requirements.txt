@@ -1,6 +1,6 @@
 asgiref==3.5.2
 async-timeout==4.0.2
-backports.zoneinfo==0.2.1
+backports.zoneinfo==0.2.1;python_version<"3.9"
 beautifulsoup4==4.11.1
 Deprecated==1.2.13
 Django==4.1.2
