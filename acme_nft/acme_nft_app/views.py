@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password, is_password_usable
@@ -7,7 +9,7 @@ from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .models import Address, EntryType, Opinion, Product, ProductEntry
+from .models import Address, EntryType, Opinion, Product, ProductEntry, Order
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -402,3 +404,16 @@ def add_comment(request, product_id):
         comment.save()
         
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
+# ------------------------ Orders ------------------------
+
+def orders(request):
+    order = Order(ref_code="123456789", user=request.user, address=Address.objects.get(pk=1), status="PENDING", date = datetime.now())
+    order.save()
+    user = request.user
+    orders = Order.objects.filter(user=user)
+    return render(request, "orders.html", {
+        "orders": orders,
+    })

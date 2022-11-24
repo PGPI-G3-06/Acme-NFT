@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  {% load static %}
+  <title>Acme NFT</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="{% static 'css/address.css' %}">
+
+</head>
+
+
+  <body>
+    <section>
+    <div class="list_address">
+      <div class="container">
+        <label for="chk" aria-hidden="true">Sus direcciones registradas son: </label>
+        <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
+          {% for order in orders %}
+          <div class="address">
+            <div class="card w-75">
+              <div class="card-body">
+                <h2 class="card-title">Código de referencía: {{ order.ref_code }}</h2>
+                <div style="display: flex; justify-content: center;">
+                  <a class="class-link" href="/update-address/{{ address.id }}" >Detalles del pedido</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <br>
+          <br>
+          {% endfor %}
+
+    </div>
+  </section>
+
+  </body>
+
+</html>
