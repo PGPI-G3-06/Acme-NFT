@@ -27,7 +27,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggler" style="justify-content: space-between; width: 100%">
                     <div class="d-flex w-100 justify-content-center">
-                        <form class="d-flex class-search-form" role="search">
+                        <form class="d-flex class-search-form" role="search" action="{% url 'acme-nft:index' %}">
                             <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" name="buscar">
                             <button class="btn btn-outline-success" type="submit">Buscar</button>
                         </form>
