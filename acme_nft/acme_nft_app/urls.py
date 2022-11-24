@@ -4,8 +4,8 @@ from . import views
 app_name = "acme-nft"
 urlpatterns = [
     path('', views.index, name="index"),
-    path("order-by-collections/", views.index, name="order-by-collections"),
-    path("order-by-author/", views.index, name="order-by-author"),
+    # path("order-by-collections/", views.index, name="order-by-collections"),
+    # path("order-by-author/", views.index, name="order-by-author"),
     # Product detail
     path('product/<int:product_id>', views.product_detail, name="product_detail"),
     # Login page

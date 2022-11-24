@@ -16,14 +16,30 @@ max_products_per_page = 10
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-    print(request.path)
+    #print(request.GET['order-by-collections'])
+    products = Product.objects.all()
+    try:
+        if request.GET['order-by'] == 'collections':
+            products = Product.objects.all().order_by('collection')
 
-    if request.path == "/order-by-collections/":
-        products = Product.objects.order_by('collection')
-    elif request.path == "/order-by-author/":
-        products = Product.objects.order_by('author_id')
-    else:
-        products = Product.objects.all()
+    except:
+        pass
+    try:
+        if request.GET['order-by'] == 'author':
+            products = Product.objects.all().order_by('author_id')
+
+    except:
+        pass
+
+    try:
+        if request.GET['buscar'] != '':
+            products = Product.objects.all().filter(name__icontains=request.GET['buscar']) | Product.objects.all().filter(collection__icontains=request.GET['buscar']) | Product.objects.all().filter(author__name__icontains=request.GET['buscar'])
+
+        else:
+            products=[]
+    except:
+        pass
+
 
     entries = ProductEntry.objects.all()
     products_to_list = []
