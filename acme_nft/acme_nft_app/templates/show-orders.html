@@ -13,23 +13,91 @@
     <section>
     <div class="list_address">
       <div class="container">
-        <label for="chk" aria-hidden="true">Sus direcciones registradas son: </label>
         <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
-          {% for order in orders %}
-          <div class="address">
-            <div class="card w-75">
-              <div class="card-body">
-                <h2 class="card-title">Código de referencía: {{ order.ref_code }}</h2>
-                <div style="display: flex; justify-content: center;">
-                  <a class="class-link" href="/update-address/{{ address.id }}" >Detalles del pedido</a>
-                </div>
-              </div>
+            <label for="chk" aria-hidden="true">Sus pedidos en tránsito son: </label>
+              {% for order in orders %}
+                  {% if order.status == 'ON_TRANSIT' %}
+                  <div class="order">
+                    <div class="card w-75">
+                      <div class="card-body-order">
+                          <div>
+                            <h2 class="card-title">Código de referencía: {{ order.ref_code }}</h2>
+                            <h2 class="keep-margin class-menu-direction-default">Estado: {{ order.status }}</h2>
+                          </div>
 
-            </div>
-          </div>
-          <br>
-          <br>
-          {% endfor %}
+                          <div style="display: flex; justify-content: center;">
+                            <a class="class-link" href="/order/{{ order.id }}" >Detalles del pedido</a>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                    {% endif %}
+              {% endfor %}
+            <label for="chk" aria-hidden="true">Sus pedidos enviados son: </label>
+                {% for order in orders %}
+                  {% if order.status == 'SENT' %}
+                  <div class="order">
+                    <div class="card w-75">
+                      <div class="card-body-order">
+                          <div>
+                            <h2 class="card-title">Código de referencía: {{ order.ref_code }}</h2>
+                            <h2 class="keep-margin class-menu-direction-default">Estado: {{ order.status }}</h2>
+                          </div>
+
+                          <div style="display: flex; justify-content: center;">
+                            <a class="class-link" href="/order/{{ order.id }}" >Detalles del pedido</a>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                    {% endif %}
+              {% endfor %}
+            <label for="chk" aria-hidden="true">Sus pedidos entregados son: </label>
+                {% for order in orders %}
+                  {% if order.status == 'DELIVERED' %}
+                  <div class="order">
+                    <div class="card w-75">
+                      <div class="card-body-order">
+                          <div>
+                            <h2 class="card-title">Código de referencía: {{ order.ref_code }}</h2>
+                            <h2 class="keep-margin class-menu-direction-default">Estado: {{ order.status }}</h2>
+                          </div>
+
+                          <div style="display: flex; justify-content: center;">
+                            <a class="class-link" href="/order/{{ order.id }}" >Detalles del pedido</a>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                    {% endif %}
+              {% endfor %}
+            <label for="chk" aria-hidden="true">Sus pedidos recibidos son: </label>
+                {% for order in orders %}
+                  {% if order.status == 'RECEIVED' %}
+                  <div class="order">
+                    <div class="card w-75">
+                      <div class="card-body-order">
+                          <div>
+                            <h2 class="card-title">Código de referencía: {{ order.ref_code }}</h2>
+                            <h2 class="keep-margin class-menu-direction-default">Estado: {{ order.status }}</h2>
+                          </div>
+
+                          <div style="display: flex; justify-content: center;">
+                            <a class="class-link" href="/order/{{ order.id }}" >Detalles del pedido</a>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                    {% endif %}
+              {% endfor %}
 
     </div>
   </section>

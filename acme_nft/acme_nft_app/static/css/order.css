@@ -25,8 +25,8 @@ section{
 
 
 .card-body{
-	width: 750px;
-	height:125px;
+	width: 950px;
+	height:600px;
 	background: red;
 	overflow: hidden;
 	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
@@ -49,20 +49,12 @@ section{
 
 label{
 	color: #fff;
-	font-size: 2.3em;
-	justify-content: center;
+	font-size: 2.5em;
 	display: flex;
-	margin: 60px;
 	font-weight: bold;
-	cursor: pointer;
-	transition: .5s ease-in-out;
 }
 
-.btn-primary{
-	background: #6d44b8;
 
-
-}
 
 .class-link{
     position: relative;
@@ -86,36 +78,9 @@ label{
     transition: 0.5s all;
 
 }
-#chk{
-	display: none;
-}
-.address{
-	position: relative;
-	width:100%;
-	height: 100%;
-}
-label{
-	color: #fff;
-	font-size: 2.3em;
-	justify-content: center;
-	display: flex;
-	margin: 60px;
-	font-weight: bold;
-	cursor: pointer;
-	transition: .5s ease-in-out;
-}
-input{
-	width: 60%;
-	height: 20px;
-	background: #e0dede;
-	justify-content: center;
-	display: flex;
-	margin: 20px auto;
-	padding: 10px;
-	border: none;
-	outline: none;
-	border-radius: 5px;
-}
+
+
+
 button{
 	width: 60%;
 	height: 40px;
@@ -136,72 +101,35 @@ button{
 button:hover{
 	background: #6d44b8;
 }
-.login{
-	height: 560px;
-	background: #eee;
-	border-radius: 60% / 10%;
-	transform: translateY(-180px);
-	transition: .8s ease-in-out;
+
+
+
+.order-title{
+	font-size: 1.5em;
+
 }
-.login label{
-	color: #573b8a;
-	transform: scale(.6);
+.order-date{
+	font-size: 1em;
+
 }
 
-#chk:checked ~ .login{
-	transform: translateY(-600px);
-}
-#chk:checked ~ .login label{
-	transform: scale(1);
-}
-#chk:checked ~ .signup label{
-	transform: scale(.6);
+.order-status{
+	font-size: 1.5em;
+
 }
 
-.alert alert-primary{
-	color: #6d44b8;
-	text-decoration-color: white;
-	justify-content: center;
-}
-
-/* Errors management */
-
-.errors-div{
-	background-color: rgba(255,255,255,0.5);
-	box-shadow: 5px 20px 50px #000;
-	border-radius: 15px;
-	margin-left: 20px;
-}
-
-label.error{
-	color: #fff;
-	font-size: 0.75em;
-	justify-content: center;
-	display: flex;
-	margin: 10px;
-	font-weight: bold;
-	cursor: pointer;
-	transition: .5s ease-in-out;
-}
-
-.keep-margin {
-    margin-right: 1.5rem;
-}
-.class-menu-direction-default {
-    font-size: 20px;
-    font-weight: lighter;
-    text-align: center;
-}
 
 .card-body-order{
-	width: 750px;
-	height: 175px;
+	width: 850px;
+	height: 1000px;
 	background: red;
 	overflow: hidden;
 	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
 	border-radius: 10px;
 	box-shadow: 5px 20px 50px rgb(124, 72, 209);
 }
+
+
 
 
 
