@@ -5,7 +5,7 @@ from django.db import models
 from enum import Enum
 
 # Enum
-class EntryType(Enum):
+class EntryType(models.TextChoices):
     cart = 'CART'
     order = 'ORDER'
     wishlist = 'WISHLIST'
@@ -104,7 +104,7 @@ class ProductEntry(models.Model):
     entry_type = models.CharField(max_length=60, choices=[ (tag, tag.value) for tag in EntryType])
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return f'user_id: {self.user.id}, product_id: {self.product.id}, entry_type: {self.entry_type}'
