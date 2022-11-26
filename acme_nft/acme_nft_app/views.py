@@ -6,6 +6,7 @@ from django.contrib.sessions.models import Session
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+import ast
 
 from .models import Address, EntryType, Opinion, Product, ProductEntry
 
@@ -222,10 +223,10 @@ def new_address(request):
                 "are_errors": are_errors,
             })
         else:
-            user = User.objects.get(id=2)
-            address = Address(user_id=user.id, street_name=street_name, number=number, block=block, floor=floor, door=door, city=city, code_postal=code_postal)
+
+            address = Address(user_id=request.user.id, street_name=street_name, number=number, block=block, floor=floor, door=door, city=city, code_postal=code_postal)
             address.save()
-            return HttpResponseRedirect(reverse("acme-nft:show-address", args=(user.id,)))
+            return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
     else:
         return render(request, "new-address.html")
 
@@ -233,7 +234,7 @@ def delete_address(request, address_id):
 
     address = Address.objects.get(id=address_id)
     address.delete()
-    return HttpResponseRedirect(reverse("acme-nft:show-address", args=(2,)))
+    return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
 
 
 def update_address(request, address_id):
@@ -368,6 +369,90 @@ def add_to_cart(request, product_id):
     else:
         return HttpResponseNotFound("Invalid Quantity")
 
+
+def cart_view(request, error=None):
+    user = request.user
+    if not user.is_authenticated:
+        user = None
+    entries = ProductEntry.objects.filter(user=user, entry_type='CART')
+
+    addresses = Address.objects.filter(user_id=user.id)
+
+    return render(request, "cart.html", {
+        "cart": entries,
+        "addresses": addresses,
+        'error': error
+    })
+
+def resume_cart_view(request):
+
+    user = request.user
+    if not user.is_authenticated:
+        user = None
+
+    products_ids = request.POST.getlist('productos')
+    pay = request.POST.get('pagos')
+    address_id = request.POST.get('envios')
+
+    if len(products_ids) == 0:
+        return cart_view(request, error="No has seleccionado ningún producto")
+
+    products = ProductEntry.objects.filter(id__in=products_ids, user=user, entry_type='CART')
+    address = Address.objects.get(id=address_id)
+
+    return render(request, "resume-cart.html", {
+        "products": products,
+        "address": address,
+        "pay": pay,
+    })
+
+
+def edit_amount_cart(request, product_id):
+
+    user = request.user
+    if not user.is_authenticated:
+        user = None
+    product = Product.objects.get(id=product_id)
+    entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
+
+    quantity = int(bytes_to_dict(request.body)['quantity'])
+    if 0 < quantity <= entry.product.stock:
+        entry.quantity = quantity
+        entry.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseNotFound("Invalid Quantity")
+
+def delete_from_cart(request, product_id):
+    user = request.user
+    if not user.is_authenticated:
+        user = None
+    product = Product.objects.get(id=product_id)
+    entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
+    entry.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def add_address_in_cart(request):
+
+    user = request.user
+    if not user.is_authenticated:
+        user = None
+
+    street_name = request.POST['street_name']
+    number = request.POST['number']
+    floor = request.POST['floor']
+    block = request.POST['block']
+    door = request.POST['door']
+    city = request.POST['city']
+    code_postal = request.POST['postal_code']
+
+    Address.objects.create(user=user, street_name=street_name, number=number, floor=floor, block=block, door=door, city=city, code_postal=code_postal)
+
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 # ------------------------ Wishlist ------------------------
 
 def add_to_wishlist(request, product_id):
@@ -402,3 +487,8 @@ def add_comment(request, product_id):
         comment.save()
         
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# ------------------------ common ------------------------
+def bytes_to_dict(bytes_d):
+    dict_str = bytes_d.decode('utf-8')
+    return ast.literal_eval(dict_str)
