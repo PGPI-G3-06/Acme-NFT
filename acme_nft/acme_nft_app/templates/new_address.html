@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  {% load static %}
-	<title>Acme NFT</title>
-  <meta charset="utf-8" />
-	<link rel="stylesheet" href="{% static 'css/address.css' %}">
-  
-</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/address.css' %}">
+{% endblock %}
+
+{% block content %}
 <section>
 	<body>
 		<div class="main">
 			<input type="checkbox" id="chk" aria-hidden="true">
 				{% if are_errors %}
 				<div class="signup">
-					<form action="/new-address" method="POST">
+					<form action="{% url 'acme-nft:new_address' %}" method="POST">
 						  {% csrf_token %}
 						<label for="chk" aria-hidden="true">Nueva Dirección</label>
 						<input type="text" name="street_name" placeholder="Nombre  de la calle" required="True" value="{{ street_name }}">
@@ -28,7 +27,7 @@
 				</div>
 				{% else %}
 				<div class="signup">
-					<form action="/new-address" method="POST">
+					<form action="{% url 'acme-nft:new_address' %}" method="POST">
 						  {% csrf_token %}
 						<label for="chk" aria-hidden="true">Nueva Dirección</label>
 						<input type="text" name="street_name" placeholder="Nombre  de la calle" required="True">
@@ -52,4 +51,4 @@
 		</div>
 	</body>
 </section>
-</html>
+{% endblock %}
