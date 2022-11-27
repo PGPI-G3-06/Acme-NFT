@@ -33,7 +33,7 @@ urlpatterns = [
     path("update-address/<int:address_id>", views.update_address, name="update-address"),
 
     #Orders
-    path("orders/<int:user_id>", views.orders, name="orders"),
+    path("orders", views.orders, name="orders"),
     path("order/<int:order_id>", views.order, name="order"),
 
 ]
