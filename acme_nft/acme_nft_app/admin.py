@@ -14,6 +14,10 @@ class ComplaintInline(admin.TabularInline):
     model = Complaint
     extra = 1
 
+class OpinionInline(admin.TabularInline):
+    model = Opinion
+    extra = 1
+
 class ProfilePictureInline(admin.TabularInline):
     model = ProfilePicture
     extra = 1
@@ -31,14 +35,14 @@ class ProductInline(admin.StackedInline):
 class AuthorAdmin(admin.ModelAdmin):
     inlines = [ProductInline]
 
-class OpinionInline(admin.StackedInline):
-    model = Opinion
+class CommentInline(admin.StackedInline):
+    model = Comment
     extra = 1
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'price', 'rarity')
     search_fields = ['name', 'author__name']
-    inlines = [OpinionInline]
+    inlines = [CommentInline]
 
 class ProductEntryAdmin(admin.ModelAdmin):
     list_display = ('user_display','product_display','stock_display','quantity')

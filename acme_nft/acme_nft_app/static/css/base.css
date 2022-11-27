@@ -40,3 +40,16 @@
         width: 100%;
     }
 }
+
+footer{
+    background: rgb(173, 138, 229);
+    color: #fff;
+    padding: 2rem 0;
+    text-align: center;
+
+}
+
+.footer-component{
+    color: white;
+
+}

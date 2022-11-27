@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password, is_password_usable
@@ -8,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
 
-from .models import Address, EntryType, Opinion, Product, ProductEntry
+from .models import Address, EntryType, Opinion, Product, ProductEntry, Complaint, Comment
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -68,7 +70,7 @@ def product_detail(request, product_id):
             in_wishlist = True
             break
     
-    comments = Opinion.objects.filter(product=product)
+    comments = Comment.objects.filter(product=product)
 
     return render(request, "product_details.html", context={"user": request.user, "product": product, "comments": comments, "in_wishlist": in_wishlist})
 
@@ -483,7 +485,7 @@ def add_comment(request, product_id):
         
         comment_text = request.POST['comment']
         
-        comment = Opinion(text=comment_text, product=product, user=user)
+        comment = Comment(text=comment_text, product=product, user=user)
         comment.save()
         
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -492,3 +494,19 @@ def add_comment(request, product_id):
 def bytes_to_dict(bytes_d):
     dict_str = bytes_d.decode('utf-8')
     return ast.literal_eval(dict_str)
+
+# ------------------------ Customer Service ------------------------
+def customer_service(request):
+    return render(request, "customer-service.html")
+
+
+def complaint(request):
+    if request.method == "POST":
+        user = User.objects.get(pk=request.user.id)
+        complaint_title = request.POST['title']
+        complaint_text = request.POST['complaint']
+
+        complaint = Complaint(title=complaint_title, description=complaint_text, user=user, date = datetime.now())
+        complaint.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
