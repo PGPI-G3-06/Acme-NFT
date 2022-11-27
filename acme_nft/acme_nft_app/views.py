@@ -496,7 +496,7 @@ def add_comment(request, product_id):
 # ------------------------ Orders ------------------------
 
 def orders(request, user_id):
-    orders = Order.objects.filter(user_id = user_id).order_by('-date')
+    orders = Order.objects.filter(productentry__user_id = request.user.id).order_by('-date')
     return render(request, "show-orders.html", {
         "orders": orders,
     })
