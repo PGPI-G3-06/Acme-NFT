@@ -10,11 +10,11 @@ class EntryType(models.TextChoices):
     order = 'ORDER'
     wishlist = 'WISHLIST'
 
-class PaymentMethod(Enum):
+class PaymentMethod(models.TextChoices):
     cash_on_delivery = 'CASH_ON_DELIVERY'
     card = 'CARD'
 
-class Status(Enum):
+class Status(models.TextChoices):
     received = 'RECEIVED'
     sent = 'SENT'
     on_transit = 'ON_TRANSIT'
@@ -94,7 +94,6 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     address = models.CharField(max_length=256)
     status = models.CharField(max_length=60, choices=[ (tag, tag.value) for tag in Status])
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.ref_code

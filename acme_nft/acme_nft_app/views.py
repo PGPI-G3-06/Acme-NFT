@@ -1,14 +1,30 @@
+import string
+import random
+
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password, is_password_usable
 from django.contrib.auth.models import AnonymousUser, User, UserManager
 from django.contrib.sessions.models import Session
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseRedirect, \
+    HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
+import braintree
 
-from .models import Address, EntryType, Opinion, Product, ProductEntry
+from acme_nft import settings as django_settings
+
+gateway = braintree.BraintreeGateway(
+        braintree.Configuration.configure(
+            environment=braintree.Environment.Sandbox,
+            merchant_id=django_settings.BRAINTREE_MERCHANT_ID,
+            public_key=django_settings.BRAINTREE_PUBLIC_KEY,
+            private_key=django_settings.BRAINTREE_PRIVATE_KEY
+        )
+    )
+
+from .models import Address, EntryType, Opinion, Product, ProductEntry, Order, Status, PaymentMethod
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -381,7 +397,7 @@ def cart_view(request, error=None):
     return render(request, "cart.html", {
         "cart": entries,
         "addresses": addresses,
-        'error': error
+        'error': error,
     })
 
 def resume_cart_view(request):
@@ -400,11 +416,62 @@ def resume_cart_view(request):
     products = ProductEntry.objects.filter(id__in=products_ids, user=user, entry_type='CART')
     address = Address.objects.get(id=address_id)
 
+    try:
+        braintree_client_token = braintree.ClientToken.generate(
+            {"customer_id": user.id})
+    except:
+        braintree_client_token = braintree.ClientToken.generate({})
+
     return render(request, "resume-cart.html", {
         "products": products,
         "address": address,
         "pay": pay,
+        "braintree_client_token": braintree_client_token
     })
+
+
+def payment(request):
+    nonce_from_the_client = request.POST['paymentMethodNonce']
+    products_request = list(map(lambda x : int(x), request.POST.get('products').split(',')))
+
+    products_entry = ProductEntry.objects.filter(id__in=products_request, entry_type='CART')
+
+    products = Product.objects.filter(productentry__in=products_entry)
+
+    for p in products:
+        p.stock = p.stock - products_entry.get(product=p).quantity
+        p.save()
+
+    total = 0
+
+    for product in products_entry:
+        total += product.product.price * product.quantity
+
+    address = request.POST.get('address')
+
+    ref_code = ''.join(list(map(lambda x : str(x), products_request)))+''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+
+    order = Order(ref_code=ref_code, payment_method=PaymentMethod.card.value, address=address, status=Status.sent.value)
+
+    order.save()
+
+    products_entry.update(order=order,entry_type='ORDER')
+
+    customer_kwargs = {
+        "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
+        "email": request.user.email,
+    }
+    customer_create = braintree.Customer.create(customer_kwargs)
+    customer_id = customer_create.customer.id
+    result = braintree.Transaction.sale({
+        "amount": f"{total:.2f}",
+        "payment_method_nonce": nonce_from_the_client,
+        "options": {
+            "submit_for_settlement": True
+        }
+    })
+    return HttpResponse('Ok')
 
 
 def edit_amount_cart(request, product_id):
