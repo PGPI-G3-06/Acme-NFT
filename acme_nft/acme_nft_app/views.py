@@ -14,6 +14,7 @@ import ast
 import braintree
 
 from acme_nft import settings as django_settings
+from django.core.mail import send_mail
 
 gateway = braintree.BraintreeGateway(
         braintree.Configuration.configure(
@@ -471,6 +472,11 @@ def payment(request):
             "submit_for_settlement": True
         }
     })
+
+    user = request.user
+
+    send_mail('Acma NFT', f'Gracias por su compra, su pedido es {ref_code}', 'acmenftinc@gmail.com', [user.email], fail_silently=False)
+
     return HttpResponse('Ok')
 
 
