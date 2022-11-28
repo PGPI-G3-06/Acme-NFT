@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mathfilters %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/order.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section>
+
+    <div class="container">
+
+        <div class="row row-cols-3">
+            <div class="col"></div>
+            <div class="col"><label >Detalles del pedido</label></div>
+            <div class="col"></div>
+
+        </div>
+        <br>
+        <br>
+        <div class="row row-cols-3">
+            <div class="col"><h4 class="order-title">Pedido #{{ order.ref_code }}</h4></div>
+            <div class="col"></div>
+            <div class="col"><h4 class="order-status">Estado: {{ order.status }}</h4></div>
+            <div class="col"><h6>{{ order.date }}</h6></div>
+
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col">
+                <h4>Productos</h4>
+            </div>
+        </div>
+        <br>
+        <div class="row row-cols-3">
+           <div class="col"><h6>Nombre del producto</h6></div>
+           <div class="col"><h6>Cantidad</h6></div>
+           <div class="col"><h6>Precio</h6></div>
+       </div>
+        {% for entry in products %}
+           <div class="row row-cols-3">
+                <div class="col">{{ entry.product.name}}</div>
+                <div class="col">{{ entry.quantity}}</div>
+                <div class="col">{{ entry.product.price}}</div>
+           </div>
+
+        {% endfor %}
+        <div class="row row-cols-3">
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col">TOTAL: {{ total }}</div>
+       </div>
+        <br>
+        <br>
+        <div class="row row-cols-3">
+            <div class="col">
+                <h4>Dirección de envío</h4>
+                <h5>{{ order.address }}</h5>
+            </div>
+            <div class="col"></div>
+            <div class="col">
+                <h4>Método de pago</h4>
+                <h5>{{ order.payment_method }}</h5>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+{% endblock %}
+
+

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password, is_password_usable
@@ -8,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
 
-from .models import Address, EntryType, Opinion, Product, ProductEntry
+from .models import Address, EntryType, Opinion, Product, ProductEntry, Order, Status, PaymentMethod
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -493,6 +495,33 @@ def add_comment(request, product_id):
         comment.save()
         
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
+
+# ------------------------ Orders ------------------------
+
+def orders(request, user_id):
+    orders = Order.objects.filter(productentry__user_id = request.user.id).order_by('-date')
+    return render(request, "show-orders.html", {
+        "orders": orders,
+    })
+
+def order(request, order_id):
+    order = Order.objects.get(pk=order_id)
+    products = ProductEntry.objects.filter(order_id=order_id)
+    total = final_price(products)
+    return render(request, "order-details.html", {
+        "order": order,
+        "products": products,
+        "total": total,
+    })
+
+def final_price(products):
+    final_price = 0
+    for product in products:
+        final_price += product.product.price * product.quantity
+    return final_price
 
 # ------------------------ common ------------------------
 def bytes_to_dict(bytes_d):
