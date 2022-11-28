@@ -8,10 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link type="text/css" rel="stylesheet"href="{% static 'css/bootstrap-vue.css' %}" />
     <link href="{% static 'css/bootstrap-5.2.2-min.css' %}" rel="stylesheet">
     <link href="{% static 'css/bootstrap-docs.css'%}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <script src="{% static 'js/fontawesome.js' %}" crossorigin="anonymous"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     {% block extrahead %}
@@ -21,21 +21,21 @@
     <header id="header" style="position: sticky; z-index:100; top: 0; width: 100%">
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">Acme NFT</a>
+                <a class="navbar-brand" href="{% url 'acme-nft:index' %}">Acme NFT</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggler" style="justify-content: space-between; width: 100%">
                     <div class="d-flex w-100 justify-content-center">
-                        <form class="d-flex class-search-form" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
+                        <form class="d-flex class-search-form" role="search" action="{% url 'acme-nft:index' %}">
+                            <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" name="buscar">
                             <button class="btn btn-outline-success" type="submit">Buscar</button>
                         </form>
                     </div>
                     <div class="d-flex justify-content-end">
                         <ul class="navbar-nav w-100">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img width="30px" height="30px" alt="imagen de perfil" src={% static 'images/cart.png' %}/>
                                 </a>
                                 <ul class="dropdown-menu">
@@ -47,17 +47,19 @@
                             </li>
                             {% if user.is_authenticated %}
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img style="border-radius: 50px" width="30px" height="30px" alt="imagen de perfil" src={% static 'images/profile.png' %}/> {{request.user.username}}
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/profile">Perfil</a></li>
-                                    <li><a class="dropdown-item" href="/addresses">Direcciones</a></li>
-                                    <li><a class="dropdown-item" href="/orders/live">Seguimiento</a></li>
-                                    <li><a class="dropdown-item" href="/orders">Historial</a></li>
-                                    <li><a class="dropdown-item" href="/wishlist">Lista de deseos</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'acme-nft:profile' %}">Perfil</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'acme-nft:show_address' user.id %}">Direcciones</a></li>
+                                    {% comment %}
+                                    <li><a class="dropdown-item" href="{% url 'acme-nft:orders_live' %}">Seguimiento</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'acme-nft:orders' %}">Historial</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'acme-nft:wishtlist' %}">Lista de deseos</a></li>
+                                    {% endcomment %}
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/signout">Cerrar sesión</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'acme-nft:signout' %}">Cerrar sesión</a></li>
                                 </ul>
                             </li>
                             {% else %}

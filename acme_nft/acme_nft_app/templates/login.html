@@ -1,72 +1,67 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  {% load static %}
-	<title>Acme NFT</title>
-  <meta charset="utf-8" />
-	<link rel="stylesheet" href="{% static 'css/login.css' %}">
-  	
-</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
 <section>
-	<body>
-		
-			<div class="main">  	
-				<input type="checkbox" id="chk" aria-hidden="true">
-		
-					{% if are_errors %}
-						<div class="signup">
-						<form action="/register" method="POST">
-							{% csrf_token %}
-							<label for="chk" aria-hidden="true">Sign up</label>
-							<input type="text" name="first_name" placeholder="Nombre" required="True" value="{{ first_name }}">
-							<input type="text" name="last_name" placeholder="Apellidos" required="True" value="{{ last_name }}">
-							<input type="text" name="username" placeholder="Usuario" required="True" value="{{ username }}">
-							<input type="email" name="email" placeholder="Email" required="True" value="{{ email }}">
-							<input type="password" name="password" placeholder="Contraseña" required="True">
-							<div style="display: flex; justify-content: center;">
-								<button type="submit" class="class-link">Sign up</button>
-							</div>
-						</form>
+	<div class="main">  	
+		<input type="checkbox" id="chk" aria-hidden="true">
+
+			{% if are_errors %}
+				<div class="signup">
+				<form action="{% url 'acme-nft:signup' %}" method="POST">
+					{% csrf_token %}
+					<label for="chk" aria-hidden="true">Sign up</label>
+					<input type="text" name="first_name" placeholder="Nombre" required="True" value="{{ first_name }}">
+					<input type="text" name="last_name" placeholder="Apellidos" required="True" value="{{ last_name }}">
+					<input type="text" name="username" placeholder="Usuario" required="True" value="{{ username }}">
+					<input type="email" name="email" placeholder="Email" required="True" value="{{ email }}">
+					<input type="password" name="password" placeholder="Contraseña" required="True">
+					<div style="display: flex; justify-content: center;">
+						<button type="submit" class="class-link">Sign up</button>
 					</div>
-		
-					{% else %}
-						<div class="signup">
-						<form action="/register" method="POST">
-							{% csrf_token %}
-							<label for="chk" aria-hidden="true">Sign up</label>
-							<input type="text" name="first_name" placeholder="Nombre" required="True">
-							<input type="text" name="last_name" placeholder="Apellidos" required="True">
-							<input type="text" name="username" placeholder="Usuario" required="True">
-							<input type="email" name="email" placeholder="Email" required="True">
-							<input type="password" name="password" placeholder="Contraseña" required="True">
-							<div style="display: flex; justify-content: center;">
-								<button type="submit" class="class-link">Sign up</button>
-							</div>
-							
-						</form>
-					</div>
-					{% endif %}
-		
-					<div class="login">
-						<form action="/login" method="POST">
-							{% csrf_token %}
-							<label for="chk" aria-hidden="true">Login</label>
-							<input type="text" name="username" placeholder="Username" required="True">
-							<input type="password" name="password" placeholder="Password" required="True">
-							<div style="display: flex; justify-content: center;">
-								<button type="submit" class="class-link">Login</button>
-							</div>
-						</form>
-					</div>
+				</form>
 			</div>
-			<div class="errors-div">
-				{% for error in errors %}
-					<label class="error" for="chk" aria-hidden="true">
-						{{ error }}
-					</label>
-				{% endfor %}
+
+			{% else %}
+				<div class="signup">
+				<form action="{% url 'acme-nft:signup' %}" method="POST">
+					{% csrf_token %}
+					<label for="chk" aria-hidden="true">Sign up</label>
+					<input type="text" name="first_name" placeholder="Nombre" required="True">
+					<input type="text" name="last_name" placeholder="Apellidos" required="True">
+					<input type="text" name="username" placeholder="Usuario" required="True">
+					<input type="email" name="email" placeholder="Email" required="True">
+					<input type="password" name="password" placeholder="Contraseña" required="True">
+					<div style="display: flex; justify-content: center;">
+						<button type="submit" class="class-link">Sign up</button>
+					</div>
+					
+				</form>
 			</div>
-		
-	</body>
+			{% endif %}
+
+			<div class="login">
+				<form action="{% url 'acme-nft:login' %}" method="POST">
+					{% csrf_token %}
+					<label for="chk" aria-hidden="true">Login</label>
+					<input type="text" name="username" placeholder="Username" required="True">
+					<input type="password" name="password" placeholder="Password" required="True">
+					<div style="display: flex; justify-content: center;">
+						<button type="submit" class="class-link">Login</button>
+					</div>
+				</form>
+			</div>
+	</div>
+	<div class="errors-div">
+		{% for error in errors %}
+			<label class="error" for="chk" aria-hidden="true">
+				{{ error }}
+			</label>
+		{% endfor %}
+	</div>	
 </section>
-</html>
+{% endblock %}

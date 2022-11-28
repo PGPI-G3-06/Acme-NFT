@@ -1,8 +1,9 @@
 import os.path
 import string
 import random
-
 import convertapi
+
+from datetime import datetime
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import  User
@@ -35,8 +36,31 @@ max_products_per_page = 10
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-
+    #print(request.GET['order-by-collections'])
     products = Product.objects.all()
+    try:
+        if request.GET['order-by'] == 'collections':
+            products = Product.objects.all().order_by('collection')
+
+    except:
+        pass
+    try:
+        if request.GET['order-by'] == 'author':
+            products = Product.objects.all().order_by('author_id')
+
+    except:
+        pass
+
+    try:
+        if request.GET['buscar'] != '':
+            products = Product.objects.all().filter(name__icontains=request.GET['buscar']) | Product.objects.all().filter(collection__icontains=request.GET['buscar']) | Product.objects.all().filter(author__name__icontains=request.GET['buscar'])
+
+        else:
+            products=[]
+    except:
+        pass
+
+
     entries = ProductEntry.objects.all()
     products_to_list = []
     wishlist = []
@@ -72,8 +96,14 @@ def index(request):
                                                 }
                 )
 
+
+
+
 def signin(request):
-    return render(request, "login.html", context={})
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("acme-nft:index"))
+    else:
+        return render(request, "login.html", context={})
 
 def product_detail(request, product_id):
     
@@ -169,7 +199,10 @@ def signup(request):
             return HttpResponseRedirect(reverse("acme-nft:index"))
             
     else:
-        return render(request, "login.html")
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("acme-nft:index"))
+        else:
+            return render(request, "login.html")
         
         
 def edit_user(request):
@@ -203,7 +236,7 @@ def show_adrress(request, user_id):
     user = User.objects.get(id=user_id)
     list_address = user.address_set.all()
     print(list_address)
-    return render(request, "show-address.html", context={"list_address": list_address})
+    return render(request, "show_address.html", context={"list_address": list_address})
 
 def new_address(request):
 
@@ -229,7 +262,7 @@ def new_address(request):
                                                          street_name)
         if len(errors) > 0:
             are_errors = True
-            return render(request, "new-address.html", {
+            return render(request, "new_address.html", {
                 "errors": errors,
                 "street_name": street_name,
                 "number": number,
@@ -246,7 +279,7 @@ def new_address(request):
             address.save()
             return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
     else:
-        return render(request, "new-address.html")
+        return render(request, "new_address.html")
 
 def delete_address(request, address_id):
 
@@ -281,7 +314,7 @@ def update_address(request, address_id):
                                                          street_name)
         if len(errors) > 0:
             are_errors = True
-            return render(request, "new-address.html", {
+            return render(request, "new_address.html", {
                 "errors": errors,
                 "street_name": street_name,
                 "number": number,
@@ -301,7 +334,7 @@ def update_address(request, address_id):
             address.city = city
             address.code_postal = code_postal
             address.save()
-            return HttpResponseRedirect(reverse("acme-nft:show-address", args=(2,)))
+            return HttpResponseRedirect(reverse("acme-nft:show_address", args=(2,)))
     else:
         address = Address.objects.get(id=address_id)
         street_name = address.street_name
@@ -319,7 +352,7 @@ def update_address(request, address_id):
         code_postal = address.code_postal
         id = address.id
 
-        return render(request, "update-address.html", {
+        return render(request, "update_address.html", {
                       "street_name": street_name,
                       "number": number,
                       "floor": floor,
@@ -566,6 +599,33 @@ def add_comment(request, product_id):
         comment.save()
         
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
+
+# ------------------------ Orders ------------------------
+
+def orders(request, user_id):
+    orders = Order.objects.filter(productentry__user_id = request.user.id).order_by('-date')
+    return render(request, "show-orders.html", {
+        "orders": orders,
+    })
+
+def order(request, order_id):
+    order = Order.objects.get(pk=order_id)
+    products = ProductEntry.objects.filter(order_id=order_id)
+    total = final_price(products)
+    return render(request, "order-details.html", {
+        "order": order,
+        "products": products,
+        "total": total,
+    })
+
+def final_price(products):
+    final_price = 0
+    for product in products:
+        final_price += product.product.price * product.quantity
+    return final_price
 
 # ------------------------ common ------------------------
 def bytes_to_dict(bytes_d):
