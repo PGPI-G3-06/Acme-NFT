@@ -1,20 +1,21 @@
+import os.path
 import string
 import random
 
+import convertapi
 from django.contrib import auth
 from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import check_password, make_password, is_password_usable
-from django.contrib.auth.models import AnonymousUser, User, UserManager
-from django.contrib.sessions.models import Session
+from django.contrib.auth.models import  User
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
     HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
 import braintree
+import pandas as pd
 
 from acme_nft import settings as django_settings
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 
 gateway = braintree.BraintreeGateway(
         braintree.Configuration.configure(
@@ -475,7 +476,12 @@ def payment(request):
 
     user = request.user
 
-    send_mail('Acma NFT', f'Gracias por su compra, su pedido es {ref_code}', 'acmenftinc@gmail.com', [user.email], fail_silently=False)
+    pdf = get_invoice(order.id)
+
+    email = EmailMessage('Acma NFT', f'Gracias por su compra, su pedido es {ref_code}', 'acmenftinc@gmail.com', [user.email])
+    email.attach_file(pdf)
+    email.send()
+
 
     return HttpResponse('Ok')
 
@@ -565,3 +571,36 @@ def add_comment(request, product_id):
 def bytes_to_dict(bytes_d):
     dict_str = bytes_d.decode('utf-8')
     return ast.literal_eval(dict_str)
+
+
+def get_invoice(order_id):
+    order = Order.objects.get(id=order_id)
+    products = ProductEntry.objects.filter(order=order, entry_type='ORDER')
+
+    if not os.path.exists('invoices/'):
+        os.makedirs('invoices/')
+
+    path = f'invoices/{order.ref_code}.csv'
+
+    with open(path, 'w') as f:
+        f.write(f'Order ref: {order.ref_code}\n\n')
+        f.write(f'Producto;Cantidad;Precio/Ud;Total\n')
+        total = 0
+        for p in products:
+            f.write(f'{p.product.name};{p.quantity};{p.product.price};{p.product.price*p.quantity}\n')
+            total += p.product.price*p.quantity
+        f.write(f'\n')
+        f.write(f'Total: {total}€\n')
+        f.write(f'\n\n')
+        f.write(f'Pago: {order.payment_method}\n')
+        f.write(f'Envio: {order.address}\n')
+        f.close()
+
+    convertapi.api_secret = 'gPfHZCFyCuqXLNn6'
+    convertapi.convert('pdf', {
+        'File': path
+    }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
+
+    return f'invoices/{order.ref_code}.pdf'
+
+

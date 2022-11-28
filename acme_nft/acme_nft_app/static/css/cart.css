@@ -49,7 +49,7 @@
     display: block;
 }
 
-.cart-resumen{
+.cart-resumen {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -58,7 +58,7 @@
     border-bottom: 1px solid var(--main-color);
 }
 
-.card-title{
+.card-title {
     font-weight: bold;
     color: var(--main-color);
     padding: 3px;
@@ -67,6 +67,10 @@
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
