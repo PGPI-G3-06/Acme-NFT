@@ -1,0 +1,240 @@
+/* BACKGROUND */
+section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 100px 20px;
+    min-height: 100vh;
+    background:  #c8c8c8;
+}
+
+.main{
+	width: 550px;
+	height:700px;
+	background: red;
+	overflow: hidden;
+	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
+	border-radius: 10px;
+	box-shadow: 5px 20px 50px rgb(124, 72, 209);
+}
+.card{
+	position: center;
+}
+
+
+
+.card-body{
+	width: 950px;
+	height:600px;
+	background: red;
+	overflow: hidden;
+	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
+	border-radius: 10px;
+	box-shadow: 5px 20px 50px rgb(124, 72, 209);
+}
+
+.card-title{
+	color: black;
+	font-size: 1.25em;
+	justify-content: center;
+	display: flex;
+	margin: 10px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: .5s ease-in-out;
+}
+
+
+
+label{
+	color: #fff;
+	font-size: 2.5em;
+	display: flex;
+	font-weight: bold;
+}
+
+
+
+.class-link{
+    position: relative;
+    top: 10px;
+    display: inline-block;
+    padding: 12px 30px;
+    background: white;
+    border-radius: 40px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #111;
+    text-decoration: none;
+    text-transform: uppercase;
+	margin: 10px;
+	padding: 10px;
+}
+
+.class-link:hover{
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    transition: 0.5s all;
+
+}
+
+
+
+button{
+	width: 60%;
+	height: 40px;
+	margin: 10px auto;
+	justify-content: center;
+	display: block;
+	color: #fff;
+	background: #573b8a;
+	font-size: 1em;
+	font-weight: bold;
+	margin-top: 20px;
+	outline: none;
+	border: none;
+	border-radius: 5px;
+	transition: .2s ease-in;
+	cursor: pointer;
+}
+button:hover{
+	background: #6d44b8;
+}
+
+
+
+
+
+
+.card-body-order{
+	width: 850px;
+	height: 1000px;
+	background: red;
+	overflow: hidden;
+	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
+	border-radius: 10px;
+	box-shadow: 5px 20px 50px rgb(124, 72, 209);
+}
+
+.class-card{
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin: 20px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: var(--card-background-color);
+    box-shadow: 0 10px 25px var(--main-color);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+}
+
+.icon{
+	width: 50px;
+	height: 50px;
+}
+
+/* MODAL */
+
+
+
+#post-complaint-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#post-opinion-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+#complaint-input{
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+}
+
+.publish-complaint-button{
+    padding: 10px 30px;
+    margin-top: 20px;
+    border-radius: 15px;
+    background: var(--main-button-background-color);
+}
+
+.publish-complaint-button:hover{
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
+}
+
+#opinion-input{
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+}
+
+.publish-opinion-button{
+    padding: 10px 30px;
+    margin-top: 20px;
+    border-radius: 15px;
+    background: var(--main-button-background-color);
+}
+
+.publish-opinion-button:hover{
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
+}
+
+
+
+@media screen and (min-width: 1100px) {
+
+
+
+    .new-complaint-button{
+        width: 20%;
+    }
+    .new-opinion-button{
+        width: 20%;
+    }
+
+
+
+    #buttons-section{
+        padding: 20px 10%;
+    }
+
+
+}
+
+@media screen and (max-width: 1100px) {
+
+
+    .new-complaint-button{
+        width: 40%;
+    }
+    .opinion{
+        width: 40%;
+    }
+
+
+}
+
+@media screen and (max-width: 450px) {
+    .new-complaint-button{
+        width: 100%;
+    }
+
+    .new-opinion-button{
+        width: 100%;
+    }
+}
+
+.modal-content{
+    background: var(--modal-comment-background-button-color);
+}
