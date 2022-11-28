@@ -57,7 +57,10 @@ def index(request):
                 )
 
 def signin(request):
-    return render(request, "login.html", context={})
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("acme-nft:index"))
+    else:
+        return render(request, "login.html", context={})
 
 def product_detail(request, product_id):
     
@@ -153,7 +156,10 @@ def signup(request):
             return HttpResponseRedirect(reverse("acme-nft:index"))
             
     else:
-        return render(request, "login.html")
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("acme-nft:index"))
+        else:
+            return render(request, "login.html")
         
         
 def edit_user(request):
@@ -187,7 +193,7 @@ def show_adrress(request, user_id):
     user = User.objects.get(id=user_id)
     list_address = user.address_set.all()
     print(list_address)
-    return render(request, "show-address.html", context={"list_address": list_address})
+    return render(request, "show_address.html", context={"list_address": list_address})
 
 def new_address(request):
 
@@ -213,7 +219,7 @@ def new_address(request):
                                                          street_name)
         if len(errors) > 0:
             are_errors = True
-            return render(request, "new-address.html", {
+            return render(request, "new_address.html", {
                 "errors": errors,
                 "street_name": street_name,
                 "number": number,
@@ -230,7 +236,7 @@ def new_address(request):
             address.save()
             return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
     else:
-        return render(request, "new-address.html")
+        return render(request, "new_address.html")
 
 def delete_address(request, address_id):
 
@@ -265,7 +271,7 @@ def update_address(request, address_id):
                                                          street_name)
         if len(errors) > 0:
             are_errors = True
-            return render(request, "new-address.html", {
+            return render(request, "new_address.html", {
                 "errors": errors,
                 "street_name": street_name,
                 "number": number,
@@ -285,7 +291,7 @@ def update_address(request, address_id):
             address.city = city
             address.code_postal = code_postal
             address.save()
-            return HttpResponseRedirect(reverse("acme-nft:show-address", args=(2,)))
+            return HttpResponseRedirect(reverse("acme-nft:show_address", args=(2,)))
     else:
         address = Address.objects.get(id=address_id)
         street_name = address.street_name
@@ -303,7 +309,7 @@ def update_address(request, address_id):
         code_postal = address.code_postal
         id = address.id
 
-        return render(request, "update-address.html", {
+        return render(request, "update_address.html", {
                       "street_name": street_name,
                       "number": number,
                       "floor": floor,
