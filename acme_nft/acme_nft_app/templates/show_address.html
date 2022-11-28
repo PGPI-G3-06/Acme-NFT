@@ -17,8 +17,8 @@
               <div class="card-body">
                 <h5 class="card-title">{{ address }}</h5>
                 <div style="display: flex; justify-content: center;">
-                  <a class="class-link" href="{% url 'acme-nft:update_address' %}">Editar dirección</a>
-                  <a class="class-link" href="{% url 'acme-nft:delete_address' %}">Eliminar dirección</a>
+                  <a class="class-link" href="{% url 'acme-nft:update_address' address.id %}">Editar dirección</a>
+                  <a class="class-link" href="{% url 'acme-nft:delete_address' address.id %}">Eliminar dirección</a>
                 </div>
               </div>
                 
@@ -28,7 +28,7 @@
           <br>
           {% endfor %}
           <div style="display: flex; justify-content: center;">
-            <a class="class-link" href="/address/new" role="button">Crear un nueva dirección</a>
+            <a class="class-link" href="{% url 'acme-nft:new_address' %}" role="button">Crear un nueva dirección</a>
             <br><br>
           </div>
     </div>

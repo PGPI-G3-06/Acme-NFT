@@ -6,7 +6,7 @@ import convertapi
 from datetime import datetime
 from django.contrib import auth
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import  User
+from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
     HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -19,25 +19,25 @@ from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
 
 gateway = braintree.BraintreeGateway(
-        braintree.Configuration.configure(
-            environment=braintree.Environment.Sandbox,
-            merchant_id=django_settings.BRAINTREE_MERCHANT_ID,
-            public_key=django_settings.BRAINTREE_PUBLIC_KEY,
-            private_key=django_settings.BRAINTREE_PRIVATE_KEY
-        )
+    braintree.Configuration.configure(
+        environment=braintree.Environment.Sandbox,
+        merchant_id=django_settings.BRAINTREE_MERCHANT_ID,
+        public_key=django_settings.BRAINTREE_PUBLIC_KEY,
+        private_key=django_settings.BRAINTREE_PRIVATE_KEY
     )
+)
 
 from .models import *
-
 
 # ------------------------------------- Constants -------------------------------------
 
 max_products_per_page = 10
 
+
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-    #print(request.GET['order-by-collections'])
+    # print(request.GET['order-by-collections'])
     products = Product.objects.all()
     try:
         if request.GET['order-by'] == 'collections':
@@ -54,13 +54,17 @@ def index(request):
 
     try:
         if request.GET['buscar'] != '':
-            products = Product.objects.all().filter(name__icontains=request.GET['buscar']) | Product.objects.all().filter(collection__icontains=request.GET['buscar']) | Product.objects.all().filter(author__name__icontains=request.GET['buscar'])
+            products = Product.objects.all().filter(
+                name__icontains=request.GET[
+                    'buscar']) | Product.objects.all().filter(
+                collection__icontains=request.GET[
+                    'buscar']) | Product.objects.all().filter(
+                author__name__icontains=request.GET['buscar'])
 
         else:
-            products=[]
+            products = []
     except:
         pass
-
 
     entries = ProductEntry.objects.all()
     products_to_list = []
@@ -70,7 +74,7 @@ def index(request):
         page_number = int(request.GET['page'])
     except:
         page_number = 0
-    
+
     if len(products) % max_products_per_page == 0:
         possible_pages = int(len(products) / max_products_per_page)
     else:
@@ -78,26 +82,26 @@ def index(request):
 
     # Load products to show in view
 
-    for i in range(page_number*max_products_per_page, page_number*max_products_per_page+max_products_per_page):
-        if(i < len(products)):
+    for i in range(page_number * max_products_per_page,
+                   page_number * max_products_per_page + max_products_per_page):
+        if (i < len(products)):
             products_to_list.append(products[i])
 
     # Load wishlist to render hearts
 
     for product in products_to_list:
         for entry in entries:
-            if entry.product == product and entry.user==request.user and entry.entry_type == 'WISHLIST':
+            if entry.product == product and entry.user == request.user and entry.entry_type == 'WISHLIST':
                 wishlist.append(entry.product_id)
 
     return render(request, "index.html", context={"user": request.user,
-                                                "products": products_to_list,
-                                                "wishlist": wishlist,
-                                                "pages_range": range(0, possible_pages),
-                                                "current_page": page_number
-                                                }
-                )
-
-
+                                                  "products": products_to_list,
+                                                  "wishlist": wishlist,
+                                                  "pages_range": range(0,
+                                                                       possible_pages),
+                                                  "current_page": page_number
+                                                  }
+                  )
 
 
 def signin(request):
@@ -106,51 +110,55 @@ def signin(request):
     else:
         return render(request, "login.html", context={})
 
+
 def product_detail(request, product_id):
-    
     product = get_object_or_404(Product, pk=product_id)
 
     in_wishlist = False
 
     for entry in ProductEntry.objects.all():
-        if entry.product == product and entry.user==request.user and entry.entry_type == 'WISHLIST':
+        if entry.product == product and entry.user == request.user and entry.entry_type == 'WISHLIST':
             in_wishlist = True
             break
-    
+
     comments = Comment.objects.filter(product=product)
 
-    return render(request, "product_details.html", context={"user": request.user, "product": product, "comments": comments, "in_wishlist": in_wishlist})
+    return render(request, "product_details.html",
+                  context={"user": request.user, "product": product,
+                           "comments": comments, "in_wishlist": in_wishlist})
+
 
 def hello(request, user_id):
-
     user = get_object_or_404(User, pk=user_id)
 
     return render(request, "hello.html", context={'user': user})
 
+
 def error(request):
     return render(request, "error.html", context={})
+
 
 # ------------------------------------- API views -------------------------------------
 
 # ------------------------ Login page ------------------------
 
 def login(request):
-
-    user = authenticate(username=request.POST['username'], password=request.POST['password'])
+    user = authenticate(username=request.POST['username'],
+                        password=request.POST['password'])
 
     if user is not None:
         auth.login(request, user)
         return HttpResponseRedirect(reverse("acme-nft:index"))
     else:
         return HttpResponseRedirect(reverse("acme-nft:error"))
-    
-def signout(request):
 
+
+def signout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse("acme-nft:index"))
 
-def signup(request):
 
+def signup(request):
     if request.method == "POST":
 
         username = request.POST['username']
@@ -160,7 +168,7 @@ def signup(request):
         email = request.POST['email']
 
         errors = []
-        if username == " " or password == " " or first_name == " " or last_name == " " or email == " ": # Check if any field is empty
+        if username == " " or password == " " or first_name == " " or last_name == " " or email == " ":  # Check if any field is empty
             empty = "Todos los campos del formulario deben estar rellenos"
             errors.append(empty)
         if first_name[0].islower():
@@ -194,29 +202,31 @@ def signup(request):
                 "are_errors": are_errors
             })
         else:
-            user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
+            user = User.objects.create_user(username=username,
+                                            password=password,
+                                            first_name=first_name,
+                                            last_name=last_name, email=email)
             user.save()
             auth.login(request, user)
             return HttpResponseRedirect(reverse("acme-nft:index"))
-            
+
     else:
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse("acme-nft:index"))
         else:
             return render(request, "login.html")
-        
-        
+
+
 def edit_user(request):
     user = User.objects.get(username=request.user)
     if request.method == 'GET':
 
-
-        return render(request, "profile.html",{
+        return render(request, "profile.html", {
             'username': user.username,
             'email': user.email,
             'first_name': user.first_name,
             'last_name': user.last_name,
-    })
+        })
 
     else:
 
@@ -233,14 +243,14 @@ def edit_user(request):
 # ------------------------ Address ------------------------
 
 def show_adrress(request, user_id):
-
     user = User.objects.get(id=user_id)
     list_address = user.address_set.all()
     print(list_address)
-    return render(request, "show_address.html", context={"list_address": list_address})
+    return render(request, "show_address.html",
+                  context={"list_address": list_address})
+
 
 def new_address(request):
-
     if request.method == "POST":
 
         errors = []
@@ -259,8 +269,9 @@ def new_address(request):
         city = request.POST['city']
         code_postal = request.POST['code_postal']
 
-        errors = check_errors(block, city, code_postal, door, errors, floor, number,
-                                                         street_name)
+        errors = check_errors(block, city, code_postal, door, errors, floor,
+                              number,
+                              street_name)
         if len(errors) > 0:
             are_errors = True
             return render(request, "new_address.html", {
@@ -276,24 +287,29 @@ def new_address(request):
             })
         else:
 
-            address = Address(user_id=request.user.id, street_name=street_name, number=number, block=block, floor=floor, door=door, city=city, code_postal=code_postal)
+            address = Address(user_id=request.user.id, street_name=street_name,
+                              number=number, block=block, floor=floor,
+                              door=door, city=city, code_postal=code_postal)
             address.save()
-            return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
+            return HttpResponseRedirect(
+                reverse("acme-nft:show_address", args=(request.user.id,)))
     else:
         return render(request, "new_address.html")
 
-def delete_address(request, address_id):
 
+def delete_address(request, address_id):
     address = Address.objects.get(id=address_id)
     address.delete()
-    return HttpResponseRedirect(reverse("acme-nft:show-address", args=(request.user.id,)))
+    return HttpResponseRedirect(
+        reverse("acme-nft:show_address", args=(request.user.id,)))
 
 
 def update_address(request, address_id):
-
     if request.method == "POST":
 
         address = Address.objects.get(id=address_id)
+
+
 
         errors = []
 
@@ -311,8 +327,9 @@ def update_address(request, address_id):
         city = request.POST['city']
         code_postal = request.POST['code_postal']
 
-        errors = check_errors(block, city, code_postal, door, errors, floor, number,
-                                                         street_name)
+        errors = check_errors(block, city, code_postal, door, errors, floor,
+                              number,
+                              street_name)
         if len(errors) > 0:
             are_errors = True
             return render(request, "new_address.html", {
@@ -335,36 +352,39 @@ def update_address(request, address_id):
             address.city = city
             address.code_postal = code_postal
             address.save()
-            return HttpResponseRedirect(reverse("acme-nft:show_address", args=(2,)))
+
+            return HttpResponseRedirect(
+                reverse("acme-nft:show_address", args=(request.user.id,)))
     else:
         address = Address.objects.get(id=address_id)
         street_name = address.street_name
         number = address.number
         floor = address.floor
-        if floor == None:
+        if floor is None:
             floor = ""
         block = address.block
-        if block == None:
+        if block is None:
             block = ""
         door = address.door
-        if door == None:
+        if door is None:
             door = ""
         city = address.city
         code_postal = address.code_postal
-        id = address.id
+
 
         return render(request, "update_address.html", {
-                      "street_name": street_name,
-                      "number": number,
-                      "floor": floor,
-                        "block": block,
-                        "door": door,
-                        "city": city,
-                        "code_postal": code_postal,
-                        "id": id,})
+            "street_name": street_name,
+            "number": number,
+            "floor": floor,
+            "block": block,
+            "door": door,
+            "city": city,
+            "code_postal": code_postal,
+            "id": address_id, })
 
 
-def check_errors(block, city, code_postal, door, errors, floor, number, street_name):
+def check_errors(block, city, code_postal, door, errors, floor, number,
+                 street_name):
     if len(street_name) > 60:
         street_name_length = "El nombre de la calle no puede tener más de 60 caracteres"
         errors.append(street_name_length)
@@ -399,23 +419,25 @@ def check_errors(block, city, code_postal, door, errors, floor, number, street_n
         errors.append(city_length)
     return errors
 
+
 # -------------------------- Cart --------------------------
 
 def add_to_cart(request, product_id):
-    
     quantity = int(request.POST['quantity'])
-    
+
     if quantity > 0:
         user = request.user
-        
+
         if not user.is_authenticated:
             user = None
         product = Product.objects.get(id=product_id)
         try:
-            entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
+            entry = ProductEntry.objects.get(product=product,
+                                             entry_type='CART', user=user)
             entry.quantity = entry.quantity + quantity
         except:
-            entry = ProductEntry(product=product, entry_type='CART', user=user, quantity=quantity)
+            entry = ProductEntry(product=product, entry_type='CART', user=user,
+                                 quantity=quantity)
         entry.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
@@ -436,8 +458,8 @@ def cart_view(request, error=None):
         'error': error,
     })
 
-def resume_cart_view(request):
 
+def resume_cart_view(request):
     user = request.user
     if not user.is_authenticated:
         user = None
@@ -449,7 +471,8 @@ def resume_cart_view(request):
     if len(products_ids) == 0:
         return cart_view(request, error="No has seleccionado ningún producto")
 
-    products = ProductEntry.objects.filter(id__in=products_ids, user=user, entry_type='CART')
+    products = ProductEntry.objects.filter(id__in=products_ids, user=user,
+                                           entry_type='CART')
     address = Address.objects.get(id=address_id)
 
     try:
@@ -468,9 +491,11 @@ def resume_cart_view(request):
 
 def payment(request):
     nonce_from_the_client = request.POST['paymentMethodNonce']
-    products_request = list(map(lambda x : int(x), request.POST.get('products').split(',')))
+    products_request = list(
+        map(lambda x: int(x), request.POST.get('products').split(',')))
 
-    products_entry = ProductEntry.objects.filter(id__in=products_request, entry_type='CART')
+    products_entry = ProductEntry.objects.filter(id__in=products_request,
+                                                 entry_type='CART')
 
     products = Product.objects.filter(productentry__in=products_entry)
 
@@ -485,13 +510,16 @@ def payment(request):
 
     address = request.POST.get('address')
 
-    ref_code = ''.join(list(map(lambda x : str(x), products_request)))+''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    ref_code = ''.join(
+        list(map(lambda x: str(x), products_request))) + ''.join(
+        random.choices(string.ascii_uppercase + string.digits, k=10))
 
-    order = Order(ref_code=ref_code, payment_method=PaymentMethod.card.value, address=address, status=Status.sent.value)
+    order = Order(ref_code=ref_code, payment_method=PaymentMethod.card.value,
+                  address=address, status=Status.sent.value)
 
     order.save()
 
-    products_entry.update(order=order,entry_type='ORDER')
+    products_entry.update(order=order, entry_type='ORDER')
 
     customer_kwargs = {
         "first_name": request.user.first_name,
@@ -512,21 +540,22 @@ def payment(request):
 
     pdf = get_invoice(order.id)
 
-    email = EmailMessage('Acma NFT', f'Gracias por su compra, su pedido es {ref_code}', 'acmenftinc@gmail.com', [user.email])
+    email = EmailMessage('Acma NFT',
+                         f'Gracias por su compra, su pedido es {ref_code}',
+                         'acmenftinc@gmail.com', [user.email])
     email.attach_file(pdf)
     email.send()
-
 
     return HttpResponse('Ok')
 
 
 def edit_amount_cart(request, product_id):
-
     user = request.user
     if not user.is_authenticated:
         user = None
     product = Product.objects.get(id=product_id)
-    entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
+    entry = ProductEntry.objects.get(product=product, entry_type='CART',
+                                     user=user)
 
     quantity = int(bytes_to_dict(request.body)['quantity'])
     if 0 < quantity <= entry.product.stock:
@@ -536,18 +565,19 @@ def edit_amount_cart(request, product_id):
     else:
         return HttpResponseNotFound("Invalid Quantity")
 
+
 def delete_from_cart(request, product_id):
     user = request.user
     if not user.is_authenticated:
         user = None
     product = Product.objects.get(id=product_id)
-    entry = ProductEntry.objects.get(product=product, entry_type='CART', user=user)
+    entry = ProductEntry.objects.get(product=product, entry_type='CART',
+                                     user=user)
     entry.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def add_address_in_cart(request):
-
     user = request.user
     if not user.is_authenticated:
         user = None
@@ -560,8 +590,9 @@ def add_address_in_cart(request):
     city = request.POST['city']
     code_postal = request.POST['postal_code']
 
-    Address.objects.create(user=user, street_name=street_name, number=number, floor=floor, block=block, door=door, city=city, code_postal=code_postal)
-
+    Address.objects.create(user=user, street_name=street_name, number=number,
+                           floor=floor, block=block, door=door, city=city,
+                           code_postal=code_postal)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -569,48 +600,51 @@ def add_address_in_cart(request):
 # ------------------------ Wishlist ------------------------
 
 def add_to_wishlist(request, product_id):
-
-    try: 
+    try:
         user = request.user
         product = Product.objects.get(pk=product_id)
-        entry = ProductEntry.objects.get(product=product, entry_type='WISHLIST', user=user)
+        entry = ProductEntry.objects.get(product=product,
+                                         entry_type='WISHLIST', user=user)
         entry.delete()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     except:
-    
+
         product = get_object_or_404(Product, pk=product_id)
         user = request.user
-        entry = ProductEntry(quantity=None, entry_type='WISHLIST', product=product, user=user)
+        entry = ProductEntry(quantity=None, entry_type='WISHLIST',
+                             product=product, user=user)
         entry.save()
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 # ------------------------ Comments ------------------------
 
 def add_comment(request, product_id):
-    
     if request.method == "POST":
         user = User.objects.get(pk=1)
         product = Product.objects.get(pk=product_id)
-        
+
         comment_text = request.POST['comment']
-        
+
         comment = Comment(text=comment_text, product=product, user=user)
         comment.save()
-        
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
 
 
 # ------------------------ Orders ------------------------
 
-def orders(request, user_id):
-    orders = Order.objects.filter(productentry__user_id = request.user.id).order_by('-date')
+def orders(request):
+    orders = Order.objects.filter(
+        productentry__user_id=request.user.id).order_by('-date').distinct()
+
+
     return render(request, "show-orders.html", {
         "orders": orders,
     })
+
 
 def order(request, order_id):
     order = Order.objects.get(pk=order_id)
@@ -621,6 +655,7 @@ def order(request, order_id):
         "products": products,
         "total": total,
     })
+
 
 def final_price(products):
     final_price = 0
@@ -639,7 +674,9 @@ def complaint(request):
         user = User.objects.get(pk=request.user.id)
         complaint_title = request.POST['title']
         complaint_text = request.POST['complaint']
-        complaint = Complaint(title=complaint_title, description=complaint_text, user=user, date=datetime.now())
+        complaint = Complaint(title=complaint_title,
+                              description=complaint_text, user=user,
+                              date=datetime.now())
         complaint.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -649,20 +686,24 @@ def opinion(request):
         user = User.objects.get(pk=request.user.id)
         opinion_title = request.POST['title']
         opinion_text = request.POST['opinion']
-        opinion = Opinion(title=opinion_title, description=opinion_text, user=user, date = datetime.now())
+        opinion = Opinion(title=opinion_title, description=opinion_text,
+                          user=user, date=datetime.now())
         opinion.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 def opinions(request):
     opinions = Opinion.objects.all()
     return render(request, "opinions.html", {
         "opinions": opinions
     })
-    
- # ------------------------ common ------------------------
+
+
+# ------------------------ common ------------------------
 def bytes_to_dict(bytes_d):
     dict_str = bytes_d.decode('utf-8')
     return ast.literal_eval(dict_str)
+
 
 def get_invoice(order_id):
     order = Order.objects.get(id=order_id)
@@ -678,8 +719,9 @@ def get_invoice(order_id):
         f.write(f'Producto;Cantidad;Precio/Ud;Total\n')
         total = 0
         for p in products:
-            f.write(f'{p.product.name};{p.quantity};{p.product.price};{p.product.price*p.quantity}\n')
-            total += p.product.price*p.quantity
+            f.write(
+                f'{p.product.name};{p.quantity};{p.product.price};{p.product.price * p.quantity}\n')
+            total += p.product.price * p.quantity
         f.write(f'\n')
         f.write(f'Total: {total}€\n')
         f.write(f'\n\n')
@@ -693,6 +735,3 @@ def get_invoice(order_id):
     }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
 
     return f'invoices/{order.ref_code}.pdf'
-
-
-
