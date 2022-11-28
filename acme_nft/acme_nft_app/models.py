@@ -78,12 +78,20 @@ class Product(models.Model):
     def __str__(self):
         return self.name
         
-class Opinion(models.Model):
+class Comment(models.Model):
     text = models.CharField(max_length=2000)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.text
+
+class Opinion(models.Model):
+    title = models.CharField(max_length=60)
+    description = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.text
 

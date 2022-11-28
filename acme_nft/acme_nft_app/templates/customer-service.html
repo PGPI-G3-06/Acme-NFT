@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+    <script type="text/javascript" src="{% static 'js/customer_service.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<section>
+
+    <div class="container">
+
+        <div class="row row-cols-3">
+            <div class="col"></div>
+            <div class="col"><label >Atención al cliente</label></div>
+            <div class="col"></div>
+
+        </div>
+        <br>
+        <br>
+        <h3 class="order-title">Pongáse en contacto con nosotros para cualquier duda o problema que le surja</h3>
+        <div class="row row-cols-3">
+            <div class="col">
+                <div class="class-card">
+                    <div class="class-img-box">
+                        <img class="icon" src="{% static 'images/phone.png' %}" alt="phone" />
+                    </div>
+                    <div class="class-content">
+                        <h2 style="text-align: center;">Teléfono</h2>
+                        <p style="text-align: center;">+34 666 666 666</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="class-card">
+                    <div class="class-img-box">
+                        <img class="icon" src="{% static 'images/email.png' %}" alt="email" />
+                    </div>
+                    <div class="class-content">
+                        <h2 style="text-align: center;">Email</h2>
+                        <p style="text-align: center;">acme-nft@acme.es</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="class-card">
+                    <div class="class-img-box">
+                        <img class="icon" src="{% static 'images/opinion.png' %}" alt="email" />
+                    </div>
+                    <div class="class-content">
+                        <h4 style="text-align: center;">Dejenos su opinión o problema</h4>
+                        <p style="text-align: center;"></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <h3>Ayudanos a mejorar, deja aqui tu opinión</h3>
+        <div style="display: flex; justify-content: center;">
+        {% if user.is_authenticated %}
+            <button class="class-link" data-bs-toggle="modal" data-bs-target="#opinion-modal">Escribe tu opinión</button>
+        {% endif %}
+          <a class="class-link" href="/opinions">Ver opiniones</a>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="opinion-modal" tabindex="-1" aria-labelledby="opinion-modal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <label class="modal-title">Escriba su opinion</label>
+              </div>
+              <div class="modal-body">
+                <form action="/opinion" method="POST" id="post-opinion-form">
+                {% csrf_token %}
+                <input id="opinion-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
+                <textarea id="opinion-input" name="opinion" value="" placeholder="Escribe tu opinión..."></textarea>
+                <button class="class-link publish-opinion-button">Publicar</button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <h3>Reclamaciones</h3>
+        <h4>Sentimos no haberte atendido como te mereces, intentaremos mejorar</h4>
+        {% if user.is_authenticated %}
+            <div style="display: flex; justify-content: center;">
+              <button class="class-link" data-bs-toggle="modal" data-bs-target="#complaint-modal">Escribir reclamación</button>
+            </div>
+        {% endif %}
+        <div class="modal fade" id="complaint-modal" tabindex="-1" aria-labelledby="complaint-modal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <label class="modal-title" id="exampleModalLabel">Escriba su reclamación</label>
+              </div>
+              <div class="modal-body">
+                <form action="/complaint" method="POST" id="post-complaint-form">
+                {% csrf_token %}
+                <input id="complaint-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
+                <textarea id="complaint-input" name="complaint" placeholder="Escribe tu opinión..."></textarea>
+                <button class="class-link publish-complaint-button">Publicar</button>
+              </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+</section>
+{% endblock %}
+
