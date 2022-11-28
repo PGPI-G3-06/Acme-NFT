@@ -9,8 +9,15 @@
 
 {% block content %}
 <section>
+    <div style="display: flex; justify-content: center;">
+        <a class="class-link" href="?order-by=collections" role="button">Ordenar por Colección</a>
+        <a class="class-link" href="?order-by=author" role="button">Ordenar por Autor</a>
+        <br><br>
+    </div>
     <div style="margin-top: 25px;">
+
         <div class="class-grid-container">
+
             {% for product in products %}
             
                 <div class="class-card">

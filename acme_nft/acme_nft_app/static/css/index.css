@@ -130,6 +130,8 @@ section{
     transition: 0.5s all;
 }
 
+
+
 .class-icons-row{
     display: flex;
     justify-content: space-between;
@@ -234,6 +236,29 @@ section{
 	to {
 		transform: translateY(0) scale(1);
 	}
+}
+
+.class-link{
+    position: relative;
+    top: 10px;
+    display: inline-block;
+    padding: 12px 30px;
+    background: white;
+    border-radius: 40px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #111;
+    text-decoration: none;
+    text-transform: uppercase;
+	margin: 20px;
+	padding: 10px;
+}
+
+.class-link:hover{
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    transition: 0.5s all;
+
 }
 
 /* MEDIA SCREENS */
