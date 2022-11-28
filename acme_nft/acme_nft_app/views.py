@@ -18,6 +18,9 @@ import pandas as pd
 from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
 
+from .models import Product, ProductEntry, Comment, \
+    Address, Order, PaymentMethod, Status, Complaint, Opinion
+
 gateway = braintree.BraintreeGateway(
     braintree.Configuration.configure(
         environment=braintree.Environment.Sandbox,
@@ -27,7 +30,7 @@ gateway = braintree.BraintreeGateway(
     )
 )
 
-from .models import *
+
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -43,13 +46,13 @@ def index(request):
         if request.GET['order-by'] == 'collections':
             products = Product.objects.all().order_by('collection')
 
-    except:
+    except KeyError:
         pass
     try:
         if request.GET['order-by'] == 'author':
             products = Product.objects.all().order_by('author_id')
 
-    except:
+    except KeyError:
         pass
 
     try:
@@ -63,7 +66,7 @@ def index(request):
 
         else:
             products = []
-    except:
+    except KeyError:
         pass
 
     entries = ProductEntry.objects.all()
@@ -72,7 +75,7 @@ def index(request):
 
     try:
         page_number = int(request.GET['page'])
-    except:
+    except KeyError:
         page_number = 0
 
     if len(products) % max_products_per_page == 0:
@@ -84,7 +87,7 @@ def index(request):
 
     for i in range(page_number * max_products_per_page,
                    page_number * max_products_per_page + max_products_per_page):
-        if (i < len(products)):
+        if i < len(products):
             products_to_list.append(products[i])
 
     # Load wishlist to render hearts
@@ -435,7 +438,7 @@ def add_to_cart(request, product_id):
             entry = ProductEntry.objects.get(product=product,
                                              entry_type='CART', user=user)
             entry.quantity = entry.quantity + quantity
-        except:
+        except ProductEntry.DoesNotExist:
             entry = ProductEntry(product=product, entry_type='CART', user=user,
                                  quantity=quantity)
         entry.save()
@@ -608,7 +611,7 @@ def add_to_wishlist(request, product_id):
         entry.delete()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    except:
+    except ProductEntry.DoesNotExist:
 
         product = get_object_or_404(Product, pk=product_id)
         user = request.user

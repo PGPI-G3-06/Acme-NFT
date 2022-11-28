@@ -87,7 +87,7 @@ function main(){
     });
 
     let price = document.getElementById('price').innerHTML;
-    price.replace(" €", "");
+    price = price.replace(" €", "");
     price = parseFloat(price);
     document.getElementById('price').innerHTML = price.toFixed(2) + " €";
 

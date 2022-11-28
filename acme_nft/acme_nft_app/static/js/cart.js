@@ -18,7 +18,6 @@ function downQuantity(id, product_id, price, stock) {
 
     if (quantity == 1) {
         alert("No puedes tener menos de 1");
-        return;
     } else {
         if (quantity > 1) {
             quantity--;
@@ -74,18 +73,18 @@ async function updateQuantityDB(id, quantity, price) {
 }
 
 function getCookie(name) {
-    var cookieValue = null;
+    let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
+        let cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
             // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+            let cookie_s = cookie.trim().substring(0, name.length + 1);
+            if (cookie_s === (name + '=')) {
+                return decodeURIComponent(cookie_s);
             }
         }
     }
+
     return cookieValue;
 }
 
@@ -130,42 +129,6 @@ function addAddressSubmit(event) {
 
     console.log(formData);
 }
-
-// function addAddressSubmit2(event) {
-//
-//     const addressForm = document.getElementById("address-form");
-//
-//     addressForm.addEventListener("submit", (event) => {
-//         event.preventDefault();
-//
-//         let form = event.target;
-//         let formData = new FormData(form);
-//
-//         let error = false;
-//
-//         let streetName = formData.get("street_name");
-//         let number = formData.get("number");
-//         let block = formData.get("block");
-//         let floor = formData.get("floor");
-//         let door = formData.get("door");
-//         let postalCode = formData.get("postal_code");
-//         let city = formData.get("city");
-//
-//         if (streetName === "") {
-//             error = true;
-//             addressForm.street_name.classList.add("is-invalid");
-//         }
-//
-//         if (!error) {
-//             return addressForm.submit();
-//         }
-//
-//
-//     });
-//
-//
-// }
-
 
 function checkSubmit(event) {
     event.preventDefault();

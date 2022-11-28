@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 
-# Register your models here.
+from .models import Address, Complaint, Comment, \
+    ProfilePicture, Product, Author, Order, ProductEntry
 
-from .models import *
+
+# Register your models here.
 
 
 class AddressInline(admin.StackedInline):

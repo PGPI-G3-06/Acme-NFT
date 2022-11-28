@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 # Find or create the author
                 try:
                     author = Author.objects.get(name=row["creator"])
-                except:
+                except Author.DoesNotExist:
                     author = Author(name=row["creator"])
                     author.save()
                 
@@ -56,5 +56,4 @@ class Command(BaseCommand):
             print("Done! Your product database is now populated with some initial data.")
         else:
             print("Exiting...")
-            return
     

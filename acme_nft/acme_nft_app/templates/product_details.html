@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'css/product_details.css' %}">
+    <link rel="stylesheet" href="{% static 'css/product_details.css' %}"
+          xmlns="http://www.w3.org/1999/html">
     <script type="text/javascript" src="{% static 'js/product_details.js' %}"></script>
 {% endblock %}
 
@@ -37,9 +38,9 @@
                         <button id="wishlist-button">
                             Añadir a lista de deseos
                             {% if in_wishlist %}
-                                <i class="fa-solid fa-heart fa-lg heart" id="product-{{product.id}}-img"></i>
+                                <em class="fa-solid fa-heart fa-lg heart" id="product-{{product.id}}-img"></em>
                             {% else %}
-                                <i class="fa-regular fa-heart fa-lg heart" id="product-{{product.id}}-img"></class=>
+                                <em class="fa-regular fa-heart fa-lg heart" id="product-{{product.id}}-img"></em>
                             {% endif %}
                         </button>
                         {% endif %}
