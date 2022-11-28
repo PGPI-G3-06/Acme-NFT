@@ -60,4 +60,31 @@ function main(){
 
 }
 
+function nextPage(minPages, maxPages){
+    let min = parseInt(minPages);
+    let max = parseInt(maxPages)-1;
+    if(window.location.search){
+        let page = new URL(location.href).searchParams.get('page')
+        if(page < max && page >= min){
+            page++;
+            window.location.href = "?page=" + page;
+        }
+    } else{
+        min++;
+        window.location.href = "?page=" + min;
+    }
+}
+
+function previousPage(minPages, maxPages){
+    let min = parseInt(minPages);
+    let max = parseInt(maxPages)-1;
+    if(window.location.search){
+        let page = new URL(location.href).searchParams.get('page')
+        if(page <= max && page > min){
+            page--;
+            window.location.href = "?page=" + page;
+        }
+    }
+}
+
 document.addEventListener("DOMContentLoaded", main);

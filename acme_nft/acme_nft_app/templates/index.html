@@ -32,7 +32,7 @@
                             </div>
                             <div class="class-carrito">
                                 <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                <form action="cart/add/{{product.id}}" id="add-cart-{{product.id}}" method="POST">
+                                <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="add-cart-{{product.id}}" method="POST">
                                     {% csrf_token %} 
                                     <input type="hidden" name="quantity" value="1">
                                 </form>
@@ -47,7 +47,9 @@
         <div class="pagination-container">
             <div class="pagination-box">
                 <ul class="pagination">
-                    <li><a href="#">Previous</a></li>
+                    <li class="d-flex justify-content-center align-items-center">
+                        <button style="border:none" class="btn" onclick="previousPage({{pages_range.start}}, {{pages_range.stop}})">Anterior</button>
+                    </li>
                     {% for i in pages_range %}
                         {% if i == current_page %}
                         <li><a href="?page={{i}}" class="active">{{ i | addition:1 }}</a></li>
@@ -55,7 +57,9 @@
                         <li><a href="?page={{i}}">{{ i | addition:1 }}</a></li>
                         {% endif %}
                     {% endfor %}
-                    <li><a href="#">Next</a></li>
+                    <li class="d-flex justify-content-center align-items-center">
+                        <button style="border:none" class="btn" onclick="nextPage({{pages_range.start}}, {{pages_range.stop}})">Siguiente</button>
+                    </li>
                 </ul>
             </div>
         </div>

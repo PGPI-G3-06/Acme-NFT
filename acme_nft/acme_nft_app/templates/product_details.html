@@ -21,7 +21,7 @@
                         <h4 class="author-text">Autor: {{ product.author.name }}</h4>
                     </div>
                     <div class="desc-section">
-                        <form action="/cart/add/{{product.id}}" id="cart-form" method="POST">
+                        <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="cart-form" method="POST">
                             {% csrf_token %} 
                             <span>Cantidad:<input class="input-cantidad" id="quantity" type="number" value="1" min="1" name="quantity"></input></span>
                         </form>
@@ -58,7 +58,7 @@
                     <div class="face-3d back-3d"></div>
                     <div class="face-3d front-3d">
                       <h2>¡Escribe tu comentario!</h2>
-                      <form action="/comments/add/{{product.id}}" method="POST" id="post-comment-form">
+                      <form action="{% url 'acme-nft:add_comment' product.id %}" method="POST" id="post-comment-form">
                         {% csrf_token %}
                         <textarea id="comment-input" name="comment" value="" placeholder="Escribe tu comentario..."></textarea>
                         <button class="publish-comment-button">Publicar</button>
