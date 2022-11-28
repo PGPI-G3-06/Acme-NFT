@@ -19,8 +19,31 @@ max_products_per_page = 10
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-
+    #print(request.GET['order-by-collections'])
     products = Product.objects.all()
+    try:
+        if request.GET['order-by'] == 'collections':
+            products = Product.objects.all().order_by('collection')
+
+    except:
+        pass
+    try:
+        if request.GET['order-by'] == 'author':
+            products = Product.objects.all().order_by('author_id')
+
+    except:
+        pass
+
+    try:
+        if request.GET['buscar'] != '':
+            products = Product.objects.all().filter(name__icontains=request.GET['buscar']) | Product.objects.all().filter(collection__icontains=request.GET['buscar']) | Product.objects.all().filter(author__name__icontains=request.GET['buscar'])
+
+        else:
+            products=[]
+    except:
+        pass
+
+
     entries = ProductEntry.objects.all()
     products_to_list = []
     wishlist = []
@@ -55,6 +78,9 @@ def index(request):
                                                 "current_page": page_number
                                                 }
                 )
+
+
+
 
 def signin(request):
     if request.user.is_authenticated:
