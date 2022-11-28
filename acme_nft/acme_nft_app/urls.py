@@ -35,4 +35,6 @@ urlpatterns = [
     # Customer Service
     path("customerservice", views.customer_service, name="customerservice"),
     path("complaint", views.complaint, name="complaint"),
+    path("opinion", views.opinion, name="opinion"),
+    path("opinions", views.opinions, name="opinions"),
 ]

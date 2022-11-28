@@ -88,7 +88,8 @@ class Comment(models.Model):
         return self.text
 
 class Opinion(models.Model):
-    text = models.CharField(max_length=2000)
+    title = models.CharField(max_length=60)
+    description = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):

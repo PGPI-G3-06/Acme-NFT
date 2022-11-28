@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
 
-from .models import Address, EntryType, Opinion, Product, ProductEntry, Complaint, Comment
+from .models import Address, EntryType, Comment, Product, ProductEntry, Complaint, Comment, Opinion
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -505,8 +505,22 @@ def complaint(request):
         user = User.objects.get(pk=request.user.id)
         complaint_title = request.POST['title']
         complaint_text = request.POST['complaint']
-
-        complaint = Complaint(title=complaint_title, description=complaint_text, user=user, date = datetime.now())
+        complaint = Complaint(title=complaint_title, description=complaint_text, user=user, date=datetime.now())
         complaint.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def opinion(request):
+    if request.method == "POST":
+        user = User.objects.get(pk=request.user.id)
+        opinion_title = request.POST['title']
+        opinion_text = request.POST['opinion']
+        opinion = Opinion(title=opinion_title, description=opinion_text, user=user, date = datetime.now())
+        opinion.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def opinions(request):
+    opinions = Opinion.objects.all()
+    return render(request, "opinions.html", {
+        "opinions": opinions
+    })

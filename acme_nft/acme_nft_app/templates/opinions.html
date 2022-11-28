@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/opinions.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<section>
+
+    <div class="container">
+
+        <div class="row row-cols-3">
+            <div class="col"></div>
+            <div class="col"><label >Opiniones de la web</label></div>
+            <div class="col"></div>
+
+        </div>
+        <br>
+        <br>
+        {% for opinion in opinions %}
+
+            <div class="row row-cols-1">
+                <div class="col">
+                  <div class="card">
+                      <div class="card-header">
+                        {{ opinion.user.username }} ({{ opinion.date }})
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title">{{ opinion.title }}</h5>
+                        <p class="card-text">{{ opinion.description }}</p>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        <br>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+

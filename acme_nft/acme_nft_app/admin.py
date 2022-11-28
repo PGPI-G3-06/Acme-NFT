@@ -15,7 +15,7 @@ class ComplaintInline(admin.TabularInline):
     extra = 1
 
 class OpinionInline(admin.TabularInline):
-    model = Opinion
+    model = Comment
     extra = 1
 
 class ProfilePictureInline(admin.TabularInline):

@@ -63,33 +63,57 @@
         <h3>Ayudanos a mejorar, deja aqui tu opinión</h3>
         <div style="display: flex; justify-content: center;">
         {% if user.is_authenticated %}
-            <button class="class-link new-opinion-button">Escribe tu opinión</button>
+            <button class="class-link" data-bs-toggle="modal" data-bs-target="#opinion-modal">Escribe tu opinión</button>
         {% endif %}
-          <a class="class-link" href="">Ver opiniones</a>
+          <a class="class-link" href="/opinions">Ver opiniones</a>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="opinion-modal" tabindex="-1" aria-labelledby="opinion-modal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <label class="modal-title">Escriba su opinion</label>
+              </div>
+              <div class="modal-body">
+                <form action="/opinion" method="POST" id="post-opinion-form">
+                {% csrf_token %}
+                <input id="opinion-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
+                <textarea id="opinion-input" name="opinion" value="" placeholder="Escribe tu opinión..."></textarea>
+                <button class="class-link publish-opinion-button">Publicar</button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
         <h3>Reclamaciones</h3>
         <h4>Sentimos no haberte atendido como te mereces, intentaremos mejorar</h4>
         {% if user.is_authenticated %}
             <div style="display: flex; justify-content: center;">
-              <button class="class-link new-complaint-button">Escribir reclamación</button>
+              <button class="class-link" data-bs-toggle="modal" data-bs-target="#complaint-modal">Escribir reclamación</button>
             </div>
         {% endif %}
-        <div class="modal-background"></div>
-        <div id="modal-flip-from-left" class="modal">
-            <div class="face-3d back-3d"></div>
-            <div class="face-3d front-3d">
-              <h2>¡Escribe tu reclamación</h2>
-              <form action="/complaint" method="POST" id="post-complaint-form">
+        <div class="modal fade" id="complaint-modal" tabindex="-1" aria-labelledby="complaint-modal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <label class="modal-title" id="exampleModalLabel">Escriba su reclamación</label>
+              </div>
+              <div class="modal-body">
+                <form action="/complaint" method="POST" id="post-complaint-form">
                 {% csrf_token %}
-                <input id="complaint-title" class="form-control" type="text" placeholder="Título de la reclamación" name="title">
-                <textarea id="complaint-input" name="complaint" value="" placeholder="Escribe tu reclamación..."></textarea>
-                <button class="publish-complaint-button">Publicar</button>
+                <input id="complaint-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
+                <textarea id="complaint-input" name="complaint" placeholder="Escribe tu opinión..."></textarea>
+                <button class="class-link publish-complaint-button">Publicar</button>
               </form>
+              </div>
+
             </div>
+          </div>
         </div>
+
 
     </div>
 

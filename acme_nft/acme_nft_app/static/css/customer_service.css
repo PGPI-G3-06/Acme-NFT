@@ -104,19 +104,7 @@ button:hover{
 
 
 
-.order-title{
-	font-size: 1.5em;
 
-}
-.order-date{
-	font-size: 1em;
-
-}
-
-.order-status{
-	font-size: 1.5em;
-
-}
 
 
 .card-body-order{
@@ -151,94 +139,7 @@ button:hover{
 
 /* MODAL */
 
-.modal {
-    position: absolute;
-    padding: 35px;
-    box-shadow: 0px 0px 8px 0px #333;
-    border-radius: 15px;
-    background: var(--modal-comment-background-button-color);
-    color: var(--modal-comment-text-color);
-    text-align: left;
-    transform-style: preserve-3d;
-}
 
-.back-3d {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    content: '';
-    background: var(--modal-comment-background-button-color);;
-    transform: rotateY(180deg);
-    z-index: 1;
-}
-
-.modal-background {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: var(--modal-comment-background-color);
-    opacity: 0;
-    pointer-events: none;
-}
-
-.modal-background.show {
-    display: block;
-    opacity: 1;
-    pointer-events: auto;
-    animation: fadein 0.8s;
-}
-
-.modal-background.hide {
-    animation: fadeout 0.8s;
-}
-
-#modal-flip-from-left {
-    display: block;
-    top: 50%;
-    left: -200%;
-    transform: translate(-50%, -50%);
-}
-
-#modal-flip-from-left.show {
-    left: 50%;
-    animation: modal-flip-from-left-show 1s;
-}
-
-#modal-flip-from-left.hide {
-    left: -200%;
-    transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-@keyframes fadeout {
-    from { opacity: 1; }
-    to   { opacity: 0; }
-}
-
-@keyframes modal-flip-from-left-show {
-    0% {
-      left: -200%;
-      transform: translate(-50%, -50%) rotateY(-180deg);
-    }
-    80% {
-      transform: translate(-50%, -50%) rotateY(-180deg);
-    }
-    90% {
-      left: 50%;
-      transform: translate(-50%, -50%) rotateY(-90deg);
-    }
-    100% {
-      transform: translate(-50%, -50%) rotateY(0deg);
-    }
-}
 
 #post-complaint-form{
     display: flex;
@@ -246,10 +147,14 @@ button:hover{
     justify-content: center;
     align-items: center;
 }
-
-.front-3d h2{
-    margin-bottom: 20px;
+#post-opinion-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+
+
 
 #complaint-input{
     width: 100%;
@@ -268,38 +173,33 @@ button:hover{
     background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
 }
 
+#opinion-input{
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+}
+
+.publish-opinion-button{
+    padding: 10px 30px;
+    margin-top: 20px;
+    border-radius: 15px;
+    background: var(--main-button-background-color);
+}
+
+.publish-opinion-button:hover{
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
+}
+
 
 
 @media screen and (min-width: 1100px) {
 
-    .product-detail-page{
-        position: absolute;
-        top: 0%;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
 
-    .img-div{
-        width: 45%;
-    }
-
-    .img-div img{
-        max-width: 100%;
-        max-height: 500px;
-        object-fit: contain;
-    }
-
-    .desc-div{
-        width: 45%;
-    }
-
-    #modal-flip-from-left {
-        height: 500px;
-        width: 700px;
-    }
 
     .new-complaint-button{
+        width: 20%;
+    }
+    .new-opinion-button{
         width: 20%;
     }
 
@@ -313,32 +213,12 @@ button:hover{
 }
 
 @media screen and (max-width: 1100px) {
-    .img-and-desc-div{
-        flex-direction: column;
-        justify-content: start;
-    }
 
-    .img-div{
-        width: 98%;
-    }
-
-    .img-div img{
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-
-    #modal-flip-from-left {
-        height: 400px;
-        width: 100%;
-    }
-
-    .desc-div{
-        width: 98%;
-        margin-top: 30px;
-    }
 
     .new-complaint-button{
+        width: 40%;
+    }
+    .opinion{
         width: 40%;
     }
 
@@ -349,4 +229,12 @@ button:hover{
     .new-complaint-button{
         width: 100%;
     }
+
+    .new-opinion-button{
+        width: 100%;
+    }
+}
+
+.modal-content{
+    background: var(--modal-comment-background-button-color);
 }
