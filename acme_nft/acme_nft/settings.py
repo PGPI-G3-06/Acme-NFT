@@ -164,3 +164,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+BRAINTREE_MERCHANT_ID = 'n26dfxt97t3snx7v'
+BRAINTREE_PUBLIC_KEY = '6dycmm2nkddsgnpn'
+BRAINTREE_PRIVATE_KEY = 'a05ff716b510635df597303366771121'
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'acmenftinc'
+EMAIL_HOST_PASSWORD = 'bmgfcexythbnbgon'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+
