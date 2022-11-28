@@ -42,7 +42,7 @@
                                 <li><a class="dropdown-item" href="#">Producto 1</a></li>
                                 <li><a class="dropdown-item" href="#">Producto 2</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Total/Comprar</a></li>
+                                <li><a class="dropdown-item" href="{% url 'acme-nft:cart' %}">Total/Comprar</a></li>
                                 </ul>
                             </li>
                             {% if user.is_authenticated %}
