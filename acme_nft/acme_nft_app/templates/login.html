@@ -12,7 +12,7 @@
 
 			{% if are_errors %}
 				<div class="signup">
-				<form action="{% url 'acme-nft:signup' %}" method="POST">
+				<form action="{% url 'acme-nft:signup' %}" method="POST" class="login-page-form">
 					{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
 					<input type="text" name="first_name" placeholder="Nombre" required="True" value="{{ first_name }}">
@@ -28,7 +28,7 @@
 
 			{% else %}
 				<div class="signup">
-				<form action="{% url 'acme-nft:signup' %}" method="POST">
+				<form action="{% url 'acme-nft:signup' %}" method="POST" class="login-page-form">
 					{% csrf_token %}
 					<label for="chk" aria-hidden="true">Sign up</label>
 					<input type="text" name="first_name" placeholder="Nombre" required="True">
@@ -45,7 +45,7 @@
 			{% endif %}
 
 			<div class="login">
-				<form action="{% url 'acme-nft:login' %}" method="POST">
+				<form action="{% url 'acme-nft:login' %}" method="POST" class="login-page-form">
 					{% csrf_token %}
 					<label for="chk" aria-hidden="true">Login</label>
 					<input type="text" name="username" placeholder="Username" required="True">
@@ -56,12 +56,14 @@
 				</form>
 			</div>
 	</div>
+	{% if are_errors %}
 	<div class="errors-div">
 		{% for error in errors %}
-			<label class="error" for="chk" aria-hidden="true">
+			<p class="error" for="chk" aria-hidden="true">
 				{{ error }}
-			</label>
+			</p>
 		{% endfor %}
 	</div>	
+	{% endif %}
 </section>
 {% endblock %}
