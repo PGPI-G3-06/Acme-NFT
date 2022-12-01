@@ -74,6 +74,7 @@ class Product(models.Model):
     offer_price = models.FloatField(blank=True, null=True)
     rarity = models.CharField(max_length=60, choices=[ (rarity, rarity.value) for rarity in RarityType], default=RarityType.common)
     author = models.ForeignKey(Author, on_delete=models.DO_NOTHING, null=True)
+    showcase = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name

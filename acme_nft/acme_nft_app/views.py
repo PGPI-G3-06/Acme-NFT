@@ -1,7 +1,6 @@
 import os.path
 import string
 import random
-import convertapi
 
 from datetime import datetime
 from django.contrib import auth
@@ -422,6 +421,14 @@ def check_errors(block, city, code_postal, door, errors, floor, number,
         errors.append(city_length)
     return errors
 
+# ------------------------ Showcase ------------------------
+
+def showcase(request):
+    products_showcase = Product.objects.filter(is_showcase=True)
+
+    return render(request, "showcase.html", {
+        "products_showcase": products_showcase,
+    })
 
 # -------------------------- Cart --------------------------
 
