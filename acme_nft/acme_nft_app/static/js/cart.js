@@ -73,18 +73,18 @@ async function updateQuantityDB(id, quantity, price) {
 }
 
 function getCookie(name) {
-    let cookieValue = null;
+    var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        let cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
             // Does this cookie string begin with the name we want?
-            let cookie_s = cookie.trim().substring(0, name.length + 1);
-            if (cookie_s === (name + '=')) {
-                return decodeURIComponent(cookie_s);
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
     }
-
     return cookieValue;
 }
 
