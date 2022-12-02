@@ -2,9 +2,11 @@
 {% load static %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
-    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
-    <script type="text/javascript" src="{% static 'js/customer_service.js' %}"></script>
+
+
+<link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+<script type="text/javascript" src="{% static 'js/customer_service.js' %}"></script>
+
 
 {% endblock %}
 
@@ -12,115 +14,78 @@
 <section>
 
     <div class="container">
+        <h1 class="service-title">Atención al cliente</h1>
 
-        <div class="row row-cols-3">
-            <div class="col"></div>
-            <div class="col"><label >Atención al cliente</label></div>
-            <div class="col"></div>
-
+        {% if successfull_message %}
+        <div class="alert alert-light alert-dismissible fade show" role="alert">
+            {{ message }}
         </div>
-        <br>
-        <br>
-        <h3 class="order-title">Pongáse en contacto con nosotros para cualquier duda o problema que le surja</h3>
-        <div class="row row-cols-3">
-            <div class="col">
-                <div class="class-card">
-                    <div class="class-img-box">
-                        <img class="icon" src="{% static 'images/phone.png' %}" alt="phone" />
-                    </div>
-                    <div class="class-content">
-                        <h2 style="text-align: center;">Teléfono</h2>
-                        <p style="text-align: center;">+34 666 666 666</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="class-card">
-                    <div class="class-img-box">
-                        <img class="icon" src="{% static 'images/email.png' %}" alt="email" />
-                    </div>
-                    <div class="class-content">
-                        <h2 style="text-align: center;">Email</h2>
-                        <p style="text-align: center;">acme-nft@acme.es</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="class-card">
-                    <div class="class-img-box">
-                        <img class="icon" src="{% static 'images/opinion.png' %}" alt="email" />
-                    </div>
-                    <div class="class-content">
-                        <h4 style="text-align: center;">Dejenos su opinión o problema</h4>
-                        <p style="text-align: center;"></p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <br>
-        <br>
-        <h3>Ayudanos a mejorar, deja aqui tu opinión</h3>
-        <div style="display: flex; justify-content: center;">
-        {% if user.is_authenticated %}
-            <button class="class-link" id="modal-btn" data-bs-toggle="modal" data-bs-target="#opinion-modal">Escribe tu opinión</button>
         {% endif %}
-          <a class="class-link" href="/opinions">Ver opiniones</a>
-        </div>
+        <br>
 
-        <!-- Modal -->
-        <div class="modal fade" id="opinion-modal" tabindex="-1" aria-labelledby="opinion-modal" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <label class="modal-title">Escriba su opinion</label>
-              </div>
-              <div class="modal-body">
-                <form action="/opinion" method="POST" id="post-opinion-form">
-                {% csrf_token %}
-                <input id="opinion-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
-                <textarea id="opinion-input" name="opinion" value="" placeholder="Escribe tu opinión..."></textarea>
-                <button class="class-link publish-opinion-button">Publicar</button>
-              </form>
+        <div class="row">
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                  <img src="{% static 'images/communication.png' %}" class="card-img-top" alt="Imagen de comunicaciones">
+                  <div class="card-body">
+                    <h5 class="card-title">Comunicaciones</h5>
+                    <p class="card-text">Contacta con nosotros para cualquier duda o queja que le surja.</p>
+                    <a href="{% url 'acme-nft:contact' %}" class="class-link">Contactar</a>
+                  </div>
+                </div>
+            </div>
+            <br>
+            <div class="col">
+              <div class="card" style="width: 18rem;">
+                <img src="{% static 'images/opinion.png'%}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Opiniones</h5>
+                  <p class="card-text">Nos interasa saber como ha sido tu experienacía con nosotros, dejanos tu opinión y ayudanos a mejorar.</p>
+                  <a href="{% url 'acme-nft:opinions' %}" class="class-link">Opinar</a>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+            <br>
+            <div class="col">
+              <div class="card" style="width: 18rem;">
+                <img src="{% static 'images/complaint.png'%}" class="card-img-top" alt="Imagen de reclamación">
+                <div class="card-body">
+                  <h5 class="card-title">Reclamaciones</h5>
 
+                    {% if user.is_authenticated %}
+                        <p class="card-text">Si no estas satisfecho con tu compra o con el servicio proporcionado, puedes realizar una reclamación.</p>
+                        <button class="class-link complaint-button" id="modal-btn" data-bs-toggle="modal" data-bs-target="#complaint-modal">Reclamación</button>
+                    {% else %}
+                        <p class="card-text">Para poder realizar una reclamación debe estar registrado</p>
+                        <a href="{% url 'acme-nft:signup' %}" class="class-link">Registrarse</a>
+                    {% endif %}
+                    <div class="modal fade" id="complaint-modal" tabindex="-1" aria-labelledby="complaint-modal" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="service-title"id="exampleModalLabel">Escriba su reclamación</h1>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/complaint" method="POST" id="post-complaint-form">
+                            {% csrf_token %}
+                            <input id="complaint-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
+                            <textarea id="complaint-input" name="complaint" placeholder="Escribe tu opinión..."></textarea>
+                            <button class="class-link publish-complaint-button">Publicar</button>
+                          </form>
+                          </div>
 
-        <h3>Reclamaciones</h3>
-        <h4>Sentimos no haberte atendido como te mereces, intentaremos mejorar</h4>
-        {% if user.is_authenticated %}
-            <div style="display: flex; justify-content: center;">
-              <button class="class-link" id="modal-btn" data-bs-toggle="modal" data-bs-target="#complaint-modal">Escribir reclamación</button>
-            </div>
-        {% endif %}
-        <div class="modal fade" id="complaint-modal" tabindex="-1" aria-labelledby="complaint-modal" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <label class="modal-title" id="exampleModalLabel">Escriba su reclamación</label>
+                        </div>
+                      </div>
+                    </div>
+                </div>
               </div>
-              <div class="modal-body">
-                <form action="/complaint" method="POST" id="post-complaint-form">
-                {% csrf_token %}
-                <input id="complaint-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
-                <textarea id="complaint-input" name="complaint" placeholder="Escribe tu opinión..."></textarea>
-                <button class="class-link publish-complaint-button">Publicar</button>
-              </form>
-              </div>
-
             </div>
-          </div>
         </div>
-
-
     </div>
-
-
-
-
-
+  <br>
+    <br>
 </section>
+
+
 {% endblock %}
 

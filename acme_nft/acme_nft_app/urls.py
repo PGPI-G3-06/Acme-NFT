@@ -40,6 +40,7 @@ urlpatterns = [
     path("complaint", views.complaint, name="complaint"),
     path("opinion", views.opinion, name="opinion"),
     path("opinions", views.opinions, name="opinions"),
+    path("contact", views.contact, name="contact"),
 
     # Orders
     path("orders", views.orders, name="orders"),
