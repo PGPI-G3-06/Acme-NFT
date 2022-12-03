@@ -2,13 +2,14 @@ import os.path
 import string
 import random
 import convertapi
-
+import json
 from datetime import datetime
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
-    HttpResponse
+    HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
@@ -738,3 +739,16 @@ def get_invoice(order_id):
     }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
 
     return f'invoices/{order.ref_code}.pdf'
+
+
+# ------------------------ Suggestions ------------------------
+def sugesstions(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    suggestions = Product.objects.filter(collection=product.collection).exclude(
+        pk=product_id) | Product.objects.filter(author_id=product.author_id).exclude(pk=product_id)
+    if len(suggestions) == 0:
+        random = Product.objects.all().order_by('?')[:5]
+        return JsonResponse({'suggestions': list(random.values())})
+
+    else:
+        return JsonResponse({'suggestions': list(suggestions.values())})

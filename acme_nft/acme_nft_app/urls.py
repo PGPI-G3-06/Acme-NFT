@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.index, name="index"),    
     # Product detail
     path('product/<int:product_id>', views.product_detail, name="product_detail"),
+    path('sugesstions/<int:product_id>', views.sugesstions, name="sugesstions"),
     
     # Login page
     path("signin", views.signin, name="signin"),
