@@ -38,14 +38,15 @@
                         <button id="wishlist-button">
                             Añadir a lista de deseos
                             {% if in_wishlist %}
-                                <em class="fa-solid fa-heart fa-lg heart" id="product-{{product.id}}-img"></em>
+                                <img src="{% static 'images/heart-lleno.png'%}" alt="heart-lleno" id="product-{{product.id}}-img" class="heart-icon">
                             {% else %}
-                                <em class="fa-regular fa-heart fa-lg heart" id="product-{{product.id}}-img"></em>
+                                <img src="{% static 'images/heart.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img" class="heart-icon"></img>
                             {% endif %}
                         </button>
                         {% endif %}
                         <button id="add-to-cart-btn">
-                            Añadir al carrito<i class="fa fa-cart-plus fa-lg cart" aria-hidden="true"></i>
+                            Añadir al carrito <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" class="cart-icon">
+
                         </button>
                     </div>
                 </div>

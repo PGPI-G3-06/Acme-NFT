@@ -394,3 +394,13 @@
         width: 100%;
     }
 }
+
+.cart-icon{
+    height: 25px;
+    width: 25px;
+}
+
+.heart-icon{
+    height: 25px;
+    width: 25px;
+}
