@@ -263,6 +263,7 @@
                             'address': '{{ address }}',
                             'payment_method': '{{ pay }}',
                             'email': '{{ email }}',
+                            'name': '{{ name }}',
                         }
                     }).done(function (result) {
                         window.location.href = "{% url 'acme-nft:index' %}";
