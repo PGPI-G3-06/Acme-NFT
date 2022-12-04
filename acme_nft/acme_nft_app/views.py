@@ -13,7 +13,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
 import braintree
-import pandas as pd
+
+from io import BytesIO, StringIO
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
@@ -29,8 +32,6 @@ gateway = braintree.BraintreeGateway(
         private_key=django_settings.BRAINTREE_PRIVATE_KEY
     )
 )
-
-
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -312,8 +313,6 @@ def update_address(request, address_id):
 
         address = Address.objects.get(id=address_id)
 
-
-
         errors = []
 
         street_name = request.POST['street_name']
@@ -373,7 +372,6 @@ def update_address(request, address_id):
             door = ""
         city = address.city
         code_postal = address.code_postal
-
 
         return render(request, "update_address.html", {
             "street_name": street_name,
@@ -541,7 +539,7 @@ def payment(request):
 
     user = request.user
 
-    pdf = get_invoice(order.id)
+    pdf = get_invoice_pdf(order)
 
     email = EmailMessage('Acma NFT',
                          f'Gracias por su compra, su pedido es {ref_code}',
@@ -643,7 +641,6 @@ def orders(request):
     orders = Order.objects.filter(
         productentry__user_id=request.user.id).order_by('-date').distinct()
 
-
     return render(request, "show-orders.html", {
         "orders": orders,
     })
@@ -708,33 +705,47 @@ def bytes_to_dict(bytes_d):
     return ast.literal_eval(dict_str)
 
 
-def get_invoice(order_id):
-    order = Order.objects.get(id=order_id)
-    products = ProductEntry.objects.filter(order=order, entry_type='ORDER')
 
+
+
+def get_invoice_pdf(order_id):
+    order_ = Order.objects.get(id=order_id.id)
+    products = ProductEntry.objects.filter(order=order_,
+                                           entry_type='ORDER').annotate()
+    user = products[0].user
+
+    total_by_product = {p.product.id: p.product.price * p.quantity for p in
+                        products}
+
+    total = sum(total_by_product.values())
+
+    context_dict = {"order_reference": order_.ref_code,
+                    "products": products,
+                    "client": {
+                        "name": user.first_name + " " + user.last_name,
+                        "email": user.email,
+                    },
+                    "pay": order_.payment_method,
+                    "address": order_.address,
+                    "total": total,
+                    }
+
+    template = get_template('invoice.html')
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(
+        StringIO(html),
+        dest=result,
+        encoding='UTF-8'
+    )
+
+    # save pdf
     if not os.path.exists('invoices/'):
         os.makedirs('invoices/')
 
-    path = f'invoices/{order.ref_code}.csv'
+    with open(f'invoices/{order_.ref_code}.pdf', 'wb') as f:
+        f.write(result.getvalue())
 
-    with open(path, 'w') as f:
-        f.write(f'Order ref: {order.ref_code}\n\n')
-        f.write(f'Producto;Cantidad;Precio/Ud;Total\n')
-        total = 0
-        for p in products:
-            f.write(
-                f'{p.product.name};{p.quantity};{p.product.price};{p.product.price * p.quantity}\n')
-            total += p.product.price * p.quantity
-        f.write(f'\n')
-        f.write(f'Total: {total}€\n')
-        f.write(f'\n\n')
-        f.write(f'Pago: {order.payment_method}\n')
-        f.write(f'Envio: {order.address}\n')
-        f.close()
+    return f'invoices/{order_.ref_code}.pdf'
 
-    convertapi.api_secret = 'gPfHZCFyCuqXLNn6'
-    convertapi.convert('pdf', {
-        'File': path
-    }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
 
-    return f'invoices/{order.ref_code}.pdf'
