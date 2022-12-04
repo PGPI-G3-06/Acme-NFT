@@ -28,7 +28,8 @@
                 <div class="col">
                     <h1 class="card-title">Carrito</h1>
                     <div class="cart rounded mb-xl-3 custom-scrollbar table-wrapper-scroll-y checkbox-group required">
-                        <table class="table table-responsive-sm table-striped" aria-describedby="Tabla de resumen de productos">
+                        <table class="table table-responsive-sm table-striped"
+                               aria-describedby="Tabla de resumen de productos">
                             <thead class="head">
                             <tr class="separator-line">
                                 <th scope="col">#</th>
@@ -108,7 +109,8 @@
                         <div class="col">
                             <h1 class="card-title">Pago</h1>
                             <div class="div-pagos rounded mb-xl-3">
-                                <table class="table" aria-describedby="Tabla de tipo de pagos">
+                                <table class="table"
+                                       aria-describedby="Tabla de tipo de pagos">
                                     <thead class="head">
                                     <tr class="separator-line">
                                         <th scope="col">#</th>
@@ -142,57 +144,120 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h1 class="card-title">Dirección</h1>
-                                <button type="button"
-                                   class="btn btn-primary"
 
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">
-                                    Añade una dirección
-                                </button>
-                            </div>
+                    {% if user.is_authenticated %}
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h1 class="card-title">Dirección</h1>
 
-                            <div class="div-pagos rounded mb-xl-3">
-                                <table class="table" aria-describedby="Table de direcciones">
-                                    <thead class="head">
-                                    <tr class="separator-line">
-                                        <th scope="col">#</th>
-                                        <th scope="col">Dirección</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                                    <button type="button"
+                                            class="btn btn-primary"
 
-                                    {% for address in addresses %}
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal">
+                                        Añade una dirección
+                                    </button>
 
-                                        <tr>
-                                            <th scope="row">
-                                                <input class="form-check-input"
-                                                       type="radio"
-                                                       value="{{ address.id }}"
-                                                       name="envios"
-                                                       id="{{ address.id }}"
-                                                       required>
-                                            </th>
-                                            <td>{{ address }}</td>
+                                </div>
+
+                                <div class="div-pagos rounded mb-xl-3">
+                                    <table class="table"
+                                           aria-describedby="Table de direcciones">
+                                        <thead class="head">
+                                        <tr class="separator-line">
+                                            <th scope="col">#</th>
+                                            <th scope="col">Dirección</th>
                                         </tr>
+                                        </thead>
+                                        <tbody>
 
-                                    {% endfor %}
+                                        {% for address in addresses %}
 
-                                    </tbody>
-                                </table>
+                                            <tr>
+                                                <th scope="row">
+                                                    <input class="form-check-input"
+                                                           type="radio"
+                                                           value="{{ address.id }}"
+                                                           name="envios"
+                                                           id="{{ address.id }}"
+                                                           required>
+                                                </th>
+                                                <td>{{ address }}</td>
+                                            </tr>
+
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
 
 
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
+
+
                 </div>
 
             </div>
 
-            {% if  addresses|length > 0 or cart|length %}
+            {% if not user.is_authenticated %}
+
+                <h1 class="card-title">Datos</h1>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre y
+                                Apellidos</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="nombre"
+                                   name="nombre"
+                                   placeholder="Nombre, Apellidos"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   name="email"
+                                   placeholder="email"
+                                   required>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="direccion"
+                                   class="form-label">Dirección</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="direccion"
+                                   name="direccion"
+                                   placeholder="Calle, nº(piso, puerta, escalera), localidad, provincia"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="codigo-postal"
+                                   class="form-label">Código postal</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="codigo-postal"
+                                   name="codigo-postal"
+                                   placeholder="Código postal"
+                                   required>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            {% endif %}
+
+            {% if  addresses|length > 0 or cart|length > 0 %}
 
                 <div class="row">
                     <div class="col">
@@ -222,7 +287,8 @@
                                 data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
-                    <form id="address-form" method="post" action="{% url 'acme-nft:add_address_in_cart' %}">
+                    <form id="address-form" method="post"
+                          action="{% url 'acme-nft:add_address_in_cart' %}">
 
                         {% csrf_token %}
                         <div class="modal-body">

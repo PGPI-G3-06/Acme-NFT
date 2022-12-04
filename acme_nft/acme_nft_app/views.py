@@ -1,7 +1,6 @@
 import os.path
 import string
 import random
-import convertapi
 
 from datetime import datetime
 from django.contrib import auth
@@ -453,7 +452,10 @@ def cart_view(request, error=None):
         user = None
     entries = ProductEntry.objects.filter(user=user, entry_type='CART')
 
-    addresses = Address.objects.filter(user_id=user.id)
+    addresses = None
+
+    if user:
+        addresses = Address.objects.filter(user_id=user.id)
 
     return render(request, "cart.html", {
         "cart": entries,
@@ -471,12 +473,27 @@ def resume_cart_view(request):
     pay = request.POST.get('pagos')
     address_id = request.POST.get('envios')
 
+    name = '_'
+    email = '_'
+
+
+    if user is None:
+        address = request.POST.get('direccion')
+        name = request.POST.get('nombre')
+        email = request.POST.get('email')
+    else:
+        address = Address.objects.get(id=address_id)
+
+
+
+
     if len(products_ids) == 0:
         return cart_view(request, error="No has seleccionado ningún producto")
 
     products = ProductEntry.objects.filter(id__in=products_ids, user=user,
                                            entry_type='CART')
-    address = Address.objects.get(id=address_id)
+
+
 
     try:
         braintree_client_token = braintree.ClientToken.generate(
@@ -488,7 +505,9 @@ def resume_cart_view(request):
         "products": products,
         "address": address,
         "pay": pay,
-        "braintree_client_token": braintree_client_token
+        "braintree_client_token": braintree_client_token,
+        "name": name,
+        "email": email,
     })
 
 
@@ -541,11 +560,16 @@ def payment(request):
 
     user = request.user
 
+    email = ''
+
+    if not user.is_authenticated:
+        email = request.POST.get('email')
+
     pdf = get_invoice(order.id)
 
     email = EmailMessage('Acma NFT',
                          f'Gracias por su compra, su pedido es {ref_code}',
-                         'acmenftinc@gmail.com', [user.email])
+                         'acmenftinc@gmail.com', [user.email] if user else email)
     email.attach_file(pdf)
     email.send()
 

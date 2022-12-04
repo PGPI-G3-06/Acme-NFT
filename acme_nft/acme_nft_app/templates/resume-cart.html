@@ -261,7 +261,8 @@
                             'csrfmiddlewaretoken': '{{ csrf_token }}',
                             'products': productsEntriesIds.toString(),
                             'address': '{{ address }}',
-                            'payment_method': '{{ pay }}'
+                            'payment_method': '{{ pay }}',
+                            'email': '{{ email }}',
                         }
                     }).done(function (result) {
                         window.location.href = "{% url 'acme-nft:index' %}";
