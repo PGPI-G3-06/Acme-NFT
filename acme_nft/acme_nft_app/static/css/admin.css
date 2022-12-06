@@ -1,0 +1,9 @@
+.t-head{
+    background-color: var(--main-color);
+    border-bottom: 1px solid #ddd;
+    color: #fff;
+}
+
+.a-tag{
+    color: black;
+}

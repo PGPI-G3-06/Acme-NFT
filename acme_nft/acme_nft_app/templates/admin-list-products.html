@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <thead class="t-head">
+
+
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Colección</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Precio oferta</th>
+                    <th scope="col">Rareza</th>
+                    <th scope="col">Autor</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+
+                    <tr>
+
+                        <th scope="row">{{ product.id }}</th>
+                        <td> <a class="a-tag" href="{% url 'acme-nft:index' %}">{{ product.name }}</a></td>
+                        <td>{{ product.collection }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.stock }}</td>
+                        {% if product.offer_price %}
+                            <td>{{ product.offer_price }}</td>
+                        {% else %}
+                            <td>No hay oferta</td>
+                        {% endif %}
+                        <td>{{ product.rarity }}</td>
+                        <td>{{ product.author }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+
+{% endblock content %}

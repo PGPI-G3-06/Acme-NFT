@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <script src="{% static 'js/admin.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <form id="form" action="{% url 'acme-nft:admin_new_product' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="InputName">Nombre NFT</label>
+            <input type="text" class="form-control" id="name"
+                   aria-describedby="nameHelp" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="collection">Colección</label>
+            <input type="text" class="form-control"
+                   id="collection" placeholder="Colección" name="collection"
+                   required>
+        </div>
+        <div class="d-flex flex-row align-items-center flex-wrap">
+            <div class="form-group me-5">
+                <label for="stock">Stock</label>
+                <input type="number" min="0" class="form-control"
+                       id="stock" name="stock" required>
+            </div>
+            <div class="form-group me-5">
+                <label for="price">Precio</label>
+                <input type="number" step="any" class="form-control"
+                       id="price" name="price" required>
+            </div>
+            <div class="form-group me-5">
+                <label for="offer_price">Precio oferta</label>
+                <input type="number" min="0" class="form-control"
+                       id="offer_price" name="offer_price">
+            </div>
+
+        </div>
+        <div class="d-flex flex-row align-items-center flex-wrap mt-2">
+            <button type="button" class="btn btn-primary me-5"
+                    onclick="showSelectAuthor()">
+                Elige autor
+            </button>
+
+            <button type="button" class="btn btn-primary"
+                    onclick="showCreateAuthor()">
+                Crea autor
+            </button>
+        </div>
+
+
+        <div id="elige-autor" style="display: none">
+            <label for="author-select">Elige autor</label>
+            <select class="form-select" aria-label="Default select example"
+                    name="author-select" id="author-select" required>
+                {% for a in authors %}
+                    <option value="{{ a.id }}">{{ a.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="crea-autor" style="display: none">
+            <div class="form-group">
+                <label for="author-input">Nombre</label>
+                <input type="text" class="form-control" id="author-input"
+                       aria-describedby="nameHelp" name="author-input">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-5">Submit</button>
+
+    </form>
+
+{% endblock %}
+

@@ -1,28 +1,30 @@
 import os.path
 import string
 import random
-import convertapi
 
 from datetime import datetime
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django import forms
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
     HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 import ast
 import braintree
 
 from io import BytesIO, StringIO
 from django.template.loader import get_template
+from django.views.generic import ListView, CreateView
 from xhtml2pdf import pisa
 
 from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
 
 from .models import Product, ProductEntry, Comment, \
-    Address, Order, PaymentMethod, Status, Complaint, Opinion
+    Address, Order, PaymentMethod, Status, Complaint, Opinion, RarityType, \
+    Author
 
 gateway = braintree.BraintreeGateway(
     braintree.Configuration.configure(
@@ -747,5 +749,42 @@ def get_invoice_pdf(order_id):
         f.write(result.getvalue())
 
     return f'invoices/{order_.ref_code}.pdf'
+
+
+# ------------------------ admin ------------------------
+
+class AdminListProducts(ListView):
+    model = Product
+    template_name = 'admin-list-products.html'
+    context_object_name = 'products'
+    paginate_by = 20
+
+
+    def get_queryset(self):
+        return Product.objects.all().order_by('id')
+
+
+
+class AdminFormProduct(CreateView):
+    model = Product
+    template_name = 'admin-form-product.html'
+    success_url = reverse_lazy('admin-list-products')
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rarity'] = [(rarity, rarity.value) for rarity in RarityType]
+        context['authors'] = Author.objects.all()
+        return context
+
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+
+
+
+
 
 

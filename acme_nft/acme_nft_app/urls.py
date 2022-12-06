@@ -50,6 +50,10 @@ urlpatterns = [
     path("error", views.error, name="error"),
     path("profile", views.edit_user, name="profile"),
 
+    # Admin
+    path("admins/products", views.AdminListProducts.as_view(), name="admin"),
+    path("admins/products/new", views.AdminFormProduct.as_view(), name="admin_new_product"),
+
 
 ]
 
