@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <script src="{% static 'js/admin.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row ms-5 me-5">
+        <div class="col">
+            <fieldset class="field-set">
+                <legend class="legend-field-set">Detalle de producto</legend>
+                <form action="{% url 'acme-nft:admin_detail' product.id %}" method="post">
+
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="name">Nombre NFT</label>
+                        <input type="text" class="form-control" id="name"
+                               aria-describedby="nameHelp" name="name" placeholder="Nombre" value="{{ product.name }}"
+                               readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="collection">Colección</label>
+                        <input type="text" class="form-control"
+                               id="collection" placeholder="Colección" name="collection"
+                               value="{{ product.collection }}"
+                               readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="url">URL de la imagen</label>
+                        <input type="text" class="form-control"
+                               id="url" placeholder="url" name="url" value="{{ product.image_url }}"
+                               readonly>
+                    </div>
+                    <div class="d-flex flex-row align-items-center flex-wrap">
+                        <div class="form-group me-5">
+                            <label for="stock">Stock</label>
+                            <input type="number" min="0" class="form-control"
+                                   id="stock" name="stock" value="{{ product.stock }}" required>
+                        </div>
+                        <div class="form-group me-5">
+                            <label for="price">Precio</label>
+                            <input type="number" step="any" class="form-control"
+                                   id="price" name="price" value="{{ product.price }}" required>
+                        </div>
+                        <div class="form-group me-5">
+                            <label for="offer_price">Precio oferta</label>
+                            <input type="number" min="0" step="any" class="form-control"
+                                   id="offer_price" name="offer_price" value="{{ product.offer_price }}">
+                        </div>
+
+                        <div class="form-group me-5">
+                            <label for="rarity">Elige rareza</label>
+                            <select class="form-select" aria-label="Default select example"
+                                    name="rarity" id="rarity">
+                                <option value="{{ product.rarity }}">{{ product.rarity }}</option>
+                                {% for r,v in rarity %}
+                                    <option value="{{ r }}">{{ v }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group me-5">
+                            <label for="author-input">Nombre</label>
+                            <input type="text" class="form-control" id="author-input"
+                                   aria-describedby="nameHelp" name="author-input" value="{{ product.author.name }}"
+                                   readonly>
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary mt-5">Submit</button>
+
+                </form>
+
+            </fieldset>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}

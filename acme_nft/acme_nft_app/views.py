@@ -5,6 +5,7 @@ import random
 from datetime import datetime
 from django.contrib import auth
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django import forms
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
@@ -16,7 +17,7 @@ import braintree
 
 from io import BytesIO, StringIO
 from django.template.loader import get_template
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from xhtml2pdf import pisa
 
 from acme_nft import settings as django_settings
@@ -707,9 +708,6 @@ def bytes_to_dict(bytes_d):
     return ast.literal_eval(dict_str)
 
 
-
-
-
 def get_invoice_pdf(order_id):
     order_ = Order.objects.get(id=order_id.id)
     products = ProductEntry.objects.filter(order=order_,
@@ -763,28 +761,75 @@ class AdminListProducts(ListView):
     def get_queryset(self):
         return Product.objects.all().order_by('id')
 
+@permission_required('is_staff')
+def update_product(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    if request.method == 'GET':
+        product = Product.objects.get(pk=product_id)
+        r = product.rarity
+        a = product.author
+
+        rarity = [(rarity, rarity.value)  for rarity in RarityType if rarity.value != r]
+        authors = Author.objects.exclude(id__in=[a.id]).all()
+
+        return render(request, 'admin-update-product.html', {'product': product, 'rarity': rarity, 'authors': authors})
+    elif request.method == 'POST':
+        new_stock = request.POST['stock']
+        new_price = request.POST['price']
+        new_rarity = request.POST['rarity']
+        new_offer_price = request.POST['offer_price']
+        if new_offer_price == '':
+            new_offer_price = None
+
+        if new_stock != product.stock:
+            product.stock = new_stock
+        if new_price != product.price:
+            product.price = new_price
+        if new_rarity != product.rarity:
+            product.rarity = new_rarity
+        if new_offer_price != product.offer_price:
+            product.offer_price = new_offer_price
+        product.save()
+
+        return HttpResponseRedirect(reverse('acme-nft:admin'))
 
 
-class AdminFormProduct(CreateView):
-    model = Product
-    template_name = 'admin-form-product.html'
-    success_url = reverse_lazy('admin-list-products')
-    fields = '__all__'
+# only admin
+@permission_required('is_staff')
+def create_product(request):
+    if request.method == 'GET':
+        rarity = [(rarity, rarity.value) for rarity in RarityType]
+        authors = Author.objects.all()
+        return render(request, 'admin-form-product.html', {'rarity': rarity,'authors': authors})
+    elif request.method == 'POST':
+        name = request.POST['name']
+        collection = request.POST['collection']
+        price = request.POST['price']
+        offer_price = request.POST['offer_price']
+        if offer_price == '':
+            offer_price = None
+        stock = request.POST['stock']
+        url = request.POST['url']
+        rarity = request.POST['rarity']
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['rarity'] = [(rarity, rarity.value) for rarity in RarityType]
-        context['authors'] = Author.objects.all()
-        return context
+        if request.POST['select-author'] == 'true':
+            author = Author.objects.get(pk=request.POST['author-select'])
+        else:
+            author = Author.objects.create(name=request.POST['author-input'])
 
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+        product = Product(name=name, collection=collection, price=price,
+                          stock=stock, image_url=url, rarity=rarity, offer_price=offer_price, author=author)
+        product.save()
+        return HttpResponseRedirect(reverse('acme-nft:admin'))
 
 
+class AdminListOrders(ListView):
+    model = Order
+    template_name = 'admin-list-orders.html'
+    context_object_name = 'orders'
+    paginate_by = 20
 
-
-
-
+    def get_queryset(self):
+        return Order.objects.all().order_by('id')
 

@@ -7,3 +7,14 @@
 .a-tag{
     color: black;
 }
+
+.field-set{
+    border: 1px solid var(--main-color);
+    border-radius: 5px;
+}
+
+.legend-field-set{
+    color: var(--main-color);
+}
+
+
