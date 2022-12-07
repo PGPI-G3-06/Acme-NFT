@@ -10,7 +10,7 @@
 {% block content %}
 
     <div class="row">
-    <div class="col-md-12">
+        <div class="col-md-12">
             <button class="btn btn-primary" onclick="window.location.href = '{% url 'acme-nft:admin_new_product' %}'">
                 Añadir producto
             </button>
@@ -32,6 +32,7 @@
                     <th scope="col">Precio oferta</th>
                     <th scope="col">Rareza</th>
                     <th scope="col">Autor</th>
+                    <th scope="col">Escaparate</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,7 +41,8 @@
                     <tr>
 
                         <th scope="row">{{ product.id }}</th>
-                        <td> <a class="a-tag" href="{% url 'acme-nft:admin_detail' product.id %}">{{ product.name }}</a></td>
+                        <td><a class="a-tag" href="{% url 'acme-nft:admin_detail' product.id %}">{{ product.name }}</a>
+                        </td>
                         <td>{{ product.collection }}</td>
                         <td>{{ product.price }}</td>
                         <td>{{ product.stock }}</td>
@@ -51,6 +53,7 @@
                         {% endif %}
                         <td>{{ product.rarity }}</td>
                         <td>{{ product.author }}</td>
+                        <td>{{ product.showcase }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -105,12 +105,15 @@ class Order(models.Model):
     address = models.CharField(max_length=256)
     status = models.CharField(max_length=60, choices=[ (tag, tag.value) for tag in Status])
 
-    @classmethod
+
     def total(self):
         total = 0
-        for entry in self.entry_set.all():
+        for entry in self.productentry_set.all():
             total += entry.product.price * entry.quantity
         return total
+
+    def user(self):
+        return self.productentry_set.first().user
 
     def __str__(self):
         return self.ref_code

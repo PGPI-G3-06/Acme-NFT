@@ -54,6 +54,8 @@ urlpatterns = [
     path("admins/products", views.AdminListProducts.as_view(), name="admin"),
     path("admins/products/<int:product_id>",views.update_product, name="admin_detail"),
     path("admins/products/new", views.create_product, name="admin_new_product"),
+    path("admins/orders", views.AdminListOrders.as_view(), name="admin_orders"),
+    path("admins/orders/status/<int:order_id>", views.change_order_status, name="admin_order_status"),
 
 
 ]

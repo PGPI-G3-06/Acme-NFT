@@ -423,6 +423,7 @@ def check_errors(block, city, code_postal, door, errors, floor, number,
         errors.append(city_length)
     return errors
 
+
 # ------------------------ Showcase ------------------------
 
 def showcase(request):
@@ -431,6 +432,7 @@ def showcase(request):
     return render(request, "showcase.html", {
         "products_showcase": products_showcase,
     })
+
 
 # -------------------------- Cart --------------------------
 
@@ -765,9 +767,9 @@ class AdminListProducts(ListView):
     context_object_name = 'products'
     paginate_by = 20
 
-
     def get_queryset(self):
         return Product.objects.all().order_by('id')
+
 
 @permission_required('is_staff')
 def update_product(request, product_id):
@@ -777,7 +779,7 @@ def update_product(request, product_id):
         r = product.rarity
         a = product.author
 
-        rarity = [(rarity, rarity.value)  for rarity in RarityType if rarity.value != r]
+        rarity = [(rarity, rarity.value) for rarity in RarityType if rarity.value != r]
         authors = Author.objects.exclude(id__in=[a.id]).all()
 
         return render(request, 'admin-update-product.html', {'product': product, 'rarity': rarity, 'authors': authors})
@@ -786,6 +788,8 @@ def update_product(request, product_id):
         new_price = request.POST['price']
         new_rarity = request.POST['rarity']
         new_offer_price = request.POST['offer_price']
+        new_showcase = bool(request.POST['showcase'])
+
         if new_offer_price == '':
             new_offer_price = None
 
@@ -797,6 +801,10 @@ def update_product(request, product_id):
             product.rarity = new_rarity
         if new_offer_price != product.offer_price:
             product.offer_price = new_offer_price
+
+        if new_showcase != product.showcase:
+            product.showcase = new_showcase
+
         product.save()
 
         return HttpResponseRedirect(reverse('acme-nft:admin'))
@@ -808,7 +816,7 @@ def create_product(request):
     if request.method == 'GET':
         rarity = [(rarity, rarity.value) for rarity in RarityType]
         authors = Author.objects.all()
-        return render(request, 'admin-form-product.html', {'rarity': rarity,'authors': authors})
+        return render(request, 'admin-form-product.html', {'rarity': rarity, 'authors': authors})
     elif request.method == 'POST':
         name = request.POST['name']
         collection = request.POST['collection']
@@ -819,15 +827,16 @@ def create_product(request):
         stock = request.POST['stock']
         url = request.POST['url']
         rarity = request.POST['rarity']
+        showcase = bool(request.POST['showcase'])
 
         if request.POST['select-author'] == 'true':
             author = Author.objects.get(pk=request.POST['author-select'])
         else:
             author = Author.objects.create(name=request.POST['author-input'])
 
-
         product = Product(name=name, collection=collection, price=price,
-                          stock=stock, image_url=url, rarity=rarity, offer_price=offer_price, author=author)
+                          stock=stock, image_url=url, rarity=rarity, offer_price=offer_price, author=author,
+                          showcase=showcase)
         product.save()
         return HttpResponseRedirect(reverse('acme-nft:admin'))
 
@@ -841,3 +850,12 @@ class AdminListOrders(ListView):
     def get_queryset(self):
         return Order.objects.all().order_by('id')
 
+
+def change_order_status(request, order_id):
+    order = Order.objects.get(pk=order_id)
+
+    new_status = bytes_to_dict(request.body)['status']
+    order.status = new_status
+    order.save()
+
+    return HttpResponseRedirect(reverse('acme-nft:admin'))

@@ -11,95 +11,105 @@
 {% block content %}
 
     <div class="row ms-5 me-5">
-    <div class="col">
-        <fieldset class="field-set">
-            <legend class="legend">Add New Product</legend>
+        <div class="col">
+            <fieldset class="field-set">
+                <legend class="legend">Add New Product</legend>
 
-            <form id="form" action="{% url 'acme-nft:admin_new_product' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="InputName">Nombre NFT</label>
-            <input type="text" class="form-control" id="name"
-                   aria-describedby="nameHelp" name="name"  placeholder="Nombre">
+                <form id="form" action="{% url 'acme-nft:admin_new_product' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="InputName">Nombre NFT</label>
+                        <input type="text" class="form-control" id="name"
+                               aria-describedby="nameHelp" name="name" placeholder="Nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="collection">Colección</label>
+                        <input type="text" class="form-control"
+                               id="collection" placeholder="Colección" name="collection"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="url">URL de la imagen</label>
+                        <input type="text" class="form-control"
+                               id="url" placeholder="url" name="url"
+                               required>
+                    </div>
+                    <div class="d-flex flex-row align-items-center flex-wrap">
+                        <div class="form-group me-5">
+                            <label for="stock">Stock</label>
+                            <input type="number" min="0" class="form-control"
+                                   id="stock" name="stock" required>
+                        </div>
+                        <div class="form-group me-5">
+                            <label for="price">Precio</label>
+                            <input type="number" step="any" class="form-control"
+                                   id="price" name="price" required>
+                        </div>
+                        <div class="form-group me-5">
+                            <label for="offer_price">Precio oferta</label>
+                            <input type="number" min="0" step="any" class="form-control"
+                                   id="offer_price" name="offer_price">
+                        </div>
+
+                        <div class="form-group me-5">
+                            <label for="rarity">Elige rareza</label>
+                            <select class="form-select" aria-label="Default select example"
+                                    name="rarity" id="rarity" required>
+                                {% for r,v in rarity %}
+                                    <option value="{{ r }}">{{ v }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group me-5">
+                            <label for="showcase">Escaparate</label>
+                            <select class="form-select" aria-label="Default select example"
+                                    name="showcase" id="showcase">
+                                <option value="True">True</option>
+                                <option value="False" selected>False</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="d-flex flex-row align-items-center flex-wrap mt-2">
+                        <button type="button" class="btn btn-primary me-5"
+                                onclick="showSelectAuthor()">
+                            Elige autor
+                        </button>
+
+                        <button type="button" class="btn btn-primary"
+                                onclick="showCreateAuthor()">
+                            Crea autor
+                        </button>
+                    </div>
+
+
+                    <div id="elige-autor" style="display: none">
+                        <label for="author-select">Elige autor</label>
+                        <select class="form-select" aria-label="Default select example"
+                                name="author-select" id="author-select" required>
+                            {% for a in authors %}
+                                <option value="{{ a.id }}">{{ a.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="crea-autor" style="display: none">
+                        <div class="form-group">
+                            <label for="author-input">Nombre</label>
+                            <input type="text" class="form-control" id="author-input"
+                                   aria-describedby="nameHelp" name="author-input">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-5">Submit</button>
+
+                    <input type="text" name="select-author" value="False" style="display: none">
+
+                </form>
+
+            </fieldset>
         </div>
-        <div class="form-group">
-            <label for="collection">Colección</label>
-            <input type="text" class="form-control"
-                   id="collection" placeholder="Colección" name="collection"
-                   required>
-        </div>
-        <div class="form-group">
-            <label for="url">URL de la imagen</label>
-            <input type="text" class="form-control"
-                   id="url" placeholder="url" name="url"
-                   required>
-        </div>
-        <div class="d-flex flex-row align-items-center flex-wrap">
-            <div class="form-group me-5">
-                <label for="stock">Stock</label>
-                <input type="number" min="0" class="form-control"
-                       id="stock" name="stock" required>
-            </div>
-            <div class="form-group me-5">
-                <label for="price">Precio</label>
-                <input type="number" step="any" class="form-control"
-                       id="price" name="price" required>
-            </div>
-            <div class="form-group me-5">
-                <label for="offer_price">Precio oferta</label>
-                <input type="number" min="0" step="any" class="form-control"
-                       id="offer_price" name="offer_price">
-            </div>
-
-            <div class="form-group me5">
-                <label for="rarity">Elige rareza</label>
-                <select class="form-select" aria-label="Default select example"
-                        name="rarity" id="rarity" required>
-                    {% for r,v in rarity %}
-                        <option value="{{ r }}">{{ v }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-        </div>
-        <div class="d-flex flex-row align-items-center flex-wrap mt-2">
-            <button type="button" class="btn btn-primary me-5"
-                    onclick="showSelectAuthor()">
-                Elige autor
-            </button>
-
-            <button type="button" class="btn btn-primary"
-                    onclick="showCreateAuthor()">
-                Crea autor
-            </button>
-        </div>
-
-
-        <div id="elige-autor" style="display: none">
-            <label for="author-select">Elige autor</label>
-            <select class="form-select" aria-label="Default select example"
-                    name="author-select" id="author-select" required>
-                {% for a in authors %}
-                    <option value="{{ a.id }}">{{ a.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div id="crea-autor" style="display: none">
-            <div class="form-group">
-                <label for="author-input">Nombre</label>
-                <input type="text" class="form-control" id="author-input"
-                       aria-describedby="nameHelp" name="author-input">
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-5">Submit</button>
-
-        <input type="text" name="select-author" value="False" style="display: none">
-
-    </form>
-
-        </fieldset>
-    </div>
     </div>
 
 
