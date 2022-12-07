@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.db import models
 from enum import Enum
 
+from django.template.defaultfilters import register
+
+
 # Enum
 class EntryType(models.TextChoices):
     cart = 'CART'
@@ -11,14 +14,12 @@ class EntryType(models.TextChoices):
     wishlist = 'WISHLIST'
 
 class PaymentMethod(models.TextChoices):
-    cash_on_delivery = 'CASH_ON_DELIVERY'
-    card = 'CARD'
+    transference = 'TRANSFERENCIA'
+    card = 'TARJETA'
 
 class Status(models.TextChoices):
-    received = 'RECEIVED'
-    sent = 'SENT'
-    on_transit = 'ON_TRANSIT'
-    delivered = 'DELIVERED'
+    sent = 'ENVIADO'
+    on_transit = 'EN TRÁNSITO'
     
 class RarityType(models.TextChoices):
     common = 'COMMON'
@@ -41,9 +42,9 @@ class Address(models.Model):
     def __str__(self):
         address = ""
         address+= self.street_name + ", " + str(self.number)+ " "
-        if self.block != None:
+        if self.block:
             address+= ", Bloque " + str(self.block) + " "
-        if self.floor != None:
+        if self.floor:
             address += ", " + str(self.floor)  + "º "
         if self.door != "":
             address += self.door + " "
@@ -93,7 +94,7 @@ class Opinion(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
-        return self.text
+        return self.title
 
 class Contact(models.Model):
     name = models.CharField(max_length=60)
@@ -111,6 +112,13 @@ class Order(models.Model):
     address = models.CharField(max_length=256)
     status = models.CharField(max_length=60, choices=[ (tag, tag.value) for tag in Status])
 
+    @classmethod
+    def total(self):
+        total = 0
+        for entry in self.entry_set.all():
+            total += entry.product.price * entry.quantity
+        return total
+
     def __str__(self):
         return self.ref_code
 
@@ -120,12 +128,15 @@ class ProductEntry(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+
+    def total(self):
+        return self.quantity * self.product.price
     
     def __str__(self):
         return f'user_id: {self.user.id}, product_id: {self.product.id}, entry_type: {self.entry_type}'
 
 class ProfilePicture(models.Model):
-    image = models.ImageField(upload_to='profile_pictures')
+    image = models.ImageField(upload_to='profile_pictures', default='static/images/profile.png')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

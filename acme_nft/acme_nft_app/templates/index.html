@@ -38,7 +38,7 @@
                                 {% endif %}
                             </div>
                             <div class="class-carrito">
-                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" width="30px" height="30px">
                                 <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="add-cart-{{product.id}}" method="POST">
                                     {% csrf_token %} 
                                     <input type="hidden" name="quantity" value="1">
