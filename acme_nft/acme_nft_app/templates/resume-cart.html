@@ -172,14 +172,6 @@
                             </div>
                         </form>
                         <form autocomplete="off">
-                            {% if braintree_error %}
-                                <div class="alert alert-danger fade in">
-                                    <button class="close" data-dismiss="alert">
-                                        &times;
-                                    </button>
-                                    {{ braintree_error|safe }}
-                                </div>
-                            {% endif %}
                             <div class="braintree-notifications"></div>
                             <div id="braintree-dropin"></div>
                             <input style="background-color: var(--main-color);"

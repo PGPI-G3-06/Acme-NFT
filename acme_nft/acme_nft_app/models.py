@@ -113,9 +113,9 @@ class Order(models.Model):
     status = models.CharField(max_length=60, choices=[ (tag, tag.value) for tag in Status])
 
     @classmethod
-    def total(self):
+    def total(cls):
         total = 0
-        for entry in self.entry_set.all():
+        for entry in cls.entry_set.all():
             total += entry.product.price * entry.quantity
         return total
 

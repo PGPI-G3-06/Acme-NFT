@@ -35,9 +35,32 @@
     border: 1px solid #573b8a;
 }
 
+.class-alert{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: var(--main-white);
+    width: 100%;
+}
+
+.class-alert > div{
+    min-width: 80%;
+}
+
+.alert-error {
+    color: #842029 !important;
+    background-color: #f8d7da !important;
+    border-color: #f5c2c7 !important;
+}
+
 @media screen and (max-width: 991px) {
     .class-search-form{
         width: 100%;
+    }
+
+    .class-alert > div{
+        min-width: 100%;
     }
 }
 

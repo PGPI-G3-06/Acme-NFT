@@ -25,6 +25,7 @@ urlpatterns = [
 
     # Wishlist
     path("wishlist/add/<int:product_id>", views.add_to_wishlist, name="add_to_wishlist"),
+    path("wishlist", views.wishlist, name="wishlist"),
     
     # Comments
     path("comments/add/<int:product_id>", views.add_comment, name="add_comment"),
@@ -37,7 +38,7 @@ urlpatterns = [
    
 
     # Customer Service
-    path("customerservice", views.customer_service, name="customerservice"),
+    path("service", views.customer_service, name="service"),
     path("complaint", views.complaint, name="complaint"),
     path("opinion", views.opinion, name="opinion"),
     path("opinions", views.opinions, name="opinions"),
