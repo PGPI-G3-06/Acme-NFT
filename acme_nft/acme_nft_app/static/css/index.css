@@ -5,7 +5,7 @@ section{
     align-items: center;
     flex-direction: column;
     padding: 100px 20px;
-    min-height: 100vh;
+    min-height: 85vh;
     background: var(--main-white);
 }
 

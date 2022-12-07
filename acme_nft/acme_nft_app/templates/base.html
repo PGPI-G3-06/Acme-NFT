@@ -25,7 +25,9 @@
     {% block extrahead %}
     {% endblock %}
 </head>
+
 <body>
+<!-- Header -->
 <header id="header" style="position: sticky; z-index:100; top: 0; width: 100%">
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
@@ -80,7 +82,7 @@
                                     <img style="border-radius: 50px"
                                          width="30px" height="30px"
                                          alt="imagen de perfil"
-                                         src="{% static 'images/profile.png' %}"/> {{ request.user.username }}
+                                         src="{{ request.user.profilepicture_set.all.0.image.url }}"/> {{ request.user.username }}
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item"
@@ -92,15 +94,9 @@
                                     <li><a class="dropdown-item"
                                            href="{% url 'acme-nft:orders' %}">Historial</a>
                                     </li>
-                                    {% comment %}
-                                        <li><a class="dropdown-item"
-                                               href="{% url 'acme-nft:orders_live' %}">Seguimiento</a>
-                                        </li>
-
-                                        <li><a class="dropdown-item"
-                                               href="{% url 'acme-nft:wishtlist' %}">Lista
-                                            de deseos</a></li>
-                                    {% endcomment %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'acme-nft:wishlist' %}">Lista de deseos</a>
+                                    </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
@@ -133,16 +129,31 @@
     </nav>
 </header>
 
+<!-- Error messages -->
+{% if messages %}
+<div class="class-alert">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Content -->
 {% block content %}
 {% endblock %}
 
+<!-- Footer -->
 <footer>
 
     <p>
-        <a class="footer-component" href="/customerservice">Atención al
+        <a class="footer-component" href="{% url 'acme-nft:service' %}">Atención al
             cliente</a>
     </p>
 
 </footer>
 </body>
+
 </html>
