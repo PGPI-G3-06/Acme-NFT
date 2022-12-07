@@ -2,11 +2,12 @@ import os.path
 import string
 import random
 import convertapi
-
+import json
 from datetime import datetime
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
     HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -745,10 +746,48 @@ def get_invoice_pdf(order_id):
     if not os.path.exists('invoices/'):
         os.makedirs('invoices/')
 
+    path = f'invoices/{order.ref_code}.csv'
+
+    with open(path, 'w') as f:
+        f.write(f'Order ref: {order.ref_code}\n\n')
+        f.write(f'Producto;Cantidad;Precio/Ud;Total\n')
+        total = 0
+        for p in products:
+            f.write(
+                f'{p.product.name};{p.quantity};{p.product.price};{p.product.price * p.quantity}\n')
+            total += p.product.price * p.quantity
+        f.write(f'\n')
+        f.write(f'Total: {total}€\n')
+        f.write(f'\n\n')
+        f.write(f'Pago: {order.payment_method}\n')
+        f.write(f'Envio: {order.address}\n')
+        f.close()
+
+    convertapi.api_secret = 'gPfHZCFyCuqXLNn6'
+    convertapi.convert('pdf', {
+        'File': path
+    }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
+
+    return f'invoices/{order.ref_code}.pdf'
+
+
+
     with open(f'invoices/{order_.ref_code}.pdf', 'wb') as f:
     f.write(result.getvalue())
 
     return f'invoices/{order_.ref_code}.pdf'
+    
+    
+# ------------------------ Suggestions ------------------------
+def sugesstions(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    suggestions = Product.objects.filter(collection=product.collection).exclude(
+        pk=product_id) | Product.objects.filter(author_id=product.author_id).exclude(pk=product_id)
+
+    while len(suggestions) < 5:
+        suggestions = suggestions | Product.objects.all().order_by('?').exclude(
+        pk=product_id)[:5-len(suggestions)]
+    return JsonResponse({'suggestions': list(suggestions.values())})
 
 
 
@@ -768,5 +807,4 @@ def contact(request):
             "successfull_message": True})
     else:
         return render(request, "contact.html")
-
 
