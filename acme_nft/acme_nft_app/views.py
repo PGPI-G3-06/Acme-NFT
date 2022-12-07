@@ -8,7 +8,7 @@ from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
-    HttpResponse
+    HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
@@ -22,7 +22,7 @@ from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
 
 from .models import Product, ProductEntry, Comment, \
-    Address, Order, PaymentMethod, Status, Complaint, Opinion
+    Address, Order, PaymentMethod, Status, Complaint, Opinion, Contact
 
 gateway = braintree.BraintreeGateway(
     braintree.Configuration.configure(
@@ -147,8 +147,7 @@ def error(request):
 # ------------------------ Login page ------------------------
 
 def login(request):
-    user = authenticate(username=request.POST['username'],
-                        password=request.POST['password'])
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
 
     if user is not None:
         auth.login(request, user)
@@ -678,7 +677,10 @@ def complaint(request):
                               description=complaint_text, user=user,
                               date=datetime.now())
         complaint.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return render(request, "customer-service.html", {
+                      "message": "Su reclamación ha sido procesada y se hará llegar a la administración de la web",
+                      "successfull_message": True})
+
 
 
 def opinion(request):
@@ -693,9 +695,9 @@ def opinion(request):
 
 
 def opinions(request):
-    opinions = Opinion.objects.all()
+    opinions = list(Opinion.objects.all().order_by('-date'))
     return render(request, "opinions.html", {
-        "opinions": opinions
+        "opinions": opinions,
     })
 
 
@@ -744,8 +746,27 @@ def get_invoice_pdf(order_id):
         os.makedirs('invoices/')
 
     with open(f'invoices/{order_.ref_code}.pdf', 'wb') as f:
-        f.write(result.getvalue())
+    f.write(result.getvalue())
 
     return f'invoices/{order_.ref_code}.pdf'
+
+
+
+
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+
+        contact = Contact(name=name, email=email, subject=subject, message=message)
+        contact.save()
+        return render(request, "contact.html", {
+            "message": "Su mensaje ha sido enviado correctamente",
+            "successfull_message": True})
+    else:
+        return render(request, "contact.html")
 
 
