@@ -14,13 +14,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
 import braintree
-import pandas as pd
+
+from io import BytesIO, StringIO
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
 
 from .models import Product, ProductEntry, Comment, \
-    Address, Order, PaymentMethod, Status, Complaint, Opinion
+    Address, Order, PaymentMethod, Status, Complaint, Opinion, Contact
 
 gateway = braintree.BraintreeGateway(
     braintree.Configuration.configure(
@@ -30,8 +33,6 @@ gateway = braintree.BraintreeGateway(
         private_key=django_settings.BRAINTREE_PRIVATE_KEY
     )
 )
-
-
 
 # ------------------------------------- Constants -------------------------------------
 
@@ -147,8 +148,7 @@ def error(request):
 # ------------------------ Login page ------------------------
 
 def login(request):
-    user = authenticate(username=request.POST['username'],
-                        password=request.POST['password'])
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
 
     if user is not None:
         auth.login(request, user)
@@ -313,8 +313,6 @@ def update_address(request, address_id):
 
         address = Address.objects.get(id=address_id)
 
-
-
         errors = []
 
         street_name = request.POST['street_name']
@@ -374,7 +372,6 @@ def update_address(request, address_id):
             door = ""
         city = address.city
         code_postal = address.code_postal
-
 
         return render(request, "update_address.html", {
             "street_name": street_name,
@@ -542,7 +539,7 @@ def payment(request):
 
     user = request.user
 
-    pdf = get_invoice(order.id)
+    pdf = get_invoice_pdf(order)
 
     email = EmailMessage('Acma NFT',
                          f'Gracias por su compra, su pedido es {ref_code}',
@@ -644,7 +641,6 @@ def orders(request):
     orders = Order.objects.filter(
         productentry__user_id=request.user.id).order_by('-date').distinct()
 
-
     return render(request, "show-orders.html", {
         "orders": orders,
     })
@@ -682,7 +678,10 @@ def complaint(request):
                               description=complaint_text, user=user,
                               date=datetime.now())
         complaint.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return render(request, "customer-service.html", {
+                      "message": "Su reclamación ha sido procesada y se hará llegar a la administración de la web",
+                      "successfull_message": True})
+
 
 
 def opinion(request):
@@ -697,9 +696,9 @@ def opinion(request):
 
 
 def opinions(request):
-    opinions = Opinion.objects.all()
+    opinions = list(Opinion.objects.all().order_by('-date'))
     return render(request, "opinions.html", {
-        "opinions": opinions
+        "opinions": opinions,
     })
 
 
@@ -709,10 +708,41 @@ def bytes_to_dict(bytes_d):
     return ast.literal_eval(dict_str)
 
 
-def get_invoice(order_id):
-    order = Order.objects.get(id=order_id)
-    products = ProductEntry.objects.filter(order=order, entry_type='ORDER')
 
+
+
+def get_invoice_pdf(order_id):
+    order_ = Order.objects.get(id=order_id.id)
+    products = ProductEntry.objects.filter(order=order_,
+                                           entry_type='ORDER').annotate()
+    user = products[0].user
+
+    total_by_product = {p.product.id: p.product.price * p.quantity for p in
+                        products}
+
+    total = sum(total_by_product.values())
+
+    context_dict = {"order_reference": order_.ref_code,
+                    "products": products,
+                    "client": {
+                        "name": user.first_name + " " + user.last_name,
+                        "email": user.email,
+                    },
+                    "pay": order_.payment_method,
+                    "address": order_.address,
+                    "total": total,
+                    }
+
+    template = get_template('invoice.html')
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(
+        StringIO(html),
+        dest=result,
+        encoding='UTF-8'
+    )
+
+    # save pdf
     if not os.path.exists('invoices/'):
         os.makedirs('invoices/')
 
@@ -741,14 +771,40 @@ def get_invoice(order_id):
     return f'invoices/{order.ref_code}.pdf'
 
 
+
+    with open(f'invoices/{order_.ref_code}.pdf', 'wb') as f:
+    f.write(result.getvalue())
+
+    return f'invoices/{order_.ref_code}.pdf'
+    
+    
 # ------------------------ Suggestions ------------------------
 def sugesstions(request, product_id):
     product = Product.objects.get(pk=product_id)
     suggestions = Product.objects.filter(collection=product.collection).exclude(
         pk=product_id) | Product.objects.filter(author_id=product.author_id).exclude(pk=product_id)
-    if len(suggestions) == 0:
-        random = Product.objects.all().order_by('?')[:5]
-        return JsonResponse({'suggestions': list(random.values())})
 
+    while len(suggestions) < 5:
+        suggestions = suggestions | Product.objects.all().order_by('?').exclude(
+        pk=product_id)[:5-len(suggestions)]
+    return JsonResponse({'suggestions': list(suggestions.values())})
+
+
+
+
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+
+        contact = Contact(name=name, email=email, subject=subject, message=message)
+        contact.save()
+        return render(request, "contact.html", {
+            "message": "Su mensaje ha sido enviado correctamente",
+            "successfull_message": True})
     else:
-        return JsonResponse({'suggestions': list(suggestions.values())})
+        return render(request, "contact.html")
+
