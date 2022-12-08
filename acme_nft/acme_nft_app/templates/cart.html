@@ -34,7 +34,7 @@
 
                                 {% for item in cart %}
 
-                                    <tr id="tr-product-id-{{ item.id }}">
+                                    <tr id="tr-product-id-{{ item.id }}" class="product-{{item.product.id}}-entry">
                                     <th scope="row">
                                         <input class="form-check-input"
                                             type="checkbox"
@@ -45,7 +45,7 @@
                                             data-grouprequired="productos">
                                     </th>
                                     <td>{{ item.product.name }}</td>
-                                    <td>{{ item.product.price }}€</td>
+                                    <td>{{ item.product.price|floatformat:2 }}€</td>
                                     <td>
                                         <div class="input-group mb-3">
                                             <button class="btn btn-outline-secondary"
@@ -55,7 +55,7 @@
                                             </button>
                                             <input id="{{ item.product.id }}"
                                                 type="number"
-                                                class="form-control"
+                                                class="form-control quantity-field-{{item.product.id}}"
                                                 placeholder=""
                                                 aria-label="Example text with button addon"
                                                 aria-describedby="button-addon1"
@@ -70,7 +70,7 @@
                                         </div>
                                     </td>
 
-                                    <td id="total-{{ item.product.id }}">
+                                    <td id="total-{{ item.product.id }}" class="total-{{ item.product.id }}-class">
                                         <script>
                                             var total =
                                             {{ item.product.price }} * {{ item.quantity }}
@@ -80,7 +80,7 @@
                                     <td>
                                         <button type="button"
                                                 class="btn btn-danger"
-                                                onclick="deleteProduct({{ item.product.id }}, {{ item.id }})">
+                                                onclick="deleteProduct({{ item.product.id }})">
                                             Eliminar
                                         </button>
                                     </td>
