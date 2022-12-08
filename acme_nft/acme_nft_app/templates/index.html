@@ -53,53 +53,54 @@
 
             {% endfor %}
         </div>
-        <div class="pagination-container">
-            <div class="pagination-box">
-                <ul class="pagination">
-                    <li class="d-flex justify-content-center align-items-center">
-                        <button style="border:none" class="btn" onclick="previousPage({{pages_range.start}}, {{pages_range.stop}})">Anterior</button>
-                    </li>
-                    {% for i in pages_range %}
-                        {% if i == current_page %}
-                        <li><a href="?page={{i}}" class="active">{{ i | addition:1 }}</a></li>
-                        {% else %}
-                        <li><a href="?page={{i}}">{{ i | addition:1 }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    <li class="d-flex justify-content-center align-items-center">
-                        <button style="border:none" class="btn" onclick="nextPage({{pages_range.start}}, {{pages_range.stop}})">Siguiente</button>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        {% if needs_pagination %}
+          <div class="pagination-container">
+              <div class="pagination-box">
+                  <ul class="pagination">
+                      <li class="d-flex justify-content-center align-items-center">
+                          <button style="border:none" class="btn" onclick="previousPage({{pages_range.start}}, {{pages_range.stop}})">Anterior</button>
+                      </li>
+                      {% for i in pages_range %}
+                          {% if i == current_page %}
+                          <li class="class-page"><a href="?page={{i}}" class="active">{{ i | addition:1 }}</a></li>
+                          {% else %}
+                          <li class="class-page"><a href="?page={{i}}">{{ i | addition:1 }}</a></li>
+                          {% endif %}
+                      {% endfor %}
+                      <li class="d-flex justify-content-center align-items-center">
+                          <button style="border:none" class="btn" onclick="nextPage({{pages_range.start}}, {{pages_range.stop}})">Siguiente</button>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+        {% endif %}
 
         {% for product in products %}
-            <div class="modal fade" id="add-to-cart-modal-{{product.id}}">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"
-                                id="add-to-cart-modal-label">
-                                Añadir {{product.name}} al carrito</h5>
-                            <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="add-cart-{{product.id}}" class="modal-form" method="POST">
-                            {% csrf_token %} 
-                            <label for="quantity">Cantidad: <input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></label>
-                            
-                            <input type="submit"
-                                class="add-to-cart-btn"
-                                value="Añadir al carrito">
-                        
-                        </form>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+              <div class="modal fade" id="add-to-cart-modal-{{product.id}}">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title"
+                                  id="add-to-cart-modal-label">
+                                  Añadir {{product.name}} al carrito</h5>
+                              <button type="button"
+                                      class="btn-close"
+                                      data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                          </div>
+                          <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="add-cart-{{product.id}}" class="modal-form" method="POST">
+                              {% csrf_token %} 
+                              <label for="quantity">Cantidad: <input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></label>
 
+                              <input type="submit"
+                                  class="add-to-cart-btn"
+                                  value="Añadir al carrito">
+
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          {% endfor %}
     </div>
 </section>
 {% endblock %}
