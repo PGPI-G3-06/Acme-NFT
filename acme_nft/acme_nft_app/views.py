@@ -1,30 +1,29 @@
 import os.path
 import string
 import random
-import json
-
-
 from datetime import datetime
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
+from django import forms
 from django.core import serializers
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
     HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 import ast
 import braintree
 
 from io import BytesIO, StringIO
 from django.template.loader import get_template
+from django.views.generic import ListView, CreateView, DetailView
 from xhtml2pdf import pisa
 
 from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
 
-from .models import Product, ProductEntry, Comment, \
-    Address, Order, PaymentMethod, Status, Complaint, Opinion, Contact, ProfilePicture
+from .models import *
 
 gateway = braintree.BraintreeGateway(
     braintree.Configuration.configure(
@@ -461,6 +460,16 @@ def check_errors(block, city, code_postal, door, errors, floor, number,
     return errors
 
 
+# ------------------------ Showcase ------------------------
+
+def showcase(request):
+    products_showcase = Product.objects.filter(is_showcase=True)
+
+    return render(request, "showcase.html", {
+        "products_showcase": products_showcase,
+    })
+
+
 # -------------------------- Cart --------------------------
 
 def add_to_cart(request, product_id):
@@ -866,4 +875,105 @@ def contact(request):
     else:
         return render(request, "contact.html")
 
+
+# ------------------------ admin ------------------------
+
+class AdminListProducts(ListView):
+    model = Product
+    template_name = 'admin-list-products.html'
+    context_object_name = 'products'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Product.objects.all().order_by('id')
+
+
+@permission_required('is_staff')
+def update_product(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    if request.method == 'GET':
+        product = Product.objects.get(pk=product_id)
+        r = product.rarity
+        a = product.author
+
+        rarity = [(rarity, rarity.value) for rarity in RarityType if rarity.value != r]
+        authors = Author.objects.exclude(id__in=[a.id]).all()
+
+        return render(request, 'admin-update-product.html', {'product': product, 'rarity': rarity, 'authors': authors})
+    elif request.method == 'POST':
+        new_stock = request.POST['stock']
+        new_price = request.POST['price']
+        new_rarity = request.POST['rarity']
+        new_offer_price = request.POST['offer_price']
+        new_showcase = bool(request.POST['showcase'])
+
+        if new_offer_price == '':
+            new_offer_price = None
+
+        if new_stock != product.stock:
+            product.stock = new_stock
+        if new_price != product.price:
+            product.price = new_price
+        if new_rarity != product.rarity:
+            product.rarity = new_rarity
+        if new_offer_price != product.offer_price:
+            product.offer_price = new_offer_price
+
+        if new_showcase != product.showcase:
+            product.showcase = new_showcase
+
+        product.save()
+
+        return HttpResponseRedirect(reverse('acme-nft:admin'))
+
+
+# only admin
+@permission_required('is_staff')
+def create_product(request):
+    if request.method == 'GET':
+        rarity = [(rarity, rarity.value) for rarity in RarityType]
+        authors = Author.objects.all()
+        return render(request, 'admin-form-product.html', {'rarity': rarity, 'authors': authors})
+    elif request.method == 'POST':
+        name = request.POST['name']
+        collection = request.POST['collection']
+        price = request.POST['price']
+        offer_price = request.POST['offer_price']
+        if offer_price == '':
+            offer_price = None
+        stock = request.POST['stock']
+        url = request.POST['url']
+        rarity = request.POST['rarity']
+        showcase = bool(request.POST['showcase'])
+
+        if request.POST['select-author'] == 'true':
+            author = Author.objects.get(pk=request.POST['author-select'])
+        else:
+            author = Author.objects.create(name=request.POST['author-input'])
+
+        product = Product(name=name, collection=collection, price=price,
+                          stock=stock, image_url=url, rarity=rarity, offer_price=offer_price, author=author,
+                          showcase=showcase)
+        product.save()
+        return HttpResponseRedirect(reverse('acme-nft:admin'))
+
+
+class AdminListOrders(ListView):
+    model = Order
+    template_name = 'admin-list-orders.html'
+    context_object_name = 'orders'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Order.objects.all().order_by('id')
+
+
+def change_order_status(request, order_id):
+    order = Order.objects.get(pk=order_id)
+
+    new_status = bytes_to_dict(request.body)['status']
+    order.status = new_status
+    order.save()
+
+    return HttpResponseRedirect(reverse('acme-nft:admin'))
 
