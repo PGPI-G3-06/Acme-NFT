@@ -52,6 +52,7 @@ urlpatterns = [
     path("hello/<int:user_id>", views.hello, name="hello"),
     path("error", views.error, name="error"),
     path("profile", views.edit_user, name="profile"),
+    path("services", views.get_service_terms, name="service_terms"),
 
     # Admin
     path("admins/products", views.AdminListProducts.as_view(), name="admin"),

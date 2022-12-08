@@ -876,6 +876,12 @@ def contact(request):
         return render(request, "contact.html")
 
 
+
+# ------------------------ Services term ------------------------
+
+def get_service_terms(request):
+    return render(request, "service-terms.html")
+
 # ------------------------ admin ------------------------
 
 class AdminListProducts(ListView):
