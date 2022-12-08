@@ -60,7 +60,7 @@
                                                    data-grouprequired="productos">
                                         </th>
                                         <td>{{ item.product.name }}</td>
-                                    <td>{{ item.product.price|floatformat:2 }}€</td>
+                                        <td>{{ item.product.price|floatformat:2 }}€</td>
                                         <td>
                                             <div class="input-group mb-3">
                                                 <button class="btn btn-outline-secondary"
@@ -85,7 +85,7 @@
                                                 </button>
                                             </div>
                                         </td>
-                                        <td id="total-{{ item.product.id }}">{{ item.total|floatformat:2 }}
+                                        <td class="total-{{ item.product.id }}-class">{{ item.total|floatformat:2 }}
                                             €
                                         </td>
                                         <td>
