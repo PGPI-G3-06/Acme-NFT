@@ -774,20 +774,11 @@ def orders(request):
 def order(request, order_id):
     order = Order.objects.get(pk=order_id)
     products = ProductEntry.objects.filter(order_id=order_id)
-    total = final_price(products)
     return render(request, "order-details.html", {
         "order": order,
         "products": products,
-        "total": total,
+        "total": order.total(),
     })
-
-
-def final_price(products):
-    final_price = 0
-    for product in products:
-        final_price += product.product.price * product.quantity
-    return final_price
-
 
 # ------------------------ Customer Service ------------------------
 def customer_service(request):

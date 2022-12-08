@@ -30,7 +30,12 @@
                     <tr>
                         <th scope="row">{{ order.id }}</th>
                         <td>{{ order.ref_code }}</td>
-                        <td>{{ order.user.username }}</td>
+
+                        {% if order.productentry_set.all.0.user.username != None %}
+                            <td>{{ order.productentry_set.all.0.user.username }}</td>
+                        {% else %}
+                            <td>Usuario no registrado</td>
+                        {% endif %}
                         <td>{{ order.address }}</td>
                         <td>{{ order.date }}</td>
                         <td>{{ order.total }}</td>
@@ -44,7 +49,7 @@
                             {% csrf_token %}
 
                             <td>
-                                <select onchange="changeStatus({{ order.id }})"  class="form-select" name="status">
+                                <select onchange="changeStatus({{ order.id }})" class="form-select" name="status">
                                     <option value="EN TRÁNSITO">EN TRÁNSITO</option>
                                     <option onclick="console.log('cambiado')" value="ENVIADO">ENVIADO</option>
                                 </select>
