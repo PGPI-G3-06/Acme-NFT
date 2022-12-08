@@ -96,6 +96,14 @@ class Opinion(models.Model):
     def __str__(self):
         return self.title
 
+class Contact(models.Model):
+    name = models.CharField(max_length=60)
+    email = models.EmailField()
+    subject = models.CharField(max_length=60)
+    message = models.TextField()
+    def __str__(self):
+        return self.name
+
 
 class Order(models.Model):
     ref_code = models.CharField(max_length=60)
@@ -105,9 +113,9 @@ class Order(models.Model):
     status = models.CharField(max_length=60, choices=[ (tag, tag.value) for tag in Status])
 
     @classmethod
-    def total(self):
+    def total(cls):
         total = 0
-        for entry in self.entry_set.all():
+        for entry in cls.entry_set.all():
             total += entry.product.price * entry.quantity
         return total
 

@@ -1,13 +1,16 @@
 import os.path
 import string
 import random
+import json
+
 
 from datetime import datetime
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
-    HttpResponse
+    HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import ast
@@ -21,7 +24,7 @@ from acme_nft import settings as django_settings
 from django.core.mail import send_mail, EmailMessage
 
 from .models import Product, ProductEntry, Comment, \
-    Address, Order, PaymentMethod, Status, Complaint, Opinion
+    Address, Order, PaymentMethod, Status, Complaint, Opinion, Contact, ProfilePicture
 
 gateway = braintree.BraintreeGateway(
     braintree.Configuration.configure(
@@ -34,13 +37,12 @@ gateway = braintree.BraintreeGateway(
 
 # ------------------------------------- Constants -------------------------------------
 
-max_products_per_page = 10
-
+MAX_PRODUCTS_PER_PAGE = 10
 
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-    # print(request.GET['order-by-collections'])
+    
     products = Product.objects.all()
     try:
         if request.GET['order-by'] == 'collections':
@@ -50,7 +52,7 @@ def index(request):
         pass
     try:
         if request.GET['order-by'] == 'author':
-            products = Product.objects.all().order_by('author_id')
+            products = Product.objects.all().order_by('author__name')
 
     except KeyError:
         pass
@@ -78,15 +80,15 @@ def index(request):
     except KeyError:
         page_number = 0
 
-    if len(products) % max_products_per_page == 0:
-        possible_pages = int(len(products) / max_products_per_page)
+    if len(products) % MAX_PRODUCTS_PER_PAGE == 0:
+        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE)
     else:
-        possible_pages = int(len(products) / max_products_per_page) + 1
+        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE) + 1
 
     # Load products to show in view
 
-    for i in range(page_number * max_products_per_page,
-                   page_number * max_products_per_page + max_products_per_page):
+    for i in range(page_number * MAX_PRODUCTS_PER_PAGE,
+                   page_number * MAX_PRODUCTS_PER_PAGE + MAX_PRODUCTS_PER_PAGE):
         if i < len(products):
             products_to_list.append(products[i])
 
@@ -146,8 +148,7 @@ def error(request):
 # ------------------------ Login page ------------------------
 
 def login(request):
-    user = authenticate(username=request.POST['username'],
-                        password=request.POST['password'])
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
 
     if user is not None:
         auth.login(request, user)
@@ -210,6 +211,7 @@ def signup(request):
                                             first_name=first_name,
                                             last_name=last_name, email=email)
             user.save()
+            ProfilePicture.objects.create(user=user)
             auth.login(request, user)
             return HttpResponseRedirect(reverse("acme-nft:index"))
 
@@ -454,11 +456,14 @@ def cart_view(request, error=None):
 
     if user:
         addresses = Address.objects.filter(user_id=user.id)
+    
+    if error:
+        messages.error(request, error)
+
 
     return render(request, "cart.html", {
         "cart": entries,
         "addresses": addresses,
-        'error': error,
     })
 
 
@@ -490,7 +495,7 @@ def resume_cart_view(request):
     try:
         braintree_client_token = braintree.ClientToken.generate(
             {"customer_id": user.id})
-    except:
+    except Exception:
         braintree_client_token = braintree.ClientToken.generate({})
 
     return render(request, "resume-cart.html", {
@@ -709,7 +714,9 @@ def complaint(request):
                               description=complaint_text, user=user,
                               date=datetime.now())
         complaint.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        messages.success(request, 'Su reclamación ha sido procesada y se le hará llegar a la administración de la web')
+        return HttpResponseRedirect(reverse("acme-nft:service"))
+
 
 
 def opinion(request):
@@ -724,9 +731,9 @@ def opinion(request):
 
 
 def opinions(request):
-    opinions = Opinion.objects.all()
+    opinions = list(Opinion.objects.all().order_by('-date'))
     return render(request, "opinions.html", {
-        "opinions": opinions
+        "opinions": opinions,
     })
 
 
@@ -775,7 +782,99 @@ def get_invoice_pdf(order_id, name=None, email=None):
     if not os.path.exists('invoices/'):
         os.makedirs('invoices/')
 
+    path = f'invoices/{order.ref_code}.csv'
+
+    with open(path, 'w') as f:
+        f.write(f'Order ref: {order.ref_code}\n\n')
+        f.write(f'Producto;Cantidad;Precio/Ud;Total\n')
+        total = 0
+        for p in products:
+            f.write(
+                f'{p.product.name};{p.quantity};{p.product.price};{p.product.price * p.quantity}\n')
+            total += p.product.price * p.quantity
+        f.write(f'\n')
+        f.write(f'Total: {total}€\n')
+        f.write(f'\n\n')
+        f.write(f'Pago: {order.payment_method}\n')
+        f.write(f'Envio: {order.address}\n')
+        f.close()
+
+    convertapi.api_secret = 'gPfHZCFyCuqXLNn6'
+    convertapi.convert('pdf', {
+        'File': path
+    }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
+
+    return f'invoices/{order.ref_code}.pdf'
+
+
+
     with open(f'invoices/{order_.ref_code}.pdf', 'wb') as f:
         f.write(result.getvalue())
 
     return f'invoices/{order_.ref_code}.pdf'
+
+    
+    
+# ------------------------ Suggestions ------------------------
+def sugesstions(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    suggestions = Product.objects.filter(collection=product.collection).exclude(
+        pk=product_id) | Product.objects.filter(author_id=product.author_id).exclude(pk=product_id)
+
+    while len(suggestions) < 5:
+        suggestions = suggestions | Product.objects.all().order_by('?').exclude(
+        pk=product_id)[:5-len(suggestions)]
+    return JsonResponse({'suggestions': list(suggestions.values())})
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+
+        contact = Contact(name=name, email=email, subject=subject)
+        contact.save()
+        messages.success(request, 'Mensaje enviado correctamente')
+        return render(request, "contact.html")
+    else:
+        return render(request, "contact.html")
+    
+def wishlist(request):
+    
+    if not request.user.is_authenticated:     
+        messages.error(request, 'Tienes que iniciar sesión primero')
+        return HttpResponseRedirect(reverse("acme-nft:signin"))
+
+    products = Product.objects.filter(productentry__user=request.user, productentry__entry_type='WISHLIST').distinct()
+    products_to_list = []
+
+    if not products:
+        messages.error(request, 'No hay productos en la lista de deseos')
+        return HttpResponseRedirect(reverse("acme-nft:index"))
+
+    try:
+        page_number = int(request.GET['page'])
+    except KeyError:
+        page_number = 0
+
+    if len(products) % MAX_PRODUCTS_PER_PAGE == 0:
+        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE)
+    else:
+        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE) + 1
+
+    for i in range(page_number * MAX_PRODUCTS_PER_PAGE,
+                   page_number * MAX_PRODUCTS_PER_PAGE + MAX_PRODUCTS_PER_PAGE):
+        if i < len(products):
+            products_to_list.append(products[i])
+
+    return render(request, "wishlist.html", context={"user": request.user,
+                                                  "products": products_to_list,
+                                                  "total": len(products),
+                                                  "wishlist": products_to_list,
+                                                  "pages_range": range(0,
+                                                                       possible_pages),
+                                                  "current_page": page_number
+                                                  }
+                  )
+
+

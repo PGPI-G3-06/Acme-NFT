@@ -3,12 +3,15 @@
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 
-    {% if error %}
+    <section>
+        <div class="container mt-xl-5" id="cart-main">
+
 
         <!-- Error Alert -->
         <div class="alert alert-danger alert-dismissible fade show">
@@ -76,27 +79,12 @@
                                                 onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.price }},{{ item.product.stock }})"
                                                 type="button"
                                                 id="button-addon1">+
+
                                         </button>
-                                    </div>
-                                </td>
-
-                                <td id="total-{{ item.product.id }}">
-                                    <script>
-                                        var total =
-                                        {{ item.product.price }} * {{ item.quantity }}
-                                        document.write(total.toFixed(2) + "€")
-                                    </script>
-                                </td>
-                                <td>
-                                    <button type="button"
-                                            class="btn btn-danger"
-                                            onclick="deleteProduct({{ item.product.id }}, {{ item.id }})">
-                                        Eliminar
-                                    </button>
-                                </td>
+                                    </td>
 
 
-                            {% endfor %}
+                                {% endfor %}
 
 
                             </tbody>
@@ -195,12 +183,14 @@
                                 </div>
                             </div>
                         </div>
+
                     {% endif %}
 
 
                 </div>
 
-            </div>
+                </div>
+
 
             {% if not user.is_authenticated %}
 
@@ -259,14 +249,14 @@
 
             {% if  addresses|length > 0 or cart|length > 0 %}
 
-                <div class="row">
-                    <div class="col">
-                        <button type="submit"
-                                class="btn btn-primary float-end">
-                            Resumen
-                        </button>
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit"
+                                    class="btn btn-primary float-end">
+                                Resumen
+                            </button>
+                        </div>
                     </div>
-                </div>
 
             {% endif %}
 
@@ -348,24 +338,25 @@
                                        required="required"
                                        name="city">
 
+
+                                </div>
+
+
                             </div>
+                            <div class="modal-footer">
+                                <input type="submit"
+                                    class="btn btn-primary"
+                                    placeholder="Añadir dirección">
+                            </div>
+                        </form>
 
 
-                        </div>
-                        <div class="modal-footer">
-                            <input type="submit"
-                                   class="btn btn-primary"
-                                   placeholder="Añadir dirección">
-                        </div>
-                    </form>
-
-
+                    </div>
                 </div>
             </div>
+
         </div>
-
-    </div>
-
+    </section>
 
 
 {% endblock %}

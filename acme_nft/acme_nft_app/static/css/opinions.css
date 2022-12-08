@@ -19,7 +19,10 @@ section{
 }
 .card{
 	position: center;
+	margin: 50px;
+
 }
+
 
 
 
@@ -40,39 +43,52 @@ section{
 	transition: .5s ease-in-out;
 }
 
+#new-opinion{
 
+}
 
-label{
-	color: #fff;
-	font-size: 2.5em;
+.class-link{
 	display: flex;
-	font-weight: bold;
-}
-
-
-
-
-
-button{
-	width: 60%;
-	height: 40px;
-	margin: 10px auto;
 	justify-content: center;
-	display: block;
-	color: #fff;
-	background: #573b8a;
-	font-size: 1em;
-	font-weight: bold;
-	margin-top: 20px;
-	outline: none;
-	border: none;
-	border-radius: 5px;
-	transition: .2s ease-in;
-	cursor: pointer;
+	border: 2px solid  var(--main-button-hover-dark-color);
+    background: white;
+    border-radius: 40px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #111;
+    text-decoration: none;
+    text-transform: uppercase;
+	margin: 20px;
+	padding: 10px;
+
 }
-button:hover{
-	background: #6d44b8;
+
+
+
+
+.class-link:hover{
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    transition: 0.5s all;
+
 }
+
+#opinions{
+	position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+
+
+
+
+
+
 
 
 

@@ -5,7 +5,7 @@ section{
     align-items: center;
     flex-direction: column;
     padding: 100px 20px;
-    min-height: 100vh;
+    min-height: 85vh;
     background: var(--main-white);
 }
 
@@ -266,4 +266,10 @@ section{
 	.selectbox {
 		width: 100%;
 	}
+}
+
+.cart-icon{
+    height: 30px;
+    width: 30px;
+
 }
