@@ -12,7 +12,6 @@
     <section>
         <div class="container mt-xl-5" id="cart-main">
 
-
             <!-- Error Alert -->
             {% if error %}
 
@@ -50,7 +49,7 @@
 
                                     {% for item in cart %}
 
-                                        <tr id="tr-product-id-{{ item.id }}">
+                                        <tr class="product-{{ item.product.id }}-entry">
                                         <th scope="row">
                                             <input class="form-check-input"
                                                    type="checkbox"
@@ -61,8 +60,7 @@
                                                    data-grouprequired="productos">
                                         </th>
                                         <td>{{ item.product.name }}</td>
-                                        <td >{{ item.product.price }}</td>
-
+                                        <td>{{ item.product.price|floatformat:2 }}€</td>
                                         <td>
                                             <div class="input-group mb-3">
                                                 <button class="btn btn-outline-secondary"
@@ -70,9 +68,9 @@
                                                         type="button"
                                                         id="button-addon1">-
                                                 </button>
-                                                <input id="{{ item.product.id }}"
+                                            <input id="{{ item.product.id }}"
                                                        type="number"
-                                                       class="form-control"
+                                                class="form-control quantity-field-{{item.product.id}}"
                                                        placeholder=""
                                                        aria-label="Example text with button addon"
                                                        aria-describedby="button-addon1"
@@ -87,18 +85,18 @@
                                                 </button>
                                             </div>
                                         </td>
-                                        <td id="total-{{ item.product.id }}">{{ item.total }} €</td>
+                                        <td class="total-{{ item.product.id }}-class">{{ item.total|floatformat:2 }}
+                                            €
+                                        </td>
                                         <td>
                                             <button type="button"
                                                     class="btn btn-danger"
-                                                    onclick="deleteProduct({{ item.product.id }}, {{ item.id }})">
-                                                <i class="fas fa-trash-alt"></i>
+                                                    onclick="deleteProduct({{ item.product.id }})">
+                                            Eliminar
                                             </button>
                                         </td>
 
-
                                     {% endfor %}
-
 
                                     </tbody>
                                 </table>
@@ -115,7 +113,9 @@
                                             <thead class="head">
                                             <tr class="separator-line">
                                                 <th scope="col">#</th>
-                                                <th scope="col">Tipo de pago</th>
+
+                                            <th scope="col">Tipo de pago</th>
+
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -134,7 +134,8 @@
                                                 <td>
                                                     <input class="form-check-input"
                                                            type="radio"
-                                                           value="tarjeta" name="pagos"
+                                                           value="tarjeta"
+                                                           name="pagos"
                                                            id="tarjeta"
                                                            required="required">
                                                 </td>
@@ -150,7 +151,8 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <h1 class="card-title">Dirección</h1>
+                                            <h1 class="card-title">
+                                                Dirección</h1>
 
                                             <button type="button"
                                                     class="btn btn-primary"
@@ -168,7 +170,9 @@
                                                 <thead class="head">
                                                 <tr class="separator-line">
                                                     <th scope="col">#</th>
+                                                    
                                                     <th scope="col">Dirección</th>
+                                                    
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -212,7 +216,9 @@
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <label for="nombre" class="form-label">Nombre y
+
+                                    <label for="nombre" class="form-label">Nombre
+                                        y
                                         Apellidos</label>
                                     <input type="text"
                                            class="form-control"
@@ -222,7 +228,10 @@
                                            required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
+
+                                    <label for="email"
+                                           class="form-label">Email</label>
+
                                     <input type="email"
                                            class="form-control"
                                            id="email"
@@ -245,7 +254,10 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="codigo-postal"
-                                           class="form-label">Código postal</label>
+
+                                           class="form-label">Código
+                                        postal</label>
+
                                     <input type="text"
                                            class="form-control"
                                            id="codigo-postal"
@@ -256,8 +268,7 @@
 
                             </div>
                         </div>
-
-
+                        
                     {% endif %}
 
                     {% if  addresses|length > 0 or cart|length > 0 %}
@@ -351,7 +362,6 @@
                                                required="required"
                                                name="city">
 
-
                                     </div>
 
 
@@ -363,6 +373,15 @@
                                 </div>
                             </form>
 
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit"
+                                           class="btn btn-primary"
+                                           placeholder="Añadir dirección">
+                                </div>
+                            </form>
 
                         </div>
                     </div>

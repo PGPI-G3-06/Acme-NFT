@@ -11,15 +11,15 @@
 <section>
     <div class="d-flex justify-content-center align-items-center flex-column">
         {% if user.first_name %}
-            <h1>Bienvenido, {{user.first_name}}, a tu lista de deseos:</h1>
+            <h1 style="text-align: center">Bienvenido, {{user.first_name}}, a tu lista de deseos:</h1>
         {% else %}
-            <h1>Bienvenido, {{user.username}}, a tu lista de deseos:</h1>
+            <h1 style="text-align: center">Bienvenido, {{user.username}}, a tu lista de deseos:</h1>
         {% endif %}
         
         {% if total == 1 %}
-            <h4>Actualmente tienes un único producto guardado. ¡Aprovecha y cómpralo!</h4>
+            <h4 style="text-align: center">Actualmente tienes un único producto guardado. ¡Aprovecha y cómpralo!</h4>
         {% else %}
-            <h4>Actualmente tienes un total de {{total}} productos guardados. ¡Aprovecha y cómpralos!</h4>
+            <h4 style="text-align: center">Actualmente tienes un total de {{total}} productos guardados. ¡Aprovecha y cómpralos!</h4>
         {% endif %}
         <br><br>
     </div>
