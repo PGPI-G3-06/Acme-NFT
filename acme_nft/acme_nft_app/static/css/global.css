@@ -59,3 +59,25 @@
 html, body{
     height: 100%;
 }
+
+showcase{
+    width: 80vw;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin: 50px 0;
+    padding: 0px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px var(--main-color); 
+}
+
+showcase::-webkit-scrollbar{
+    height: 7px;
+}
+
+showcase::-webkit-scrollbar-thumb{
+    background: var(--main-color);
+	border-radius: 5px;
+}

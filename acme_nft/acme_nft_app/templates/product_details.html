@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/product_details.css' %}"
           xmlns="http://www.w3.org/1999/html">
     <script type="text/javascript" src="{% static 'js/product_details.js' %}"></script>
@@ -50,6 +51,22 @@
                     </div>
                 </div>
             </div>
+
+            <h3 class="showcase-title">Otros productos que podrían interesarte</h3>
+
+            <showcase>
+                {% for product in showcase_products %}
+
+                    <div class="showcase-element"> 
+                    
+                        <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                        <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+
+                    </div>
+            
+                {% endfor %}
+            </showcase>
+
             <div class="comments-div">
                 {% if user.is_authenticated %}
                 <button class="new-comment-button">Añade tu comentario</button>

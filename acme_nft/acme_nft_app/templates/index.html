@@ -15,7 +15,20 @@
         <a class="class-link" href="?order-by=author" role="button">Ordenar por Autor</a>
         <br><br>
     </div>
-    <div style="margin-top: 25px;">
+    <div class="main-content-container">
+
+        <showcase>
+            {% for product in showcase_products %}
+
+                <div class="showcase-element"> 
+                 
+                    <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                    <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+
+                </div>
+        
+            {% endfor %}
+        </showcase>
 
         <div class="class-grid-container">
 

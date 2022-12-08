@@ -22,11 +22,11 @@ class Status(models.TextChoices):
     on_transit = 'EN TRÁNSITO'
     
 class RarityType(models.TextChoices):
-    common = 'COMMON'
-    rare = 'RARE'
-    epic = 'EPIC'
-    legendary = 'LEGENDARY'
-    mythic = 'MYTHIC'
+    common = 'COMÚM'
+    rare = 'RARO'
+    epic = 'ÉPICO'
+    legendary = 'LEGENDARIO'
+    mythic = 'MÍTICO'
 
 
 class Address(models.Model):
