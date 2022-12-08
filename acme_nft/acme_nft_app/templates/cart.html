@@ -96,9 +96,7 @@
                                             </button>
                                         </td>
 
-
                                     {% endfor %}
-
 
                                     </tbody>
                                 </table>
@@ -115,7 +113,9 @@
                                             <thead class="head">
                                             <tr class="separator-line">
                                                 <th scope="col">#</th>
+
                                             <th scope="col">Tipo de pago</th>
+
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -170,8 +170,9 @@
                                                 <thead class="head">
                                                 <tr class="separator-line">
                                                     <th scope="col">#</th>
-                                                    <th scope="col">Dirección
-                                                    </th>
+                                                    
+                                                    <th scope="col">Dirección</th>
+                                                    
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -215,6 +216,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
+
                                     <label for="nombre" class="form-label">Nombre
                                         y
                                         Apellidos</label>
@@ -226,8 +228,10 @@
                                            required>
                                 </div>
                                 <div class="mb-3">
+
                                     <label for="email"
                                            class="form-label">Email</label>
+
                                     <input type="email"
                                            class="form-control"
                                            id="email"
@@ -250,8 +254,10 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="codigo-postal"
+
                                            class="form-label">Código
                                         postal</label>
+
                                     <input type="text"
                                            class="form-control"
                                            id="codigo-postal"
@@ -262,8 +268,7 @@
 
                             </div>
                         </div>
-
-
+                        
                     {% endif %}
 
                     {% if  addresses|length > 0 or cart|length > 0 %}
@@ -357,7 +362,6 @@
                                                required="required"
                                                name="city">
 
-
                                     </div>
 
 
@@ -369,6 +373,15 @@
                                 </div>
                             </form>
 
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit"
+                                           class="btn btn-primary"
+                                           placeholder="Añadir dirección">
+                                </div>
+                            </form>
 
                         </div>
                     </div>
