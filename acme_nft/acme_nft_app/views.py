@@ -467,10 +467,10 @@ def add_to_cart(request, product_id):
 
     if quantity > 0:
         user = request.user
+        product = Product.objects.get(id=product_id)
 
         if not user.is_authenticated:
             user = None
-        product = Product.objects.get(id=product_id)
         try:
             entry = ProductEntry.objects.get(product=product,
                                              entry_type='CART', user=user)
@@ -478,10 +478,20 @@ def add_to_cart(request, product_id):
         except ProductEntry.DoesNotExist:
             entry = ProductEntry(product=product, entry_type='CART', user=user,
                                  quantity=quantity)
-        entry.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+        if entry.quantity <= product.stock:
+            
+            entry.save()
+            messages.success(request, 'Producto añadido a la cesta')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+        else:
+            messages.error(request, 'La cantidad de producto a añadir debe ser menor o igual que el stock del producto')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
     else:
-        return HttpResponseNotFound("Invalid Quantity")
+        messages.error(request, 'La cantidad debe ser positiva')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def cart_view(request, error=None):
