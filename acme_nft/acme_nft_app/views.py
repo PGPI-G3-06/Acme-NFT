@@ -1,8 +1,9 @@
 import os.path
 import string
 import random
-import convertapi
 import json
+
+
 from datetime import datetime
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate
@@ -500,10 +501,14 @@ def cart_view(request, error=None):
         user = None
     entries = ProductEntry.objects.filter(user=user, entry_type='CART')
 
-    addresses = Address.objects.filter(user_id=user.id)
+    addresses = None
+
+    if user:
+        addresses = Address.objects.filter(user_id=user.id)
     
     if error:
         messages.error(request, error)
+
 
     return render(request, "cart.html", {
         "cart": entries,
@@ -520,12 +525,21 @@ def resume_cart_view(request):
     pay = request.POST.get('pagos')
     address_id = request.POST.get('envios')
 
+    name = '_'
+    email = '_'
+
+    if user is None:
+        address = request.POST.get('direccion')
+        name = request.POST.get('nombre')
+        email = request.POST.get('email')
+    else:
+        address = Address.objects.get(id=address_id)
+
     if len(products_ids) == 0:
         return cart_view(request, error="No has seleccionado ningún producto")
 
     products = ProductEntry.objects.filter(id__in=products_ids, user=user,
                                            entry_type='CART')
-    address = Address.objects.get(id=address_id)
 
     try:
         braintree_client_token = braintree.ClientToken.generate(
@@ -537,7 +551,9 @@ def resume_cart_view(request):
         "products": products,
         "address": address,
         "pay": pay,
-        "braintree_client_token": braintree_client_token
+        "braintree_client_token": braintree_client_token,
+        "name": name,
+        "email": email,
     })
 
 
@@ -573,10 +589,19 @@ def payment(request):
 
     products_entry.update(order=order, entry_type='ORDER')
 
+    if request.user.is_authenticated:
+        first_name = request.user.first_name
+        last_name = request.user.last_name
+        email = request.user.email
+    else:
+        first_name = request.POST['name']
+        last_name = ''
+        email = request.POST['email']
+
     customer_kwargs = {
-        "first_name": request.user.first_name,
-        "last_name": request.user.last_name,
-        "email": request.user.email,
+        "first_name": first_name,
+        "last_name": last_name,
+        "email": email,
     }
     customer_create = braintree.Customer.create(customer_kwargs)
     customer_id = customer_create.customer.id
@@ -590,11 +615,20 @@ def payment(request):
 
     user = request.user
 
-    pdf = get_invoice_pdf(order)
 
-    email = EmailMessage('Acma NFT',
+
+    if not user.is_authenticated:
+        name = request.POST['name']
+        e = request.POST['email']
+        pdf = get_invoice_pdf(order, name, e)
+    else:
+        e = user.email
+        pdf = get_invoice_pdf(order)
+
+    email = EmailMessage('Acme NFT',
                          f'Gracias por su compra, su pedido es {ref_code}',
-                         'acmenftinc@gmail.com', [user.email])
+                         'no-replay-acmenftinc@gmail.com',
+                         [e])
     email.attach_file(pdf)
     email.send()
 
@@ -758,10 +792,7 @@ def bytes_to_dict(bytes_d):
     return ast.literal_eval(dict_str)
 
 
-
-
-
-def get_invoice_pdf(order_id):
+def get_invoice_pdf(order_id, name=None, email=None):
     order_ = Order.objects.get(id=order_id.id)
     products = ProductEntry.objects.filter(order=order_,
                                            entry_type='ORDER').annotate()
@@ -772,11 +803,15 @@ def get_invoice_pdf(order_id):
 
     total = sum(total_by_product.values())
 
+    if name is None:
+        name = user.first_name + " " + user.last_name
+        email = user.email
+
     context_dict = {"order_reference": order_.ref_code,
                     "products": products,
                     "client": {
-                        "name": user.first_name + " " + user.last_name,
-                        "email": user.email,
+                        "name": name,
+                        "email": email,
                     },
                     "pay": order_.payment_method,
                     "address": order_.address,
@@ -796,29 +831,7 @@ def get_invoice_pdf(order_id):
     if not os.path.exists('invoices/'):
         os.makedirs('invoices/')
 
-    path = f'invoices/{order.ref_code}.csv'
-
-    with open(path, 'w') as f:
-        f.write(f'Order ref: {order.ref_code}\n\n')
-        f.write(f'Producto;Cantidad;Precio/Ud;Total\n')
-        total = 0
-        for p in products:
-            f.write(
-                f'{p.product.name};{p.quantity};{p.product.price};{p.product.price * p.quantity}\n')
-            total += p.product.price * p.quantity
-        f.write(f'\n')
-        f.write(f'Total: {total}€\n')
-        f.write(f'\n\n')
-        f.write(f'Pago: {order.payment_method}\n')
-        f.write(f'Envio: {order.address}\n')
-        f.close()
-
-    convertapi.api_secret = 'gPfHZCFyCuqXLNn6'
-    convertapi.convert('pdf', {
-        'File': path
-    }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
-
-    return f'invoices/{order.ref_code}.pdf'
+    path = f'invoices/{order_.ref_code}.csv'
 
 
 
@@ -826,6 +839,7 @@ def get_invoice_pdf(order_id):
         f.write(result.getvalue())
 
     return f'invoices/{order_.ref_code}.pdf'
+
     
     
 # ------------------------ Suggestions ------------------------
@@ -851,4 +865,5 @@ def contact(request):
         return render(request, "contact.html")
     else:
         return render(request, "contact.html")
+
 
