@@ -13,349 +13,362 @@
         <div class="container mt-xl-5" id="cart-main">
 
 
-        <!-- Error Alert -->
-        <div class="alert alert-danger alert-dismissible fade show">
-            <strong>Error!</strong> {{ error }}
-            <button type="button" class="btn-close"
-                    data-bs-dismiss="alert"></button>
-        </div>
+            <!-- Error Alert -->
+            {% if error %}
 
-    {% endif %}
-
-    <div class="container mt-xl-5">
-
-        <form onsubmit="return checkSubmit()"
-              action="{% url 'acme-nft:resume_cart' %}" method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col">
-                    <h1 class="card-title">Carrito</h1>
-                    <div class="cart rounded mb-xl-3 custom-scrollbar table-wrapper-scroll-y checkbox-group required">
-                        <table class="table table-responsive-sm table-striped"
-                               aria-describedby="Tabla de resumen de productos">
-                            <thead class="head">
-                            <tr class="separator-line">
-                                <th scope="col">#</th>
-                                <th scope="col">Producto</th>
-                                <th scope="col">Precio/ud</th>
-                                <th scope="col">Cantidad</th>
-                                <th scope="col">Total</th>
-                                <th scope="col">Eliminar</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {% for item in cart %}
-
-                                <tr id="tr-product-id-{{ item.id }}">
-                                <th scope="row">
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           value="{{ item.id }}"
-                                           name="productos"
-                                           id="flexCheckDefault"
-                                           checked="checked"
-                                           data-grouprequired="productos">
-                                </th>
-                                <td>{{ item.product.name }}</td>
-                                <td>{{ item.product.price }}€</td>
-                                <td>
-                                    <div class="input-group mb-3">
-                                        <button class="btn btn-outline-secondary"
-                                                onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.price }}, {{ item.product.stock }})"
-                                                type="button"
-                                                id="button-addon1">-
-                                        </button>
-                                        <input id="{{ item.product.id }}"
-                                               type="number"
-                                               class="form-control"
-                                               placeholder=""
-                                               aria-label="Example text with button addon"
-                                               aria-describedby="button-addon1"
-                                               value="{{ item.quantity }}"
-                                               min="1"
-                                               max="{{ item.product.stock }}">
-                                        <button class="btn btn-outline-secondary"
-                                                onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.price }},{{ item.product.stock }})"
-                                                type="button"
-                                                id="button-addon1">+
-
-                                        </button>
-                                    </td>
-
-
-                                {% endfor %}
-
-
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <strong>Error!</strong> {{ error }}
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="alert"></button>
                 </div>
 
-                <div class="col">
+            {% endif %}
+
+
+            <div class="container mt-xl-5">
+
+                <form onsubmit="return checkSubmit()"
+                      action="{% url 'acme-nft:resume_cart' %}" method="post">
+                    {% csrf_token %}
                     <div class="row">
                         <div class="col">
-                            <h1 class="card-title">Pago</h1>
-                            <div class="div-pagos rounded mb-xl-3">
-                                <table class="table"
-                                       aria-describedby="Tabla de tipo de pagos">
+                            <h1 class="card-title">Carrito</h1>
+                            <div class="cart rounded mb-xl-3 custom-scrollbar table-wrapper-scroll-y checkbox-group required">
+                                <table class="table table-responsive-sm table-striped"
+                                       aria-describedby="Tabla de resumen de productos">
                                     <thead class="head">
                                     <tr class="separator-line">
                                         <th scope="col">#</th>
-                                        <th scope="col">Tipo de pago</th>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Precio/ud</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Eliminar</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
+
+                                    {% for item in cart %}
+
+                                        <tr id="tr-product-id-{{ item.id }}">
                                         <th scope="row">
                                             <input class="form-check-input"
-                                                   type="radio"
-                                                   value="contra-reembolso"
-                                                   name="pagos"
-                                                   id="contra-reembolso"
-                                                   required="required">
+                                                   type="checkbox"
+                                                   value="{{ item.id }}"
+                                                   name="productos"
+                                                   id="flexCheckDefault"
+                                                   checked="checked"
+                                                   data-grouprequired="productos">
                                         </th>
-                                        <td>Contra reembolso</td>
-                                    </tr>
-                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td >{{ item.product.price }}</td>
+
                                         <td>
-                                            <input class="form-check-input"
-                                                   type="radio"
-                                                   value="tarjeta" name="pagos"
-                                                   id="tarjeta"
-                                                   required="required">
+                                            <div class="input-group mb-3">
+                                                <button class="btn btn-outline-secondary"
+                                                        onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.price }}, {{ item.product.stock }})"
+                                                        type="button"
+                                                        id="button-addon1">-
+                                                </button>
+                                                <input id="{{ item.product.id }}"
+                                                       type="number"
+                                                       class="form-control"
+                                                       placeholder=""
+                                                       aria-label="Example text with button addon"
+                                                       aria-describedby="button-addon1"
+                                                       value="{{ item.quantity }}"
+                                                       min="1"
+                                                       max="{{ item.product.stock }}">
+                                                <button class="btn btn-outline-secondary"
+                                                        onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.price }},{{ item.product.stock }})"
+                                                        type="button"
+                                                        id="button-addon1">+
+
+                                                </button>
+                                            </div>
                                         </td>
-                                        <td>Tarjeta</td>
-                                    </tr>
+                                        <td id="total-{{ item.product.id }}">{{ item.total }} €</td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-danger"
+                                                    onclick="deleteProduct({{ item.product.id }}, {{ item.id }})">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+
+
+                                    {% endfor %}
+
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    </div>
 
-                    {% if user.is_authenticated %}
-                        <div class="row">
-                            <div class="col">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h1 class="card-title">Dirección</h1>
-
-                                    <button type="button"
-                                            class="btn btn-primary"
-
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal">
-                                        Añade una dirección
-                                    </button>
-
-                                </div>
-
-                                <div class="div-pagos rounded mb-xl-3">
-                                    <table class="table"
-                                           aria-describedby="Table de direcciones">
-                                        <thead class="head">
-                                        <tr class="separator-line">
-                                            <th scope="col">#</th>
-                                            <th scope="col">Dirección</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        {% for address in addresses %}
-
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <h1 class="card-title">Pago</h1>
+                                    <div class="div-pagos rounded mb-xl-3">
+                                        <table class="table"
+                                               aria-describedby="Tabla de tipo de pagos">
+                                            <thead class="head">
+                                            <tr class="separator-line">
+                                                <th scope="col">#</th>
+                                                <th scope="col">Tipo de pago</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
                                             <tr>
                                                 <th scope="row">
                                                     <input class="form-check-input"
                                                            type="radio"
-                                                           value="{{ address.id }}"
-                                                           name="envios"
-                                                           id="{{ address.id }}"
-                                                           required>
+                                                           value="contra-reembolso"
+                                                           name="pagos"
+                                                           id="contra-reembolso"
+                                                           required="required">
                                                 </th>
-                                                <td>{{ address }}</td>
+                                                <td>Contra reembolso</td>
                                             </tr>
-
-                                        {% endfor %}
-
-                                        </tbody>
-                                    </table>
-
-
+                                            <tr>
+                                                <td>
+                                                    <input class="form-check-input"
+                                                           type="radio"
+                                                           value="tarjeta" name="pagos"
+                                                           id="tarjeta"
+                                                           required="required">
+                                                </td>
+                                                <td>Tarjeta</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h1 class="card-title">Dirección</h1>
+
+                                            <button type="button"
+                                                    class="btn btn-primary"
+
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal">
+                                                Añade una dirección
+                                            </button>
+
+                                        </div>
+
+                                        <div class="div-pagos rounded mb-xl-3">
+                                            <table class="table"
+                                                   aria-describedby="Table de direcciones">
+                                                <thead class="head">
+                                                <tr class="separator-line">
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Dirección</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% for address in addresses %}
+
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <input class="form-check-input"
+                                                                   type="radio"
+                                                                   value="{{ address.id }}"
+                                                                   name="envios"
+                                                                   id="{{ address.id }}"
+                                                                   required>
+                                                        </th>
+                                                        <td>{{ address }}</td>
+                                                    </tr>
+
+                                                {% endfor %}
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+
+                    {% if not user.is_authenticated %}
+
+                        <h1 class="card-title">Datos</h1>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre y
+                                        Apellidos</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="nombre"
+                                           name="nombre"
+                                           placeholder="Nombre, Apellidos"
+                                           required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email"
+                                           class="form-control"
+                                           id="email"
+                                           name="email"
+                                           placeholder="email"
+                                           required>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="direccion"
+                                           class="form-label">Dirección</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="direccion"
+                                           name="direccion"
+                                           placeholder="Calle, nº(piso, puerta, escalera), localidad, provincia"
+                                           required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="codigo-postal"
+                                           class="form-label">Código postal</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="codigo-postal"
+                                           name="codigo-postal"
+                                           placeholder="Código postal"
+                                           required>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    {% endif %}
+
+                    {% if  addresses|length > 0 or cart|length > 0 %}
+
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit"
+                                        class="btn btn-primary float-end">
+                                    Resumen
+                                </button>
                             </div>
                         </div>
 
                     {% endif %}
 
+                </form>
 
-                </div>
+                <div class="modal fade" id="exampleModal"
+                     tabindex="-1"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title"
+                                    id="exampleModalLabel">
+                                    Modal title</h5>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <form id="address-form" method="post"
+                                  action="{% url 'acme-nft:add_address_in_cart' %}">
 
-                </div>
-
-
-            {% if not user.is_authenticated %}
-
-                <h1 class="card-title">Datos</h1>
-
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre y
-                                Apellidos</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="nombre"
-                                   name="nombre"
-                                   placeholder="Nombre, Apellidos"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email"
-                                   class="form-control"
-                                   id="email"
-                                   name="email"
-                                   placeholder="email"
-                                   required>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="direccion"
-                                   class="form-label">Dirección</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="direccion"
-                                   name="direccion"
-                                   placeholder="Calle, nº(piso, puerta, escalera), localidad, provincia"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="codigo-postal"
-                                   class="form-label">Código postal</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="codigo-postal"
-                                   name="codigo-postal"
-                                   placeholder="Código postal"
-                                   required>
-                        </div>
-
-                    </div>
-                </div>
+                                {% csrf_token %}
+                                <div class="modal-body">
 
 
-            {% endif %}
+                                    <div class="form-group">
+                                        <label for="street-name"
+                                               class="col-form-label">Calle:</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="street-name"
+                                               required="required"
+                                               name="street_name">
+                                        <div class="invalid-feedback">
+                                            Por favor, introduce una calle.
+                                        </div>
+                                        <label for="number"
+                                               class="col-form-label">Número:</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               id="number"
+                                               required="required"
+                                               name="number">
+                                        <label for="block"
+                                               class="col-form-label">Bloque:</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               id="block"
+                                               required="required"
+                                               name="block">
+                                        <label for="floor"
+                                               class="col-form-label">Piso:</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               id="floor"
+                                               required="required"
+                                               name="floor">
+                                        <label for="door"
+                                               class="col-form-label">Puerta:</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               id="door"
+                                               name="door">
+                                        <label for="postal-code"
+                                               class="col-form-label">Código
+                                            postal:</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               id="postal-code"
+                                               required="required"
+                                               name="postal_code">
+                                        <label for="city"
+                                               class="col-form-label">Ciudad:</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="city"
+                                               required="required"
+                                               name="city">
 
-            {% if  addresses|length > 0 or cart|length > 0 %}
 
-                    <div class="row">
-                        <div class="col">
-                            <button type="submit"
-                                    class="btn btn-primary float-end">
-                                Resumen
-                            </button>
-                        </div>
-                    </div>
-
-            {% endif %}
-
-        </form>
-
-        <div class="modal fade" id="exampleModal"
-             tabindex="-1"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"
-                            id="exampleModalLabel">
-                            Modal title</h5>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                    </div>
-                    <form id="address-form" method="post"
-                          action="{% url 'acme-nft:add_address_in_cart' %}">
-
-                        {% csrf_token %}
-                        <div class="modal-body">
-
-
-                            <div class="form-group">
-                                <label for="street-name"
-                                       class="col-form-label">Calle:</label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="street-name"
-                                       required="required"
-                                       name="street_name">
-                                <div class="invalid-feedback">
-                                    Por favor, introduce una calle.
-                                </div>
-                                <label for="number"
-                                       class="col-form-label">Número:</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="number"
-                                       required="required"
-                                       name="number">
-                                <label for="block"
-                                       class="col-form-label">Bloque:</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="block"
-                                       required="required"
-                                       name="block">
-                                <label for="floor"
-                                       class="col-form-label">Piso:</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="floor"
-                                       required="required"
-                                       name="floor">
-                                <label for="door"
-                                       class="col-form-label">Puerta:</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="door"
-                                       name="door">
-                                <label for="postal-code"
-                                       class="col-form-label">Código
-                                    postal:</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="postal-code"
-                                       required="required"
-                                       name="postal_code">
-                                <label for="city"
-                                       class="col-form-label">Ciudad:</label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="city"
-                                       required="required"
-                                       name="city">
+                                    </div>
 
 
                                 </div>
+                                <div class="modal-footer">
+                                    <input type="submit"
+                                           class="btn btn-primary"
+                                           placeholder="Añadir dirección">
+                                </div>
+                            </form>
 
 
-                            </div>
-                            <div class="modal-footer">
-                                <input type="submit"
-                                    class="btn btn-primary"
-                                    placeholder="Añadir dirección">
-                            </div>
-                        </form>
-
-
+                        </div>
                     </div>
                 </div>
+
             </div>
-
-        </div>
     </section>
 
 

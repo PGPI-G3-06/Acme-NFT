@@ -782,29 +782,7 @@ def get_invoice_pdf(order_id, name=None, email=None):
     if not os.path.exists('invoices/'):
         os.makedirs('invoices/')
 
-    path = f'invoices/{order.ref_code}.csv'
-
-    with open(path, 'w') as f:
-        f.write(f'Order ref: {order.ref_code}\n\n')
-        f.write(f'Producto;Cantidad;Precio/Ud;Total\n')
-        total = 0
-        for p in products:
-            f.write(
-                f'{p.product.name};{p.quantity};{p.product.price};{p.product.price * p.quantity}\n')
-            total += p.product.price * p.quantity
-        f.write(f'\n')
-        f.write(f'Total: {total}€\n')
-        f.write(f'\n\n')
-        f.write(f'Pago: {order.payment_method}\n')
-        f.write(f'Envio: {order.address}\n')
-        f.close()
-
-    convertapi.api_secret = 'gPfHZCFyCuqXLNn6'
-    convertapi.convert('pdf', {
-        'File': path
-    }, from_format='csv').save_files(f'invoices/{order.ref_code}.pdf')
-
-    return f'invoices/{order.ref_code}.pdf'
+    path = f'invoices/{order_.ref_code}.csv'
 
 
 
