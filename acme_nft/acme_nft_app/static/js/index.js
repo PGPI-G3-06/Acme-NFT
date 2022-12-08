@@ -36,28 +36,6 @@ function main(){
         });   
     }
 
-    // Add to cart
-
-    let cart = document.getElementsByClassName("class-carrito");
-    
-
-    for (let item of cart) { 
-        item.addEventListener("click", function(){
-
-            let productId = item.getElementsByTagName("form")[0].id.replace("add-cart-", "");
-
-            let icon = item.getElementsByClassName("cart-icon")[0]
-
-            let form = document.getElementById("add-cart-" + productId);
-
-            icon.classList.add("fa-spin");
-            setTimeout(()=>{
-                icon.classList.remove("fa-spin");
-            }, 2000);
-            form.submit()
-        });
-    }
-
 }
 
 function nextPage(minPages, maxPages){
