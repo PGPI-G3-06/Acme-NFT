@@ -33,7 +33,7 @@ function calculateTotal(price, quantity, id) {
     let total_doc = document.getElementById("total-" + id);
     console.log(total_doc);
     let total = price * quantity;
-    total_doc.innerHTML = total + "€";
+    total_doc.innerHTML = total.toFixed(2) + "€";
 }
 
 async function postData(url = '', data = {}) {
