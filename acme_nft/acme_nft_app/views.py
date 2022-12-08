@@ -685,7 +685,7 @@ def edit_amount_cart(request, product_id):
     if 0 < quantity <= entry.product.stock:
         entry.quantity = quantity
         entry.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponse('Ok')
     else:
         return HttpResponseNotFound("Invalid Quantity")
 
@@ -698,7 +698,7 @@ def delete_from_cart(request, product_id):
     entry = ProductEntry.objects.get(product=product, entry_type='CART',
                                      user=user)
     entry.delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponse('Ok')
 
 
 def add_address_in_cart(request):
