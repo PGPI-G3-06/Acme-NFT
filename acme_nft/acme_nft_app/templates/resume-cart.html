@@ -29,15 +29,35 @@
                         {% for item in products %}
                             <tr>
                                 <td>{{ item.product.name }}</td>
-                                <td>{{ item.product.price }}</td>
+
+                                {% if item.product.offer_price != None %}
+
+                                    <td>{{ item.product.offer_price }}</td>
+
+                                {% else %}
+
+                                    <td>{{ item.product.price }}</td>
+
+                                {% endif %}
+
                                 <td>{{ item.quantity }}</td>
-                                <td>
-                                    <script>
+                                <td>{{ item.total }} €</td>
+                                <script>
+
+                                    console.log(typeof("{{ item.product.offer_price }}"));
+
+                                    if ("{{ item.product.offer_price }}" !== "None")
+                                    {
+                                        real_total +=
+                                        {{ item.product.offer_price }} * {{ item.quantity }}
+                                    }
+                                    else
+                                    {
                                         var total =
                                         {{ item.product.price }} * {{ item.quantity }}
-                                        document.write(total.toFixed(2) + "€")
                                         real_total += total
-                                    </script>
+                                    }
+                                </script>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -111,9 +131,6 @@
                                     'email': '{{ email }}',
                                     'name': '{{ name }}',
                                 },
-                                beforeSend: function () {
-                                    alert("Se está procesando su pedido, espere un momento por favor")
-                                },
                             }).done(function (data) {
                                 alert('Compra realizada con éxito')
                                 window.location.href = "{% url 'acme-nft:index' %}"
@@ -134,6 +151,10 @@
              aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
+
+                    <div id="wait">
+
+                    </div>
 
                     <div class="modal-header">
                         <h1 style="color: var(--main-color)">Tarjeta de
@@ -298,7 +319,16 @@
                             'payment_method': '{{ pay }}',
                             'email': '{{ email }}',
                             'name': '{{ name }}',
-                        }
+                        },
+                        beforeSend: function () {
+                            let alert = `
+                                        <div class="alert alert-info" role="alert">
+                                          Validando su compra... Espere por favor.
+                                        </div>
+                                        `;
+
+                            document.getElementById('wait').innerHTML = alert;
+                        },
                     }).done(function (result) {
                         window.location.href = "{% url 'acme-nft:index' %}";
                     });

@@ -117,7 +117,12 @@ class Order(models.Model):
     def total(self):
         total = 0
         for entry in self.productentry_set.all():
-            total += entry.product.price * entry.quantity
+
+            if entry.product.offer_price:
+                total += entry.product.offer_price * entry.quantity
+            else:
+                total += entry.product.price * entry.quantity
+
         return total
 
     def user(self):
@@ -134,6 +139,11 @@ class ProductEntry(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
 
     def total(self):
+
+        if self.product.offer_price:
+            return self.product.offer_price * self.quantity
+
+
         return self.quantity * self.product.price
     
     def __str__(self):

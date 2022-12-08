@@ -60,17 +60,28 @@
                                                    data-grouprequired="productos">
                                         </th>
                                         <td>{{ item.product.name }}</td>
-                                        <td>{{ item.product.price|floatformat:2 }}€</td>
+                                        {% if item.product.offer_price != None %}
+
+                                            <td>{{ item.product.offer_price|floatformat:2 }}€</td>
+
+                                        {% else %}
+
+                                            <td>{{ item.product.price|floatformat:2 }}€</td>
+
+                                        {% endif %}
                                         <td>
                                             <div class="input-group mb-3">
+
+                                                {% if item.product.offer_price == None %}
+
                                                 <button class="btn btn-outline-secondary"
                                                         onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.price }}, {{ item.product.stock }})"
                                                         type="button"
                                                         id="button-addon1">-
                                                 </button>
-                                            <input id="{{ item.product.id }}"
+                                                <input id="{{ item.product.id }}"
                                                        type="number"
-                                                class="form-control quantity-field-{{item.product.id}}"
+                                                       class="form-control quantity-field-{{ item.product.id }}"
                                                        placeholder=""
                                                        aria-label="Example text with button addon"
                                                        aria-describedby="button-addon1"
@@ -83,6 +94,33 @@
                                                         id="button-addon1">+
 
                                                 </button>
+
+                                                {% else %}
+
+
+                                                <button class="btn btn-outline-secondary"
+                                                        onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.offer_price }}, {{ item.product.stock }})"
+                                                        type="button"
+                                                        id="button-addon1">-
+                                                </button>
+                                                <input id="{{ item.product.id }}"
+                                                       type="number"
+                                                       class="form-control quantity-field-{{ item.product.id }}"
+                                                       placeholder=""
+                                                       aria-label="Example text with button addon"
+                                                       aria-describedby="button-addon1"
+                                                       value="{{ item.quantity }}"
+                                                       min="1"
+                                                       max="{{ item.product.stock }}">
+                                                <button class="btn btn-outline-secondary"
+                                                        onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.offer_price }},{{ item.product.stock }})"
+                                                        type="button"
+                                                        id="button-addon1">+
+
+                                                </button>
+
+                                                {% endif %}
+
                                             </div>
                                         </td>
                                         <td class="total-{{ item.product.id }}-class">{{ item.total|floatformat:2 }}
@@ -92,7 +130,7 @@
                                             <button type="button"
                                                     class="btn btn-danger"
                                                     onclick="deleteProduct({{ item.product.id }})">
-                                            Eliminar
+                                                Eliminar
                                             </button>
                                         </td>
 
@@ -114,7 +152,7 @@
                                             <tr class="separator-line">
                                                 <th scope="col">#</th>
 
-                                            <th scope="col">Tipo de pago</th>
+                                                <th scope="col">Tipo de pago</th>
 
                                             </tr>
                                             </thead>
@@ -170,9 +208,9 @@
                                                 <thead class="head">
                                                 <tr class="separator-line">
                                                     <th scope="col">#</th>
-                                                    
+
                                                     <th scope="col">Dirección</th>
-                                                    
+
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -268,7 +306,7 @@
 
                             </div>
                         </div>
-                        
+
                     {% endif %}
 
                     {% if  addresses|length > 0 or cart|length > 0 %}
@@ -373,21 +411,21 @@
                                 </div>
                             </form>
 
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="submit"
-                                           class="btn btn-primary"
-                                           placeholder="Añadir dirección">
-                                </div>
-                            </form>
-
                         </div>
-                    </div>
-                </div>
 
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit"
+                               class="btn btn-primary"
+                               placeholder="Añadir dirección">
+                    </div>
+                    </form>
+
+                </div>
             </div>
+        </div>
+
+        </div>
     </section>
 
 

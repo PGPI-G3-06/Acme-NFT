@@ -598,10 +598,7 @@ def payment(request):
         p.stock = p.stock - products_entry.get(product=p).quantity
         p.save()
 
-    total = 0
 
-    for product in products_entry:
-        total += product.product.price * product.quantity
 
     address = request.POST.get('address')
 
@@ -644,7 +641,7 @@ def payment(request):
         customer_create = braintree.Customer.create(customer_kwargs)
         customer_id = customer_create.customer.id
         result = braintree.Transaction.sale({
-            "amount": f"{total:.2f}",
+            "amount": f"{order_.total():.2f}",
             "payment_method_nonce": nonce_from_the_client,
             "options": {
                 "submit_for_settlement": True
@@ -841,10 +838,7 @@ def get_invoice_pdf(order_id, name=None, email=None):
                                            entry_type='ORDER').annotate()
     user = products[0].user
 
-    total_by_product = {p.product.id: p.product.price * p.quantity for p in
-                        products}
-
-    total = sum(total_by_product.values())
+    total = order_.total
 
     if name is None:
         name = user.first_name + " " + user.last_name
