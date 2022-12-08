@@ -103,7 +103,8 @@ def index(request):
                                                   "wishlist": wishlist,
                                                   "pages_range": range(0,
                                                                        possible_pages),
-                                                  "current_page": page_number
+                                                  "current_page": page_number,
+                                                  "needs_pagination": possible_pages > 1,
                                                   }
                   )
 
@@ -131,6 +132,44 @@ def product_detail(request, product_id):
                   context={"user": request.user, "product": product,
                            "comments": comments, "in_wishlist": in_wishlist})
 
+def wishlist(request):
+    
+    if not request.user.is_authenticated:     
+        messages.error(request, 'Tienes que iniciar sesión primero')
+        return HttpResponseRedirect(reverse("acme-nft:signin"))
+
+    products = Product.objects.filter(productentry__user=request.user, productentry__entry_type='WISHLIST').distinct()
+    products_to_list = []
+
+    if not products:
+        messages.error(request, 'No hay productos en la lista de deseos')
+        return HttpResponseRedirect(reverse("acme-nft:index"))
+
+    try:
+        page_number = int(request.GET['page'])
+    except KeyError:
+        page_number = 0
+
+    if len(products) % MAX_PRODUCTS_PER_PAGE == 0:
+        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE)
+    else:
+        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE) + 1
+
+    for i in range(page_number * MAX_PRODUCTS_PER_PAGE,
+                   page_number * MAX_PRODUCTS_PER_PAGE + MAX_PRODUCTS_PER_PAGE):
+        if i < len(products):
+            products_to_list.append(products[i])
+
+    return render(request, "wishlist.html", context={"user": request.user,
+                                                  "products": products_to_list,
+                                                  "total": len(products),
+                                                  "wishlist": products_to_list,
+                                                  "pages_range": range(0,
+                                                                       possible_pages),
+                                                  "current_page": page_number,
+                                                  "needs_pagination": possible_pages > 1,
+                                                  }
+                  )
 
 def hello(request, user_id):
     user = get_object_or_404(User, pk=user_id)
@@ -802,42 +841,4 @@ def contact(request):
         return render(request, "contact.html")
     else:
         return render(request, "contact.html")
-    
-def wishlist(request):
-    
-    if not request.user.is_authenticated:     
-        messages.error(request, 'Tienes que iniciar sesión primero')
-        return HttpResponseRedirect(reverse("acme-nft:signin"))
-
-    products = Product.objects.filter(productentry__user=request.user, productentry__entry_type='WISHLIST').distinct()
-    products_to_list = []
-
-    if not products:
-        messages.error(request, 'No hay productos en la lista de deseos')
-        return HttpResponseRedirect(reverse("acme-nft:index"))
-
-    try:
-        page_number = int(request.GET['page'])
-    except KeyError:
-        page_number = 0
-
-    if len(products) % MAX_PRODUCTS_PER_PAGE == 0:
-        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE)
-    else:
-        possible_pages = int(len(products) / MAX_PRODUCTS_PER_PAGE) + 1
-
-    for i in range(page_number * MAX_PRODUCTS_PER_PAGE,
-                   page_number * MAX_PRODUCTS_PER_PAGE + MAX_PRODUCTS_PER_PAGE):
-        if i < len(products):
-            products_to_list.append(products[i])
-
-    return render(request, "wishlist.html", context={"user": request.user,
-                                                  "products": products_to_list,
-                                                  "total": len(products),
-                                                  "wishlist": products_to_list,
-                                                  "pages_range": range(0,
-                                                                       possible_pages),
-                                                  "current_page": page_number
-                                                  }
-                  )
 

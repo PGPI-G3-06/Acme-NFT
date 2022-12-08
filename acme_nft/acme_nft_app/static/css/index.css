@@ -12,7 +12,6 @@ section{
 /* PRODUCT GRID */
 
 .class-grid-container{
-    position: relative;
     z-index: 10;
     display: flex;
     justify-content: center;
@@ -129,8 +128,6 @@ section{
     background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
     transition: 0.5s all;
 }
-
-
 
 .class-icons-row{
     display: flex;
@@ -263,9 +260,9 @@ section{
 /* MEDIA SCREENS */
 
 @media screen and (max-width: 800px){
-	.selectbox {
-		width: 100%;
-	}
+	.class-page{
+        display: none;
+    }
 }
 
 .cart-icon{

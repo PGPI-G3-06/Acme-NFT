@@ -60,25 +60,27 @@
 
             {% endfor %}
         </div>
+        {% if needs_pagination %}
         <div class="pagination-container">
             <div class="pagination-box">
                 <ul class="pagination">
-                    <li class="d-flex justify-content-center align-items-center">
-                        <button style="border:none" class="btn" onclick="previousPage({{pages_range.start}}, {{pages_range.stop}})">Anterior</button>
-                    </li>
-                    {% for i in pages_range %}
-                        {% if i == current_page %}
-                        <li><a href="?page={{i}}" class="active">{{ i | addition:1 }}</a></li>
-                        {% else %}
-                        <li><a href="?page={{i}}">{{ i | addition:1 }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    <li class="d-flex justify-content-center align-items-center">
-                        <button style="border:none" class="btn" onclick="nextPage({{pages_range.start}}, {{pages_range.stop}})">Siguiente</button>
-                    </li>
+                        <li class="d-flex justify-content-center align-items-center">
+                            <button style="border:none" class="btn" onclick="previousPage({{pages_range.start}}, {{pages_range.stop}})">Anterior</button>
+                        </li>
+                        {% for i in pages_range %}
+                            {% if i == current_page %}
+                            <li class="class-page"><a href="?page={{i}}" class="active">{{ i | addition:1 }}</a></li>
+                            {% else %}
+                            <li class="class-page"><a href="?page={{i}}">{{ i | addition:1 }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="d-flex justify-content-center align-items-center">
+                            <button style="border:none" class="btn" onclick="nextPage({{pages_range.start}}, {{pages_range.stop}})">Siguiente</button>
+                        </li>
                 </ul>
             </div>
         </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
