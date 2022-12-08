@@ -430,6 +430,27 @@ def showcase(request):
         "products_showcase": products_showcase,
     })
 
+def add_showcase(request, product_id):
+    product = Product.objects.get(id=product_id)
+
+    s_product = Product.objects.filter(is_showcase=True).count()
+
+    if s_product < 7:
+
+        product.is_showcase = True
+        product.save()
+
+    return HttpResponseRedirect(reverse("acme-nft:showcase"))
+
+def delete_showcase(request, product_id):
+    product = Product.objects.get(id=product_id)
+
+    product.is_showcase = False
+    product.save()
+
+    return HttpResponseRedirect(reverse("acme-nft:showcase"))
+
+
 # -------------------------- Cart --------------------------
 
 def add_to_cart(request, product_id):

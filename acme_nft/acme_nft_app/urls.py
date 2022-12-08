@@ -44,6 +44,11 @@ urlpatterns = [
     # Orders
     path("orders", views.orders, name="orders"),
     path("order/<int:order_id>", views.order, name="order"),
+
+    # Showcase
+    path("showcase", views.showcase, name="showcase"),
+    path("showcase/add/<int:product_id>", views.add_showcase, name="add_to_showcase"),
+    path("showcase/delete/<int:product_id>", views.delete_showcase, name="delete_from_showcase"),
     
     # Others
     path("hello/<int:user_id>", views.hello, name="hello"),
