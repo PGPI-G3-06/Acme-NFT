@@ -24,7 +24,7 @@
                     <div class="desc-section">
                         <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="cart-form" method="POST">
                             {% csrf_token %} 
-                            <span>Cantidad:<input class="input-cantidad" id="quantity" type="number" value="1" min="1" name="quantity"></input></span>
+                            <span>Cantidad:<input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></span>
                         </form>
                         <h2 id="price">{{ product.price }} €</h2>
                     </div>
@@ -46,7 +46,6 @@
                         {% endif %}
                         <button id="add-to-cart-btn">
                             Añadir al carrito <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" height="25px" width="25px">
-
                         </button>
                     </div>
                 </div>

@@ -47,11 +47,12 @@
                                 {% endif %}
                             </div>
                             <div class="class-carrito">
-                                <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" width="30px" height="30px">
-                                <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="add-cart-{{product.id}}" method="POST">
-                                    {% csrf_token %} 
-                                    <input type="hidden" name="quantity" value="1">
-                                </form>
+                                <button type="button"
+                                        class="btn" 
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#add-to-cart-modal-{{product.id}}">
+                                        <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" width="30px" height="30px">
+                                </button>
                             </div>
                             {% endif %}
                         </div>
@@ -81,6 +82,34 @@
             </div>
         </div>
         {% endif %}
+
+        {% for product in products %}
+              <div class="modal fade" id="add-to-cart-modal-{{product.id}}">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title"
+                                  id="add-to-cart-modal-label">
+                                  Añadir {{product.name}} al carrito</h5>
+                              <button type="button"
+                                      class="btn-close"
+                                      data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                          </div>
+                          <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="add-cart-{{product.id}}" class="modal-form" method="POST">
+                              {% csrf_token %} 
+                              <label for="quantity">Cantidad: <input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></label>
+
+                              <input type="submit"
+                                  class="add-to-cart-btn"
+                                  value="Añadir al carrito">
+
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          {% endfor %}
+
     </div>
 </section>
 {% endblock %}

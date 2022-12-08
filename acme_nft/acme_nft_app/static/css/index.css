@@ -224,6 +224,50 @@ section{
     margin: 0 0 0 15px;
   }
 
+  /* MODAL */
+
+  .modal-form{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px 50px;
+  }
+
+  .modal-form label{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    font-size: 1.2em;
+  }
+
+  .input-cantidad{
+    width: 90%;
+    border-radius: 15px;
+    border: 1px solid var(--main-color);
+    padding: 10px;
+    margin-left: 20px;
+  }
+
+  .add-to-cart-btn{
+    background: var(--main-button-background-color);
+    border-radius: 15px;
+    border: 1px solid var(--main-color);
+    padding: 10px;
+    font-size: 0.8em;
+    color: var(--text-black);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.5s;
+  }
+
+  .add-to-cart-btn:hover{
+    background: linear-gradient(to bottom, var(--main-button-hover-dark-color), var(--main-button-hover-light-color));
+    transition: 0.5s all;
+  }
+
 /* KEY FRAMES */
 
 @keyframes fadeIn {

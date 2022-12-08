@@ -9,6 +9,7 @@ function upQuantity(id, product_id, price, stock) {
     } else {
         quantity++;
         let quantityFields = document.getElementsByClassName("quantity-field-" + id);
+
         
         for(let field of quantityFields) {
             field.value = quantity;
@@ -28,6 +29,8 @@ function downQuantity(id, product_id, price, stock) {
         if (quantity > 1) {
             quantity--;
             let quantityFields = document.getElementsByClassName("quantity-field-" + id);
+
+
         
             for(let field of quantityFields) {
                 field.value = quantity;
