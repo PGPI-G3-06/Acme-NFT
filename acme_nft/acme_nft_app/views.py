@@ -4,14 +4,11 @@ import random
 from datetime import datetime
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
-from django import forms
-from django.core import serializers
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseNotFound, HttpResponseRedirect, \
     HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 import ast
 import braintree
 
@@ -21,7 +18,7 @@ from django.views.generic import ListView, CreateView, DetailView
 from xhtml2pdf import pisa
 
 from acme_nft import settings as django_settings
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
 
 from .models import *
 
@@ -489,14 +486,6 @@ def delete_showcase(request, product_id):
     return HttpResponseRedirect(reverse("acme-nft:showcase"))
 
 
-# ------------------------ Showcase ------------------------
-
-def showcase(request):
-    products_showcase = Product.objects.filter(is_showcase=True)
-
-    return render(request, "showcase.html", {
-        "products_showcase": products_showcase,
-    })
 
 
 # -------------------------- Cart --------------------------
@@ -596,7 +585,7 @@ def resume_cart_view(request):
 
 
 def payment(request):
-    nonce_from_the_client = request.POST['paymentMethodNonce']
+
     products_request = list(
         map(lambda x: int(x), request.POST.get('products').split(',')))
 
@@ -620,12 +609,18 @@ def payment(request):
         list(map(lambda x: str(x), products_request))) + ''.join(
         random.choices(string.ascii_uppercase + string.digits, k=10))
 
-    order = Order(ref_code=ref_code, payment_method=PaymentMethod.card.value,
-                  address=address, status=Status.sent.value)
+    if request.POST.get('payment_method') == 'tarjeta':
 
-    order.save()
+        order_ = Order(ref_code=ref_code, payment_method=PaymentMethod.card.value,
+                   address=address, status=Status.sent.value)
 
-    products_entry.update(order=order, entry_type='ORDER')
+    else:
+        order_ = Order(ref_code=ref_code, payment_method=PaymentMethod.transference.value,
+                   address=address, status=Status.on_transit.value)
+
+    order_.save()
+
+    products_entry.update(order=order_, entry_type='ORDER')
 
     if request.user.is_authenticated:
         first_name = request.user.first_name
@@ -636,20 +631,25 @@ def payment(request):
         last_name = ''
         email = request.POST['email']
 
-    customer_kwargs = {
-        "first_name": first_name,
-        "last_name": last_name,
-        "email": email,
-    }
-    customer_create = braintree.Customer.create(customer_kwargs)
-    customer_id = customer_create.customer.id
-    result = braintree.Transaction.sale({
-        "amount": f"{total:.2f}",
-        "payment_method_nonce": nonce_from_the_client,
-        "options": {
-            "submit_for_settlement": True
+
+
+    if request.POST.get('pay') == 'TARJETA':
+        nonce_from_the_client = request.POST['paymentMethodNonce']
+
+        customer_kwargs = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
         }
-    })
+        customer_create = braintree.Customer.create(customer_kwargs)
+        customer_id = customer_create.customer.id
+        result = braintree.Transaction.sale({
+            "amount": f"{total:.2f}",
+            "payment_method_nonce": nonce_from_the_client,
+            "options": {
+                "submit_for_settlement": True
+            }
+        })
 
     user = request.user
 
@@ -658,20 +658,25 @@ def payment(request):
     if not user.is_authenticated:
         name = request.POST['name']
         e = request.POST['email']
-        pdf = get_invoice_pdf(order, name, e)
+        pdf = get_invoice_pdf(order_, name, e)
     else:
         e = user.email
-        pdf = get_invoice_pdf(order)
+        pdf = get_invoice_pdf(order_)
+
+    if request.POST.get('pay') == 'TARJETA':
+        mensajito = f'Gracias por su compra, su pedido es {ref_code}'
+
+    else:
+        mensajito = f'Gracias por su compra, su pedido es {ref_code}. \n Reduerde que debe realizar el pago en la cuenta bancaria: ES6000491500051234567892 para que la compra y la factura sa valida.'
 
     email = EmailMessage('Acme NFT',
-                         f'Gracias por su compra, su pedido es {ref_code}',
+                         mensajito,
                          'no-replay-acmenftinc@gmail.com',
                          [e])
     email.attach_file(pdf)
     email.send()
 
     return HttpResponse('Ok')
-
 
 def edit_amount_cart(request, product_id):
     user = request.user
@@ -868,10 +873,6 @@ def get_invoice_pdf(order_id, name=None, email=None):
     # save pdf
     if not os.path.exists('invoices/'):
         os.makedirs('invoices/')
-
-    path = f'invoices/{order_.ref_code}.csv'
-
-
 
     with open(f'invoices/{order_.ref_code}.pdf', 'wb') as f:
         f.write(result.getvalue())

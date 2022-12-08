@@ -80,10 +80,52 @@
                         onclick="window.location.href='{% url 'acme-nft:cart' %}'">
                     Retroceder
                 </button>
-                <button type="submit" class="btn btn-primary float-end"
-                        data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Pagar y confirmar compra
-                </button>
+
+                {% if pay == 'tarjeta' %}
+
+                    <button type="submit" class="btn btn-primary float-end"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Pagar y confirmar compra
+                    </button>
+
+                {% else %}
+
+                    <button type="submit" class="btn btn-primary float-end"
+                            onclick="transfer()">
+                        Pagar y confirmar compra
+
+                    </button>
+
+                    <script>
+
+
+                        function transfer() {
+                            $.ajax({
+                                url: "{% url 'acme-nft:payment' %}",
+                                type: "POST",
+                                data: {
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                    'products': productsEntriesIds.toString(),
+                                    'address': '{{ address }}',
+                                    'payment_method': '{{ pay }}',
+                                    'email': '{{ email }}',
+                                    'name': '{{ name }}',
+                                },
+                                beforeSend: function () {
+                                    alert("Se está procesando su pedido, espere un momento por favor")
+                                },
+                            }).done(function (data) {
+                                alert('Compra realizada con éxito')
+                                window.location.href = "{% url 'acme-nft:index' %}"
+                            });
+                        }
+
+
+                    </script>
+
+
+                {% endif %}
+
             </div>
         </div>
 
