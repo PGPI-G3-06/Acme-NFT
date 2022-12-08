@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+<script type="text/javascript" src="{% static 'js/contact.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<section style="position: relative">
+
+    <div class="container">
+        <h1 class="service-title">Contacta con nosotros!</h1>
+        <br>
+
+        <div class="row">
+            <div class="col">
+                <div class="card d-flex justify-content-center align-items-center" style="width: 18rem;">
+                  <img src="{% static 'images/phone.png' %}" class="card-img-top" alt="Imagen de comunicaciones">
+                  <div class="card-body">
+                    <h5 class="card-title">Teléfono</h5>
+                    <p class="card-text">+34 666 666 666</p>
+                  </div>
+                </div>
+            </div>
+            <br>
+            <div class="col">
+              <div class="card d-flex justify-content-center align-items-center" style="width: 18rem;">
+                <img src="{% static 'images/email.png'%}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Email</h5>
+                  <p class="card-text">acme-nft@gmail.com</p>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="col">
+              <div class="card d-flex justify-content-center align-items-center" style="width: 18rem;">
+                <img src="{% static 'images/ubicacion.png'%}" class="card-img-top" alt="Imagen de reclamación">
+                <div class="card-body">
+                    <h5 class="card-title">Dirección</h5>
+                    <p class="card-text">Avenida Reina Mercedes, s/n, 41012, Sevilla</p>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  <br><br>
+    <button style="position: absolute; right: 30px; bottom: 30px;"class="message-button" type="button" id="modal-btn" data-bs-toggle="modal" data-bs-target="#complaint-modal">
+            <img class="img-contact" src="{% static 'images/carta.png' %}" alt="Mensaje">
+    </button>
+    <div class="modal fade" id="complaint-modal" tabindex="-1" aria-labelledby="complaint-modal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="service-title"id="exampleModalLabel">Dejenos su duda</h1>
+          </div>
+          <div class="modal-body">
+            <form action="/contact" method="POST" id="post-complaint-form">
+            {% csrf_token %}
+            <input id="contact-name" class="form-control" type="text" placeholder="Nombre" name="name" required="true">
+            <input id="contact-email" class="form-control" type="email" placeholder="Email" name="email" required="true">
+            <input id="contact-subject" class="form-control" type="text" placeholder="Asunto" name="subject" required="true">
+            <textarea id="contact-message" name="message" placeholder="Escribe tu duda..." required="true"></textarea>
+            <button class="class-link publish-complaint-button">Publicar</button>
+          </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+</section>
+
+
+{% endblock %}
+

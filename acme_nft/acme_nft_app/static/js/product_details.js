@@ -54,11 +54,12 @@ function main(){
     /* Wishlist button functionality */
 
     let wishlistButton = document.getElementById('wishlist-button');
+    console.log(wishlistButton);
 
     if (wishlistButton != null){
         wishlistButton.addEventListener('click', function(event){
         
-            let productId = wishlistButton.getElementsByTagName('i')[0].id.split("-")[1];
+            let productId = wishlistButton.getElementsByTagName('img')[0].id.split("-")[1];
     
             window.location.href='/wishlist/add/' + productId;
         

@@ -46,7 +46,7 @@ function main(){
 
             let productId = item.getElementsByTagName("form")[0].id.replace("add-cart-", "");
 
-            let icon = item.getElementsByTagName("i")[0];   
+            let icon = item.getElementsByClassName("cart-icon")[0]
 
             let form = document.getElementById("add-cart-" + productId);
 
