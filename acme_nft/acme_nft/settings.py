@@ -161,8 +161,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT =  os.path.join(BASE_DIR, '')
+MEDIA_URL = '/'
 
 BRAINTREE_MERCHANT_ID = 'n26dfxt97t3snx7v'
 BRAINTREE_PUBLIC_KEY = '6dycmm2nkddsgnpn'

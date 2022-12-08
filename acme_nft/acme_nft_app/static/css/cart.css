@@ -4,13 +4,14 @@
     overflow-y: scroll;
     max-height: 30em;
     max-width: 35em;
-
+    background-color: var(--main-button-background-color) !important;
 }
 
 .div-pagos {
     border: 1px solid var(--main-color);
     height: auto;
     width: auto;
+    background-color: var(--main-button-background-color);
 }
 
 .div-resumen {

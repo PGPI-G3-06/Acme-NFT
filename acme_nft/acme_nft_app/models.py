@@ -97,6 +97,14 @@ class Opinion(models.Model):
     def __str__(self):
         return self.title
 
+class Contact(models.Model):
+    name = models.CharField(max_length=60)
+    email = models.EmailField()
+    subject = models.CharField(max_length=60)
+    message = models.TextField()
+    def __str__(self):
+        return self.name
+
 
 class Order(models.Model):
     ref_code = models.CharField(max_length=60)
