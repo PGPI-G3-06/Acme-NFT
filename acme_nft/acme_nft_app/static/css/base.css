@@ -76,3 +76,17 @@ footer{
     color: white;
 
 }
+
+.class-link{
+	border: 2px solid  var(--main-button-hover-dark-color);
+    background: white;
+    border-radius: 40px;
+    font-weight: bold;
+    color: #111;
+    text-decoration: none;
+    text-transform: uppercase;
+	margin: 20px;
+	padding: 10px;
+
+
+}
