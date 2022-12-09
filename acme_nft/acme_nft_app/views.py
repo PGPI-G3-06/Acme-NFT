@@ -41,14 +41,15 @@ MAX_PRODUCTS_PER_PAGE = 10
 def index(request):
     products = Product.objects.all()
     try:
-        if request.GET['order-by'] == 'collections':
-            products = Product.objects.all().order_by('collection')
+        if request.GET['order-by'] == 'collection':
+            products = Product.objects.order_by('collection')
 
     except KeyError:
         pass
+    
     try:
         if request.GET['order-by'] == 'author':
-            products = Product.objects.all().order_by('author__name')
+            products = Product.objects.order_by('author__name')
 
     except KeyError:
         pass
@@ -94,9 +95,12 @@ def index(request):
         for entry in entries:
             if entry.product == product and entry.user == request.user and entry.entry_type == 'WISHLIST':
                 wishlist.append(entry.product_id)
+                
+    showcase_products = Product.objects.filter(showcase=True)
 
     return render(request, "index.html", context={"user": request.user,
                                                   "products": products_to_list,
+                                                  "showcase_products": showcase_products,
                                                   "wishlist": wishlist,
                                                   "pages_range": range(0,
                                                                        possible_pages),
@@ -127,6 +131,7 @@ def product_detail(request, product_id):
 
     return render(request, "product_details.html",
                   context={"user": request.user, "product": product,
+                           "suggested_products": None,
                            "comments": comments, "in_wishlist": in_wishlist})
 
 
@@ -906,7 +911,9 @@ def sugesstions(request, product_id):
 
     while len(suggestions) < 5:
         suggestions = suggestions | Product.objects.all().order_by('?').exclude(
-            pk=product_id)[:5 - len(suggestions)]
+
+        pk=product_id)[:5-len(suggestions)]
+    
     return JsonResponse({'suggestions': list(suggestions.values())})
 
 
@@ -929,6 +936,10 @@ def contact(request):
 def get_service_terms(request):
     return render(request, "service-terms.html")
 
+# ------------------------ Returns Policy ------------------------
+
+def get_returns_policy(request):
+    return render(request, "returns-policy.html")
 
 # ------------------------ admin ------------------------
 

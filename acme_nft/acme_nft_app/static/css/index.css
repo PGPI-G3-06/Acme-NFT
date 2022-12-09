@@ -2,11 +2,141 @@
 section{
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
-    padding: 100px 20px;
+    padding: 50px 20px;
     min-height: 85vh;
     background: var(--main-white);
+}
+
+.main-content-container{
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column;
+}
+
+/* FILTERS */
+
+.filters-activation-button{
+    width: 30%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-left: 10vw;
+    background-color: transparent;
+    border: none;
+}
+
+.filters-activation-button a img{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    opacity: 0.6;
+    transition: all 0.25s;
+}
+
+.filters-activation-button a{
+    color: var(--filters-button-text-color);
+    font-size: 1em;
+    text-decoration: none;
+    transition: all 0.25s;
+}
+
+.filters-activation-button a:hover{
+    color: var(--filters-button-text-hover-color);
+    transition: all 0.5s;
+}
+
+.filters-activation-button a:hover img{
+    opacity: 0.4;
+    transition: all 0.5s;
+}
+
+.filters-background-div{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -101;
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.filters-wrapper{
+    position: absolute;
+    top: 0;
+    left: -100%;
+    transition: all 0.5s;
+
+    width: 30vw;
+    height: 100vh;
+    z-index: 102;
+    background-color: var(--filters-menu-background-color);
+}
+
+.filters-active{
+    left: 0;
+    transition: all 0.5s;
+}
+
+.filters-background-active{
+    opacity: 100;
+    z-index: 101;
+    transition: opacity 0.5s ease-in;
+}
+
+.filters-wrapper-menu-header{
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 20px 20px;
+    border-bottom: 2px solid var(--filters-menu-header-border-color);
+}
+
+.filters-wrapper-menu-header a{
+    font-size: 1.2em;
+}
+
+.filters-wrapper-menu-body-section{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 40px 2.5vw;
+}
+
+.filters-wrapper-menu-footer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#apply-filters-button{
+    border: 1px solid var(--main-color);
+    padding: 10px 20px;
+}
+
+/* SHOWCASE */
+
+.showcase-element{
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 300px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 80px;
+}
+
+.showcase-element img{
+    height: 400px;
+    width: 300px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
 }
 
 /* PRODUCT GRID */
@@ -297,6 +427,7 @@ section{
 .class-link:hover{
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    color: var(--text-black);
     transition: 0.5s all;
 
 }
@@ -306,6 +437,12 @@ section{
 @media screen and (max-width: 800px){
 	.class-page{
         display: none;
+    }
+}
+
+@media screen and (max-width: 991px){
+    .filters-wrapper{
+        width: 100vw !important;
     }
 }
 
