@@ -64,7 +64,12 @@
             
                 <div class="class-card">
                     <div class="class-img-box">
-                        <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                        <img src="/static/{{product.image_url}}" {% if product.stock == 0 %} class="without-stock" {% endif %} alt="{{product.name}}"/>
+                        {% if product.stock == 0 %}
+                            <div class="no-stock">
+                                OUT OF STOCK
+                            </div>
+                        {% endif %}
                         <h2 style="text-align: center;">{{product.name}}</h2>
                     </div>
         

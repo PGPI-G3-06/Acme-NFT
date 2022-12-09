@@ -69,34 +69,46 @@
                                         <div class="infoWrap"> 
                                             <div class="cartSection">
                                                 <img src="/static/{{product_entry.product.image_url}}" alt="" class="itemImg" />
-                                                <p class="itemNumber">{{product_entry.product.author}}</p>
-                                                <h3 class="dropdown-item-text">{{product_entry.product.name}}</h3>
                                                 
-                                                <p> 
-                                                    <button class="btn btn-outline-secondary"
+                                                <div class="d-flex flex-column w-100"> 
+                                                    <p class="itemNumber">{{product_entry.product.author}}</p>
+                                                    <h3 class="dropdown-item-text">{{product_entry.product.name}}</h3>
+
+                                                    <div class="d-flex flex-row align-items-center w-100">
+                                                        <button class="btn btn-outline-secondary"
                                                             onclick="downQuantity({{ product_entry.product.id }},{{ product_entry.product.id }},{{ product_entry.product.price }}, {{ product_entry.product.stock }})"
                                                             type="button"
                                                             id="button-addon1">-
-                                                    </button>
-                                                    <input type="text" id="{{product_entry.product.id}}" 
-                                                            class="qty quantity-field-{{product_entry.product.id}}" style="border: 1px solid grey; border-radius: 5px;" 
-                                                            min="1" max="{{product_entry.product.stock}}" 
-                                                            value="{{product_entry.quantity}}" readonly/>
-                                                            x 
-                                                            {% if product_entry.product.offer_price %}
-                                                                <span style="color: var(--offer-price-color);">{{product_entry.product.offer_price}} €</span>
-                                                            {% else %}
-                                                                {{product_entry.product.price}} €
-                                                            {% endif %}
-                                                            </p>
-                                                    <button class="btn btn-outline-secondary"
-                                                            onclick="upQuantity({{ product_entry.product.id }}, {{ product_entry.product.id }},{{ product_entry.product.price }},{{ product_entry.product.stock }})"
-                                                            type="button"
-                                                            id="button-addon1">+
-                                                    </button>
-                                                
-                                                <p class="stockStatus"> In Stock</p>
-                                                </div>  
+
+                                                        </button>
+                                                        <div style="margin: 0 20px;">
+                                                            <input type="text" id="{{product_entry.product.id}}" 
+                                                                class="qty quantity-field-{{product_entry.product.id}}" style="border: 1px solid grey; border-radius: 5px;" 
+                                                                min="1" max="{{product_entry.product.stock}}" 
+                                                                value="{{product_entry.quantity}}" readonly/> 
+                                                                x 
+                                                                {% if product_entry.product.offer_price %}
+                                                                    <span style="color: var(--offer-price-color);">{{product_entry.product.offer_price}} €</span>
+                                                                {% else %}
+                                                                    {{product_entry.product.price}} €
+                                                                {% endif %}
+                                                        </div>
+                                                        <button class="btn btn-outline-secondary"
+                                                                onclick="upQuantity({{ product_entry.product.id }}, {{ product_entry.product.id }},{{ product_entry.product.price }},{{ product_entry.product.stock }})"
+                                                                type="button"
+                                                                id="button-addon1">+
+                                                        </button>
+                                                    
+                                                        {% if product_entry.product.stock == 0 %}
+                                                            <div class="no-stock">SIN STOCK</div>
+                                                        {% elif product_entry.product.stock < 5 %}
+                                                            <div class="not-much-stock">POCO STOCK</div>
+                                                        {% else %}
+                                                            <div class="enough-stock">EN STOCK</div>
+                                                        {% endif %}
+                                                    </div>
+            
+                                                </div> 
                                                 
                                                 <div class="prodTotal cartSection">
                                                     {% if product_entry.product.offer_price %}
