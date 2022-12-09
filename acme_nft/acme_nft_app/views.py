@@ -1014,12 +1014,11 @@ def sugesstions(request, product_id):
     suggestions = Product.objects.filter(collection=product.collection).exclude(
         pk=product_id) | Product.objects.filter(author_id=product.author_id).exclude(pk=product_id)
 
-    while len(suggestions) < 5:
-        suggestions = suggestions | Product.objects.all().order_by('?').exclude(
-
-        pk=product_id)[:5-len(suggestions)]
-    
-    return JsonResponse({'suggestions': list(suggestions.values())})
+    products_to_exclude = [s.id for s in suggestions]
+    products_to_exclude.append(product_id)
+    random = Product.objects.all().order_by('?').exclude(name__in=products_to_exclude)[:5 - len(suggestions)]
+    return JsonResponse({'suggestions': list(suggestions.values())
+                         + list(random.values())})
 
 
 def contact(request):
