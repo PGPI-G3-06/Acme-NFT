@@ -4,12 +4,25 @@
 {% block extrahead %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
 
 {% endblock %}
 
 {% block content %}
     <div class="container">
+
+        <!-- Error Alert -->
+        {% if error %}
+
+            <div class="alert alert-danger alert-dismissible fade show">
+                <strong>Error!</strong> {{ error }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert"></button>
+            </div>
+
+        {% endif %}
+
         <h1 class="card-title">Resumen</h1>
         <div class="row">
             <div class="col">
@@ -29,15 +42,32 @@
                         {% for item in products %}
                             <tr>
                                 <td>{{ item.product.name }}</td>
-                                <td>{{ item.product.price }}</td>
+
+                                {% if item.product.offer_price != None %}
+
+                                    <td>{{ item.product.offer_price }}</td>
+
+                                {% else %}
+
+                                    <td>{{ item.product.price }}</td>
+
+                                {% endif %}
+
                                 <td>{{ item.quantity }}</td>
-                                <td>
-                                    <script>
+                                <td>{{ item.total }} €</td>
+                                <script>
+
+                                    console.log(typeof ("{{ item.product.offer_price }}"));
+
+                                    if ("{{ item.product.offer_price }}" !== "None") {
+                                        real_total +=
+                                        {{ item.product.offer_price }} * {{ item.quantity }}
+                                    } else {
                                         var total =
                                         {{ item.product.price }} * {{ item.quantity }}
-                                        document.write(total.toFixed(2) + "€")
                                         real_total += total
-                                    </script>
+                                    }
+                                </script>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -80,10 +110,49 @@
                         onclick="window.location.href='{% url 'acme-nft:cart' %}'">
                     Retroceder
                 </button>
-                <button type="submit" class="btn btn-primary float-end"
-                        data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Pagar y confirmar compra
-                </button>
+
+                {% if pay == 'tarjeta' %}
+
+                    <button type="submit" class="btn btn-primary float-end"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Pagar y confirmar compra
+                    </button>
+
+                {% else %}
+
+                    <button type="submit" class="btn btn-primary float-end"
+                            onclick="transfer()">
+                        Pagar y confirmar compra
+
+                    </button>
+
+                    <script>
+
+
+                        function transfer() {
+                            $.ajax({
+                                url: "{% url 'acme-nft:payment' %}",
+                                type: "POST",
+                                data: {
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                    'products': productsEntriesIds.toString(),
+                                    'address': '{{ address }}',
+                                    'payment_method': '{{ pay }}',
+                                    'email': '{{ email }}',
+                                    'name': '{{ name }}',
+                                },
+                            }).done(function (data) {
+                                alert('Compra realizada con éxito')
+                                window.location.href = "{% url 'acme-nft:index' %}"
+                            });
+                        }
+
+
+                    </script>
+
+
+                {% endif %}
+
             </div>
         </div>
 
@@ -92,6 +161,10 @@
              aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
+
+                    <div id="wait">
+
+                    </div>
 
                     <div class="modal-header">
                         <h1 style="color: var(--main-color)">Tarjeta de
@@ -256,7 +329,16 @@
                             'payment_method': '{{ pay }}',
                             'email': '{{ email }}',
                             'name': '{{ name }}',
-                        }
+                        },
+                        beforeSend: function () {
+                            let alert = `
+                                        <div class="alert alert-info" role="alert">
+                                          Validando su compra... Espere por favor.
+                                        </div>
+                                        `;
+
+                            document.getElementById('wait').innerHTML = alert;
+                        },
                     }).done(function (result) {
                         window.location.href = "{% url 'acme-nft:index' %}";
                     });

@@ -60,39 +60,77 @@
                                                    data-grouprequired="productos">
                                         </th>
                                         <td>{{ item.product.name }}</td>
-                                        <td>{{ item.product.price|floatformat:2 }}€</td>
+                                        {% if item.product.offer_price != None %}
+
+                                            <td>{{ item.product.offer_price|floatformat:2 }}€</td>
+
+                                        {% else %}
+
+                                            <td>{{ item.product.price|floatformat:2 }}€</td>
+
+                                        {% endif %}
                                         <td>
                                             <div class="input-group mb-3">
-                                                <button class="btn btn-outline-secondary"
-                                                        onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.price }}, {{ item.product.stock }})"
-                                                        type="button"
-                                                        id="button-addon1">-
-                                                </button>
-                                            <input id="{{ item.product.id }}"
-                                                       type="number"
-                                                class="form-control quantity-field-{{item.product.id}}"
-                                                       placeholder=""
-                                                       aria-label="Example text with button addon"
-                                                       aria-describedby="button-addon1"
-                                                       value="{{ item.quantity }}"
-                                                       min="1"
-                                                       max="{{ item.product.stock }}">
-                                                <button class="btn btn-outline-secondary"
-                                                        onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.price }},{{ item.product.stock }})"
-                                                        type="button"
-                                                        id="button-addon1">+
 
-                                                </button>
+                                                {% if item.product.offer_price == None %}
+
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.price }}, {{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">-
+                                                    </button>
+                                                    <input id="{{ item.product.id }}"
+                                                           type="number"
+                                                           class="form-control quantity-field-{{ item.product.id }}"
+                                                           placeholder=""
+                                                           aria-label="Example text with button addon"
+                                                           aria-describedby="button-addon1"
+                                                           value="{{ item.quantity }}"
+                                                           min="1"
+                                                           max="{{ item.product.stock }}">
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.price }},{{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">+
+
+                                                    </button>
+
+                                                {% else %}
+
+
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.offer_price }}, {{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">-
+                                                    </button>
+                                                    <input id="{{ item.product.id }}"
+                                                           type="number"
+                                                           class="form-control quantity-field-{{ item.product.id }}"
+                                                           placeholder=""
+                                                           aria-label="Example text with button addon"
+                                                           aria-describedby="button-addon1"
+                                                           value="{{ item.quantity }}"
+                                                           min="1"
+                                                           max="{{ item.product.stock }}">
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.offer_price }},{{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">+
+
+                                                    </button>
+
+                                                {% endif %}
+
                                             </div>
                                         </td>
-                                        <td class="total-{{ item.product.id }}-class">{{ item.total|floatformat:2 }}
+                                        <td style="width: 19%" class=" total-{{ item.product.id }}-class">{{ item.total|floatformat:2 }}
                                             €
                                         </td>
                                         <td>
                                             <button type="button"
                                                     class="btn btn-danger"
                                                     onclick="deleteProduct({{ item.product.id }})">
-                                            Eliminar
+                                                Eliminar
                                             </button>
                                         </td>
 
@@ -114,7 +152,7 @@
                                             <tr class="separator-line">
                                                 <th scope="col">#</th>
 
-                                            <th scope="col">Tipo de pago</th>
+                                                <th scope="col">Tipo de pago</th>
 
                                             </tr>
                                             </thead>
@@ -123,12 +161,12 @@
                                                 <th scope="row">
                                                     <input class="form-check-input"
                                                            type="radio"
-                                                           value="contra-reembolso"
+                                                           value="transferencia"
                                                            name="pagos"
-                                                           id="contra-reembolso"
+                                                           id="transferencia"
                                                            required="required">
                                                 </th>
-                                                <td>Contra reembolso</td>
+                                                <td>Transferencia <div style="font-size: 12px">(Informacion en el correo tras la compra)</div></td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -151,8 +189,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <h1 class="card-title">
-                                                Dirección</h1>
+                                            <h1 class="card-title">Dirección</h1>
 
                                             <button type="button"
                                                     class="btn btn-primary"
@@ -170,9 +207,9 @@
                                                 <thead class="head">
                                                 <tr class="separator-line">
                                                     <th scope="col">#</th>
-                                                    
+
                                                     <th scope="col">Dirección</th>
-                                                    
+
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -268,15 +305,16 @@
 
                             </div>
                         </div>
-                        
+
                     {% endif %}
 
-                    {% if  addresses|length > 0 or cart|length > 0 %}
+                    {% if  addresses|length > 0 and cart|length > 0 %}
 
                         <div class="row">
                             <div class="col">
                                 <button type="submit"
-                                        class="btn btn-primary float-end">
+                                        class="btn btn-primary btn-lg float-end mt-5 pe-5 ps-5"
+                                        style="background-color: var(--main-color);">
                                     Resumen
                                 </button>
                             </div>
@@ -328,21 +366,19 @@
                                                name="number">
                                         <label for="block"
                                                class="col-form-label">Bloque:</label>
-                                        <input type="number"
+                                        <input type="text"
                                                class="form-control"
                                                id="block"
-                                               required="required"
                                                name="block">
                                         <label for="floor"
                                                class="col-form-label">Piso:</label>
-                                        <input type="number"
+                                        <input type="text"
                                                class="form-control"
                                                id="floor"
-                                               required="required"
                                                name="floor">
                                         <label for="door"
                                                class="col-form-label">Puerta:</label>
-                                        <input type="number"
+                                        <input type="text"
                                                class="form-control"
                                                id="door"
                                                name="door">
@@ -373,21 +409,21 @@
                                 </div>
                             </form>
 
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="submit"
-                                           class="btn btn-primary"
-                                           placeholder="Añadir dirección">
-                                </div>
-                            </form>
-
                         </div>
-                    </div>
-                </div>
 
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit"
+                               class="btn btn-primary"
+                               placeholder="Añadir dirección">
+                    </div>
+                    </form>
+
+                </div>
             </div>
+        </div>
+
+        </div>
     </section>
 
 
