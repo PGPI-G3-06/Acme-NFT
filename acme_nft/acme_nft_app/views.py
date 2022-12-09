@@ -97,9 +97,12 @@ def index(request):
         for entry in entries:
             if entry.product == product and entry.user == request.user and entry.entry_type == 'WISHLIST':
                 wishlist.append(entry.product_id)
+                
+    showcase_products = Product.objects.filter(showcase=True)
 
     return render(request, "index.html", context={"user": request.user,
                                                   "products": products_to_list,
+                                                  "showcase_products": showcase_products,
                                                   "wishlist": wishlist,
                                                   "pages_range": range(0,
                                                                        possible_pages),
@@ -130,6 +133,7 @@ def product_detail(request, product_id):
 
     return render(request, "product_details.html",
                   context={"user": request.user, "product": product,
+                           "suggested_products": None,
                            "comments": comments, "in_wishlist": in_wishlist})
 
 def wishlist(request):
@@ -889,6 +893,7 @@ def sugesstions(request, product_id):
     while len(suggestions) < 5:
         suggestions = suggestions | Product.objects.all().order_by('?').exclude(
         pk=product_id)[:5-len(suggestions)]
+    
     return JsonResponse({'suggestions': list(suggestions.values())})
 
 def contact(request):

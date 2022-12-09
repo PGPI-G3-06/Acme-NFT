@@ -10,6 +10,7 @@
     width: 100%;
     padding: 30px 5%;
     display: flex;
+    align-items: center;
     flex-direction: column;
 }
 
@@ -313,6 +314,12 @@
 .comments-list::-webkit-scrollbar-thumb{
     background: var(--main-color);
 	border-radius: 5px;
+}
+
+.showcase-title{
+    text-align: center;
+    margin-top: 100px;
+    font-weight: bolder;
 }
 
 @media screen and (min-width: 1100px) {

@@ -9,6 +9,33 @@ section{
     background: var(--main-white);
 }
 
+.main-content-container{
+    margin-top: 25px; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column;
+}
+
+/* SHOWCASE */
+
+.showcase-element{
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 300px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 80px;
+}
+
+.showcase-element img{
+    height: 400px;
+    width: 300px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+}
+
 /* PRODUCT GRID */
 
 .class-grid-container{
@@ -297,6 +324,7 @@ section{
 .class-link:hover{
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    color: var(--text-black);
     transition: 0.5s all;
 
 }
