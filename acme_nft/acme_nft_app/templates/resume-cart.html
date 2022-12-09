@@ -5,52 +5,71 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
 
 {% endblock %}
 
 {% block content %}
     <section>
-        <div class="container">
-            <h1 class="card-title">Resumen</h1>
-            <div class="row">
-                <div class="col">
-                    <div class="div-resumen rounded">
-                        <table class="table rounded" aria-label="Tabla de resumen de pedidos">
-                            <thead class="head">
+    <div class="container">
+
+        <!-- Error Alert -->
+        {% if error %}
+
+            <div class="alert alert-danger alert-dismissible fade show">
+                <strong>Error!</strong> {{ error }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert"></button>
+            </div>
+
+        {% endif %}
+
+        <h1 class="card-title">Resumen</h1>
+        <div class="row">
+            <div class="col">
+                <div class="div-resumen rounded">
+                    <table class="table rounded" aria-label="Tabla de resumen de pedidos">
+                        <thead class="head">
+                        <tr>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Precio/ud</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Total</th>
+                        </thead>
+                        <tbody>
+                        <script>
+                            let real_total = 0;
+                        </script>
+                        {% for item in products %}
                             <tr>
-                                <th scope="col">Producto</th>
-                                <th scope="col">Precio/ud</th>
-                                <th scope="col">Cantidad</th>
-                                <th scope="col">Total</th>
-                            </thead>
-                            <tbody>
-                            <script>
-                                let real_total = 0;
-                            </script>
-                            {% for item in products %}
-                                <tr>
-                                    <td>{{ item.product.name }}</td>
+                                <td>{{ item.product.name }}</td>
+
+                                {% if item.product.offer_price != None %}
+
+                                    <td>{{ item.product.offer_price }}</td>
+
+                                {% else %}
+
                                     <td>{{ item.product.price }}</td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td>
-                                        <script>
-                                            var total =
-                                            {{ item.product.price }} * {{ item.quantity }}
-                                            document.write(total.toFixed(2) + "€")
-                                            real_total += total
-                                        </script>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <script>
-                                        document.write('<p class="card-title">' + real_total.toFixed(2) + "€" + '</p>')
-                                    </script>
+
+                                {% endif %}
+
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.total }} €</td>
+                                <script>
+
+                                    console.log(typeof ("{{ item.product.offer_price }}"));
+
+                                    if ("{{ item.product.offer_price }}" !== "None") {
+                                        real_total +=
+                                        {{ item.product.offer_price }} * {{ item.quantity }}
+                                    } else {
+                                        var total =
+                                        {{ item.product.price }} * {{ item.quantity }}
+                                        real_total += total
+                                    }
+                                </script>
                                 </td>
                             </tbody>
                         </table>
@@ -76,39 +95,84 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col mt-lg-5">
-                    <button type="button" class="btn btn-primary"
-                            onclick="window.location.href='{% url 'acme-nft:cart' %}'">
-                        Retroceder
-                    </button>
+        </div>
+        <div class="row">
+            <div class="col mt-lg-5">
+                <button type="button" class="btn btn-primary"
+                        onclick="window.location.href='{% url 'acme-nft:cart' %}'">
+                    Retroceder
+                </button>
+
+                {% if pay == 'tarjeta' %}
                     <button type="submit" class="btn btn-primary float-end"
                             data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Pagar y confirmar compra
                     </button>
-                </div>
+
+                {% else %}
+
+                    <button type="submit" class="btn btn-primary float-end"
+                            onclick="transfer()">
+                        Pagar y confirmar compra
+
+                    </button>
+
+                    <script>
+
+
+                        function transfer() {
+                            $.ajax({
+                                url: "{% url 'acme-nft:payment' %}",
+                                type: "POST",
+                                data: {
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                    'products': productsEntriesIds.toString(),
+                                    'address': '{{ address }}',
+                                    'payment_method': '{{ pay }}',
+                                    'email': '{{ email }}',
+                                    'name': '{{ name }}',
+                                },
+                            }).done(function (data) {
+                                alert('Compra realizada con éxito')
+                                window.location.href = "{% url 'acme-nft:index' %}"
+                            });
+                        }
+
+
+                    </script>
+
+
+                {% endif %}
+
             </div>
+                    <div id="wait">
 
+                    </div>
 
-            <div id="exampleModal" class="modal fade" tabindex="-1"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 style="color: var(--main-color)">Tarjeta de
+                            pago</h1>
+                    </div>
 
-                        <div class="modal-header">
-                            <h1 style="color: var(--main-color)">Tarjeta de
-                                pago</h1>
-                        </div>
-
-                        <div class="modal-body">
-                            <form id="form" class="needs-validation"
-                                style="display: none">
-                                <div class="row mt-2">
-                                    <div class="col">
-                                        <input class="form-control" type="text"
-                                            id="cardholder-name"
-                                            placeholder="Nombre del titular de la tarjeta"
-                                            required>
+                    <div class="modal-body">
+                        <form id="form" class="needs-validation"
+                              style="display: none">
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <input class="form-control" type="text"
+                                           id="cardholder-name"
+                                           placeholder="Nombre del titular de la tarjeta"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <input class="form-control" type="number"
+                                           id="cardholder-number"
+                                           placeholder="Número de la tarjeta"
+                                           required>
+                                    <div class="invalid-feedback">
+                                        Tarjeta incorrecta.
                                     </div>
                                 </div>
                                 <div class="row mt-2">
@@ -255,8 +319,19 @@
                             'csrfmiddlewaretoken': '{{ csrf_token }}',
                             'products': productsEntriesIds.toString(),
                             'address': '{{ address }}',
-                            'payment_method': '{{ pay }}'
-                        }
+                            'payment_method': '{{ pay }}',
+                            'email': '{{ email }}',
+                            'name': '{{ name }}',
+                        },
+                        beforeSend: function () {
+                            let alert = `
+                                        <div class="alert alert-info" role="alert">
+                                          Validando su compra... Espere por favor.
+                                        </div>
+                                        `;
+
+                            document.getElementById('wait').innerHTML = alert;
+                        },
                     }).done(function (result) {
                         window.location.href = "{% url 'acme-nft:index' %}";
                     });

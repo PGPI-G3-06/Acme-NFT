@@ -6,7 +6,7 @@ urlpatterns = [
     path('', views.index, name="index"),    
     # Product detail
     path('product/<int:product_id>', views.product_detail, name="product_detail"),
-    path('sugesstions/<int:product_id>', views.sugesstions, name="sugesstions"),
+    path('suggestions/<int:product_id>', views.sugesstions, name="sugesstions"),
     
     # Login page
     path("signin", views.signin, name="signin"),
@@ -47,11 +47,27 @@ urlpatterns = [
     # Orders
     path("orders", views.orders, name="orders"),
     path("order/<int:order_id>", views.order, name="order"),
+
+    # Showcase
+    path("showcase", views.showcase, name="showcase"),
+    path("showcase/add/<int:product_id>", views.add_showcase, name="add_to_showcase"),
+    path("showcase/delete/<int:product_id>", views.delete_showcase, name="delete_from_showcase"),
     
     # Others
     path("hello/<int:user_id>", views.hello, name="hello"),
     path("error", views.error, name="error"),
     path("profile", views.edit_user, name="profile"),
+    path("services", views.get_service_terms, name="service_terms"),
+    path("search/order", views.search_order, name="search_order"),
+    path("returns", views.get_returns_policy, name="return_policy"),
+
+
+    # Admin
+    path("admins/products", views.AdminListProducts.as_view(), name="admin"),
+    path("admins/products/<int:product_id>",views.update_product, name="admin_detail"),
+    path("admins/products/new", views.create_product, name="admin_new_product"),
+    path("admins/orders", views.AdminListOrders.as_view(), name="admin_orders"),
+    path("admins/orders/status/<int:order_id>", views.change_order_status, name="admin_order_status"),
 
 
 ]

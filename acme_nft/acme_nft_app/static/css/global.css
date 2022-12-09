@@ -9,7 +9,13 @@
     --card-background-color: rgba(255, 255, 255, 0.051);
     --comment-separator-color: rgba(141, 141, 141, 0.525);
     --heart-color: red;
+    --old-price-color: rgb(141, 141, 141);
+    --offer-price-color: rgb(174, 0, 0);
+    /* Text */
 
+    --text-black: black
+    --text-white: white;
+    
     /* Login */
 
     --login-input-border-color: black;
@@ -17,6 +23,13 @@
     /* Labels */
 
     --main-label-color: #573b8a;
+
+    /* Filters */
+
+    --filters-button-text-color: rgb(106, 106, 106);
+    --filters-button-text-hover-color: rgb(163, 163, 163);
+    --filters-menu-background-color: white;
+    --filters-menu-header-border-color: rgb(163, 163, 163);
 
     /* Rarities */
 
@@ -51,6 +64,11 @@
     --color-error: #cc0033;
     --color-error-background: #fce4e4;
     --color-border-disabled: #706c6c;
+    
+    /* Stock */
+    --enough-stock-color: rgb(0, 203, 0);
+    --not-much-stock-color: orange;
+    --no-stock-color: red;
 }
 
 *{
@@ -61,4 +79,52 @@
 
 html, body{
     height: 100%;
+}
+
+showcase{
+    width: 80vw;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin: 50px 0;
+    padding: 0px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px var(--main-color); 
+}
+
+showcase::-webkit-scrollbar{
+    height: 7px;
+}
+
+showcase::-webkit-scrollbar-thumb{
+    background: var(--main-color);
+	border-radius: 5px;
+}
+
+.without-stock{
+    filter: grayscale(100%);
+}
+
+.enough-stock, .not-much-stock, .no-stock{
+    width: 100%;
+    height: 100%;
+    font-size: 1.2em;
+    font-weight: bolder;
+    text-align: center;
+    text-transform: uppercase;
+
+}
+
+.enough-stock{
+    color: var(--enough-stock-color) !important;
+}
+
+.not-much-stock{
+    color: var(--not-much-stock-color) !important;
+}
+
+.no-stock{
+    color: var(--no-stock-color) !important;
 }

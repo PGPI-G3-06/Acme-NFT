@@ -22,11 +22,11 @@ class Status(models.TextChoices):
     on_transit = 'EN TRÁNSITO'
     
 class RarityType(models.TextChoices):
-    common = 'COMMON'
-    rare = 'RARE'
-    epic = 'EPIC'
-    legendary = 'LEGENDARY'
-    mythic = 'MYTHIC'
+    common = 'COMÚM'
+    rare = 'RARO'
+    epic = 'ÉPICO'
+    legendary = 'LEGENDARIO'
+    mythic = 'MÍTICO'
 
 
 class Address(models.Model):
@@ -34,7 +34,7 @@ class Address(models.Model):
     number = models.IntegerField()
     block = models.IntegerField(null=True)
     floor = models.IntegerField(null=True)
-    door = models.CharField(max_length=1, blank=True)
+    door = models.CharField(max_length=3, blank=True, null=True)
     city = models.CharField(max_length=60)
     code_postal = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -46,7 +46,7 @@ class Address(models.Model):
             address+= ", Bloque " + str(self.block) + " "
         if self.floor:
             address += ", " + str(self.floor)  + "º "
-        if self.door != "":
+        if self.door != "" and self.door:
             address += self.door + " "
         return   address  + self.city + ", " + str(self.code_postal)
 
@@ -75,6 +75,7 @@ class Product(models.Model):
     offer_price = models.FloatField(blank=True, null=True)
     rarity = models.CharField(max_length=60, choices=[ (rarity, rarity.value) for rarity in RarityType], default=RarityType.common)
     author = models.ForeignKey(Author, on_delete=models.DO_NOTHING, null=True)
+    showcase = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name
@@ -112,12 +113,20 @@ class Order(models.Model):
     address = models.CharField(max_length=256)
     status = models.CharField(max_length=60, choices=[ (tag, tag.value) for tag in Status])
 
-    @classmethod
-    def total(cls):
+
+    def total(self):
         total = 0
-        for entry in cls.entry_set.all():
-            total += entry.product.price * entry.quantity
+        for entry in self.productentry_set.all():
+
+            if entry.product.offer_price:
+                total += entry.product.offer_price * entry.quantity
+            else:
+                total += entry.product.price * entry.quantity
+
         return total
+
+    def user(self):
+        return self.productentry_set.first().user
 
     def __str__(self):
         return self.ref_code
@@ -130,6 +139,11 @@ class ProductEntry(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
 
     def total(self):
+
+        if self.product.offer_price:
+            return self.product.offer_price * self.quantity
+
+
         return self.quantity * self.product.price
     
     def __str__(self):

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/product_details.css' %}"
           xmlns="http://www.w3.org/1999/html">
     <script type="text/javascript" src="{% static 'js/product_details.js' %}"></script>
@@ -12,7 +13,7 @@
         <div class="details-container">
             <div class="img-and-desc-div">
                 <div class="img-div">
-                    <img src="/static/{{ product.image_url }}" alt="{{product.name}}">
+                    <img src="/static/{{ product.image_url }}" {% if product.stock == 0 %} class="without-stock" {% endif %} alt="{{product.name}}">
                 </div>
                 <div class="desc-div">
                     <div class="desc-section" style="flex-direction: column">
@@ -24,14 +25,24 @@
                     <div class="desc-section">
                         <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="cart-form" method="POST">
                             {% csrf_token %} 
-                            <span>Cantidad:<input class="input-cantidad" id="quantity" type="number" value="1" min="1" name="quantity"></input></span>
+                            <span>Cantidad:<input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></span>
                         </form>
-                        <h2 id="price">{{ product.price }} €</h2>
+                        {% if product.offer_price %}
+                            <h2 id="old-price">{{ product.price|floatformat:2 }} €</h2> <h2 id="offer-price">{{ product.offer_price }} €</h2>
+                        {% else %}
+                            <h2 id="price">{{ product.price|floatformat:2 }} €</h2>
+                        {% endif %}
                     </div>
                     <div class="desc-section">
-                        <div id="cart-error" style="display: none;">
-                            <span></span>
-                        </div>
+                        {% if product.stock == 0 %}
+                            <div class="no-stock">¡NO TENEMOS STOCK DE ESTE PRODUCTO!</div>
+                        {% elif product.stock == 1 %}
+                            <div class="not-much-stock">ÚLTIMA UNIDAD, ¡DATE PRISA!</div>
+                        {% elif product.stock < 5 %}
+                            <div class="not-much-stock">SOLO QUEDAN {{product.stock}} UNIDADES, ¡DATE PRISA!</div>
+                        {% else %}
+                            <div class="enough-stock">¡EN STOCK!</div>
+                        {% endif %}
                     </div>
                     <div class="desc-section" id="buttons-section">
                         {% if user.is_authenticated %}
@@ -46,11 +57,26 @@
                         {% endif %}
                         <button id="add-to-cart-btn">
                             Añadir al carrito <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" height="25px" width="25px">
-
                         </button>
                     </div>
                 </div>
             </div>
+
+            <h3 class="showcase-title">Otros productos que podrían interesarte</h3>
+
+            <showcase>
+                {% for product in showcase_products %}
+
+                    <div class="showcase-element"> 
+                    
+                        <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                        <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+
+                    </div>
+            
+                {% endfor %}
+            </showcase>
+
             <div class="comments-div">
                 {% if user.is_authenticated %}
                 <button class="new-comment-button">Añade tu comentario</button>
