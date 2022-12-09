@@ -44,14 +44,15 @@ def index(request):
     
     products = Product.objects.all()
     try:
-        if request.GET['order-by'] == 'collections':
-            products = Product.objects.all().order_by('collection')
+        if request.GET['order-by'] == 'collection':
+            products = Product.objects.order_by('collection')
 
     except KeyError:
         pass
+    
     try:
         if request.GET['order-by'] == 'author':
-            products = Product.objects.all().order_by('author__name')
+            products = Product.objects.order_by('author__name')
 
     except KeyError:
         pass
