@@ -33,6 +33,24 @@
     border-radius: 15px;
 }
 
+#price, #old-price, #offer-price{
+    font-family: 'Lucida Sans';
+}
+
+#price{
+    font-weight: bolder;
+}
+
+#old-price{
+    text-decoration: line-through;
+    color: var(--old-price-color);
+}
+
+#offer-price{
+    color: var(--offer-price-color);
+    font-weight: bolder;
+}
+
 .desc-div{
     display: flex;
     flex-direction: column;
