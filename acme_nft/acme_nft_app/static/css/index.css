@@ -168,13 +168,19 @@ section{
 
 .class-card .class-img-box{
 
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     padding: 20px;
     transition: 0.5s ease-in-out;
+
+}
+
+.class-card:hover .class-img-box .no-stock{
+
+    opacity: 0;
+    visibility: hidden;
 
 }
 
@@ -195,10 +201,8 @@ section{
 }
 
 .class-card .class-img-box h2{
-
     opacity: 1;
     visibility: visible;
-
 }
 
 .class-card:hover .class-img-box img{
