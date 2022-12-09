@@ -55,6 +55,12 @@
     --error-message-border-color: rgba(239, 80, 80, 1);
     --register-error-message-font-color: rgb(0, 0, 0);
     --register-error-message-background-color: rgba(255,255,255,0.5);
+
+    /* Stock */
+
+    --enough-stock-color: rgb(0, 203, 0);
+    --not-much-stock-color: orange;
+    --no-stock-color: red;
 }
 
 *{
@@ -87,4 +93,30 @@ showcase::-webkit-scrollbar{
 showcase::-webkit-scrollbar-thumb{
     background: var(--main-color);
 	border-radius: 5px;
+}
+
+.without-stock{
+    filter: grayscale(100%);
+}
+
+.enough-stock, .not-much-stock, .no-stock{
+    width: 100%;
+    height: 100%;
+    font-size: 1.2em;
+    font-weight: bolder;
+    text-align: center;
+    text-transform: uppercase;
+
+}
+
+.enough-stock{
+    color: var(--enough-stock-color) !important;
+}
+
+.not-much-stock{
+    color: var(--not-much-stock-color) !important;
+}
+
+.no-stock{
+    color: var(--no-stock-color) !important;
 }

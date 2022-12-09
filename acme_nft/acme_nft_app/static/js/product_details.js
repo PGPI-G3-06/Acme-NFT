@@ -100,18 +100,7 @@ function main(){
     let quantityInput = document.getElementById('quantity');
 
     addToCartBtn.addEventListener('click', function(event){
-        
-        event.preventDefault();
-
-        let cartError = document.getElementById('cart-error');
-        cartError.style.display = 'block';
-
-        let quantity = quantityInput.value;
-        if (quantity > 0){
-            cartForm.submit();
-        }else{
-            cartError.getElementsByTagName("span")[0].innerHTML = "La cantidad debe ser mayor a 0";
-        }
+        cartForm.submit();
     });
 
     let price = document.getElementById('price').innerHTML;

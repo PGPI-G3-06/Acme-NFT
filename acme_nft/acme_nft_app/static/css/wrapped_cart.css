@@ -30,6 +30,9 @@
 .cart-wrapper .items .cartSection {
     display: table-cell;
     vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .cart-wrapper .items .cartSection .itemNumber {
     font-size: 0.75em;
@@ -51,23 +54,22 @@
     margin-bottom: 0;
 }
 
-.cart-wrapper .items .cartSection p {
+.cart-wrapper .items .cartSection div {
     display: inline-block;
-    font-size: 0.85em;
     color: #777;
     font-family: 'Montserrat', sans-serif;
 }
-.cart-wrapper .items .cartSection p .quantity {
+.cart-wrapper .items .cartSection div .quantity {
     font-weight: bold;
     color: #333;
 }
-.cart-wrapper .items .cartSection p.stockStatus {
+.cart-wrapper .items .cartSection div.stockStatus {
     color: #82ca9c;
     font-weight: bold;
     padding: 0.5em 0 0 1em;
     text-transform: uppercase;
 }
-.cart-wrapper .items .cartSection p.stockStatus.out {
+.cart-wrapper .items .cartSection div.stockStatus.out {
     color: #f69679;
 }
 .cart-wrapper .items .cartSection .itemImg {
@@ -78,6 +80,7 @@
 }
 .cart-wrapper .items .cartSection.qtyWrap, .cart-wrapper .items .cartSection.prodTotal {
     text-align: center;
+    margin-right: 20px;
 }
 .cart-wrapper .items .cartSection.qtyWrap p, .cart-wrapper .items .cartSection.prodTotal p {
     font-weight: bold;
@@ -89,7 +92,6 @@
     text-align: center;
     font-size: 1em;
     padding: 0.25em;
-    margin: 1em 0.5em 0 0;
 }
 .cart-wrapper .items .cartSection .itemImg {
     width: 8em;
