@@ -911,6 +911,11 @@ def contact(request):
 def get_service_terms(request):
     return render(request, "service-terms.html")
 
+# ------------------------ Returns Policy ------------------------
+
+def get_returns_policy(request):
+    return render(request, "returns-policy.html")
+
 # ------------------------ admin ------------------------
 
 class AdminListProducts(ListView):
