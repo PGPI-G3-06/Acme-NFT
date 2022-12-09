@@ -60,7 +60,11 @@
                                                    data-grouprequired="productos">
                                         </th>
                                         <td>{{ item.product.name }}</td>
-                                        <td>{{ item.product.price|floatformat:2 }}€</td>
+                                        {% if item.product.offer_price %}
+                                            <td>{{ item.product.offer_price|floatformat:2 }}€</td>
+                                        {% else %}
+                                            <td>{{ item.product.price|floatformat:2 }}€</td>
+                                        {% endif %}
                                         <td>
                                             <div class="input-group mb-3">
                                                 <button class="btn btn-outline-secondary"
