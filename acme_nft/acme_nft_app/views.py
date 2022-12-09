@@ -20,6 +20,7 @@ from xhtml2pdf import pisa
 from acme_nft import settings as django_settings
 from django.core.mail import EmailMessage
 
+from django.db.models import ImageField
 from .models import *
 
 gateway = braintree.BraintreeGateway(
@@ -34,6 +35,7 @@ gateway = braintree.BraintreeGateway(
 # ------------------------------------- Constants -------------------------------------
 
 MAX_PRODUCTS_PER_PAGE = 10
+PROFILE_ERRORS = {}
 
 
 # ------------------------------------- Render views -------------------------------------
@@ -264,26 +266,130 @@ def signup(request):
 
 
 def edit_user(request):
+    
+    if not request.user.is_authenticated:
+        messages.error(request, "Debes estar registrado para acceder a esta página")
+        return HttpResponseRedirect(reverse("acme-nft:signup"))
+    
     user = User.objects.get(username=request.user)
+    profile_picture, _ = ProfilePicture.objects.get_or_create(user=user)
+    
+    name_errors = PROFILE_ERRORS[user.username+'name_errors'] if PROFILE_ERRORS and PROFILE_ERRORS[user.username+'name_errors'] else []
+    surname_errors = PROFILE_ERRORS[user.username+'surname_errors'] if PROFILE_ERRORS and PROFILE_ERRORS[user.username+'surname_errors'] else []
+    username_errors = PROFILE_ERRORS[user.username+'username_errors'] if PROFILE_ERRORS and PROFILE_ERRORS[user.username+'username_errors'] else []
+    email_errors = PROFILE_ERRORS[user.username+'email_errors'] if PROFILE_ERRORS and PROFILE_ERRORS[user.username+'email_errors'] else []
+    profile_pic_errors = PROFILE_ERRORS[user.username+'profile_pic_errors'] if PROFILE_ERRORS and PROFILE_ERRORS[user.username+'profile_pic_errors'] else []
+    
     if request.method == 'GET':
-
+        first_name = user.first_name
+        surname = user.last_name
+        username = user.username
+        email = user.email
+        profile_picture = str(profile_picture.image)
+        
+        if PROFILE_ERRORS:
+            first_name= PROFILE_ERRORS[user.username+'name']
+            surname = PROFILE_ERRORS[user.username+'surname']
+            username = PROFILE_ERRORS[user.username+'username']
+            email = PROFILE_ERRORS[user.username+'email']
+            profile_picture = PROFILE_ERRORS[user.username+'profile_pic']
+            
+            del PROFILE_ERRORS[user.username+'name']
+            del PROFILE_ERRORS[user.username+'surname']
+            del PROFILE_ERRORS[user.username+'username']
+            del PROFILE_ERRORS[user.username+'email']
+            del PROFILE_ERRORS[user.username+'profile_pic']
+            
+            del PROFILE_ERRORS[user.username+'name_errors']
+            del PROFILE_ERRORS[user.username+'surname_errors']
+            del PROFILE_ERRORS[user.username+'username_errors']
+            del PROFILE_ERRORS[user.username+'email_errors']
+            del PROFILE_ERRORS[user.username+'profile_pic_errors']
+            
         return render(request, "profile.html", {
-            'username': user.username,
-            'email': user.email,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
+            'first_name': first_name,
+            'last_name': surname,
+            'username': username,
+            'email': email,
+            'profile_picture': profile_picture,
+            'name_errors': name_errors,
+            'surname_errors': surname_errors,
+            'username_errors': username_errors,
+            'email_errors': email_errors,
+            'profile_pic_errors': profile_pic_errors,
         })
-
     else:
-
         user_attrs = request.POST
-        user.first_name = user_attrs['first_name']
-        user.last_name = user_attrs['last_name']
-        user.username = user_attrs['username']
-        user.email = user_attrs['email']
-        user.save()
+        first_name = str(user_attrs['first_name']).strip()
+        surname = str(user_attrs['last_name']).strip()
+        username = str(user_attrs['username']).strip()
+        email = str(user_attrs['email']).strip()
+        profile_pic = str(user_attrs['profile_pic']).strip()
+        
+        required_field = "Este campo es obligatorio"
+        if not first_name:
+            name_errors.append(required_field)
+        if not surname:
+            surname_errors.append(required_field)
+        if not username:
+            username_errors.append(required_field)
+        if not email:
+            email_errors.append(required_field)
+        if not profile_pic:
+            profile_pic = "/static/images/profile.png"
+        
+        if first_name and first_name[0].islower():
+            name_errors.append("La primera letra del nombre debe ser mayúscula")
+        if surname and surname[0].islower():
+            surname_errors.append("La primera letra del apellido debe ser mayúscula")
+        if username and 3 >= len(username) <= 24:
+            username_errors.append("El nombre de usuario debe tener entre 4 y 24 caracteres")
+        if email and 3 >= len(email) <= 64:
+            email_errors.append("El email debe tener entre 4 y 64 caracteres")
+        if profile_pic and len(profile_pic) >= 90:
+            profile_pic_errors.append("La imagen debe tener menos de 90 caracteres")
+            
+        try:
+            if user.username != username and username:
+                User.objects.get(username=username)
+                username_errors.append("El nombre de usuario ya existe")
+        except User.DoesNotExist:
+            pass
+        
+        try:
+            if user.email != email and email:
+                User.objects.get(email=email)
+                email_errors.append("El email ya está registrado")
+        except User.DoesNotExist:
+            pass
+        
+        if name_errors or surname_errors or username_errors or email_errors or profile_pic_errors:
+            PROFILE_ERRORS[user.username+'name'] = first_name
+            PROFILE_ERRORS[user.username+'surname'] = surname
+            PROFILE_ERRORS[user.username+'username'] = username
+            PROFILE_ERRORS[user.username+'email'] = email
+            PROFILE_ERRORS[user.username+'profile_pic'] = profile_pic
+            PROFILE_ERRORS[user.username+'name_errors'] = name_errors
+            PROFILE_ERRORS[user.username+'surname_errors'] = surname_errors
+            PROFILE_ERRORS[user.username+'username_errors'] = username_errors
+            PROFILE_ERRORS[user.username+'email_errors'] = email_errors
+            PROFILE_ERRORS[user.username+'profile_pic_errors'] = profile_pic_errors
+            return HttpResponseRedirect(reverse("acme-nft:profile"))
+            
+        user.first_name = first_name
+        user.last_name = surname
+        user.username = username
+        user.email = email
+        profile_picture.image = profile_pic
+        
+        try:
+            user.save()
+            profile_picture.save()
+            messages.success(request, "Perfil actualizado correctamente")
+        except Exception:
+            messages.error(request, "Ha ocurrido un error al actualizar el perfil")
 
-    return HttpResponseRedirect(reverse("acme-nft:hello", args=(user.id,)))
+    return HttpResponseRedirect(reverse("acme-nft:profile"))
 
 
 # ------------------------ Address ------------------------
@@ -291,7 +397,6 @@ def edit_user(request):
 def show_adrress(request, user_id):
     user = User.objects.get(id=user_id)
     list_address = user.address_set.all()
-    print(list_address)
     return render(request, "show_address.html",
                   context={"list_address": list_address})
 
@@ -376,7 +481,7 @@ def update_address(request, address_id):
                               street_name)
         if len(errors) > 0:
             are_errors = True
-            return render(request, "new_address.html", {
+            return render(request, "update_address.html", {
                 "errors": errors,
                 "street_name": street_name,
                 "number": number,

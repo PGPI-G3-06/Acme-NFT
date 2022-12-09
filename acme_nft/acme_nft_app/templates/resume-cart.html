@@ -3,6 +3,7 @@
 
 {% block extrahead %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
@@ -10,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+    <section>
     <div class="container">
 
         <!-- Error Alert -->
@@ -69,38 +71,28 @@
                                     }
                                 </script>
                                 </td>
-                            </tr>
-                        {% endfor %}
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <script>
-                                    document.write('<p class="card-title">' + real_total.toFixed(2) + "€" + '</p>')
-                                </script>
-                            </td>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row mt-lg-5">
-            <div class="col">
-                <div class="div-resumen rounded">
-                    <table class="table rounded" aria-label="Tabla de resumen de pagos y envio">
-                        <thead class="head">
-                        <tr>
-                            <th scope="col">Método de pago</th>
-                            <th scope="col">Dirección de facturación</th>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{ pay }}</td>
-                            <td>{{ address }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <div class="row mt-lg-5">
+                <div class="col">
+                    <div class="div-resumen rounded">
+                        <table class="table rounded" aria-label="Tabla de resumen de pagos y envio">
+                            <thead class="head">
+                            <tr>
+                                <th scope="col">Método de pago</th>
+                                <th scope="col">Dirección de facturación</th>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>{{ pay }}</td>
+                                <td>{{ address }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,7 +104,6 @@
                 </button>
 
                 {% if pay == 'tarjeta' %}
-
                     <button type="submit" class="btn btn-primary float-end"
                             data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Pagar y confirmar compra
@@ -154,14 +145,6 @@
                 {% endif %}
 
             </div>
-        </div>
-
-
-        <div id="exampleModal" class="modal fade" tabindex="-1"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
                     <div id="wait">
 
                     </div>
@@ -192,79 +175,89 @@
                                         Tarjeta incorrecta.
                                     </div>
                                 </div>
-
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <select class="form-select" name="month"
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <input class="form-control" type="number"
+                                            id="cardholder-number"
+                                            placeholder="Número de la tarjeta"
                                             required>
-                                        <option value="01">Enero</option>
-                                        <option value="02">Febrero</option>
-                                        <option value="03">Marzo</option>
-                                        <option value="04">Abril</option>
-                                        <option value="05">Mayo</option>
-                                        <option value="06">Junio</option>
-                                        <option value="07">Julio</option>
-                                        <option value="08">Agosto</option>
-                                        <option value="09">Septiembre</option>
-                                        <option value="10">Octubre</option>
-                                        <option value="11">Noviembre</option>
-                                        <option value="12">Diciembre</option>
-                                    </select>
+                                        <div class="invalid-feedback">
+                                            Tarjeta incorrecta.
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div class="col">
-                                    <select class="form-select" name="year">
-                                        <option value="2021">2022</option>
-                                        <option value="2022">2023</option>
-                                        <option value="2023">2024</option>
-                                        <option value="2024">2025</option>
-                                        <option value="2025">2026</option>
-                                        <option value="2026">2027</option>
-                                        <option value="2027">2028</option>
-                                        <option value="2028">2029</option>
-                                        <option value="2029">2030</option>
-                                        <option value="2030">2031</option>
-                                        <option value="2031">2032</option>
-                                        <option value="2032">2033</option>
-                                    </select>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <select class="form-select" name="month"
+                                                required>
+                                            <option value="01">Enero</option>
+                                            <option value="02">Febrero</option>
+                                            <option value="03">Marzo</option>
+                                            <option value="04">Abril</option>
+                                            <option value="05">Mayo</option>
+                                            <option value="06">Junio</option>
+                                            <option value="07">Julio</option>
+                                            <option value="08">Agosto</option>
+                                            <option value="09">Septiembre</option>
+                                            <option value="10">Octubre</option>
+                                            <option value="11">Noviembre</option>
+                                            <option value="12">Diciembre</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select" name="year">
+                                            <option value="2021">2022</option>
+                                            <option value="2022">2023</option>
+                                            <option value="2023">2024</option>
+                                            <option value="2024">2025</option>
+                                            <option value="2025">2026</option>
+                                            <option value="2026">2027</option>
+                                            <option value="2027">2028</option>
+                                            <option value="2028">2029</option>
+                                            <option value="2029">2030</option>
+                                            <option value="2030">2031</option>
+                                            <option value="2031">2032</option>
+                                            <option value="2032">2033</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control" type="number"
+                                            id="cardholder-cvv"
+                                            placeholder="CVV">
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <input class="form-control" type="number"
-                                           id="cardholder-cvv"
-                                           placeholder="CVV">
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <button type="submit"
+                                                class="btn btn-primary float-end"
+                                                id="submit-button">
+                                            Confirmar compra
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <button type="submit"
-                                            class="btn btn-primary float-end"
-                                            id="submit-button">
-                                        Confirmar compra
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <form autocomplete="off">
-                            <div class="braintree-notifications"></div>
-                            <div id="braintree-dropin"></div>
-                            <input style="background-color: var(--main-color);"
-                                   id="paga"
-                                   class="btn btn-success btn-lg"
-                                   type="button"
-                                   value="Pagar"/>
-                        </form>
+                            </form>
+                            <form autocomplete="off">
+                                <div class="braintree-notifications"></div>
+                                <div id="braintree-dropin"></div>
+                                <input style="background-color: var(--main-color);"
+                                    id="paga"
+                                    class="btn btn-success btn-lg"
+                                    type="button"
+                                    value="Pagar"/>
+                            </form>
+
+                        </div>
+
 
                     </div>
 
-
                 </div>
-
             </div>
+
+
         </div>
-
-
-    </div>
-
+    </section>
     <script>
 
         const cardholderNumber = document.getElementById("cardholder-number");
