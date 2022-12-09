@@ -680,7 +680,7 @@ def payment(request):
         e = user.email
         pdf = get_invoice_pdf(order_)
 
-    if request.POST.get('pay') == 'TARJETA':
+    if request.POST.get('payment_method') == 'TARJETA':
         mensajito = f'Gracias por su compra, su pedido es {ref_code}'
 
     else:
@@ -732,8 +732,20 @@ def add_address_in_cart(request):
     street_name = request.POST['street_name']
     number = request.POST['number']
     floor = request.POST['floor']
+
+    if floor == '':
+        floor = None
+
     block = request.POST['block']
+
+    if block == '':
+        block = None
+
     door = request.POST['door']
+
+    if door == '':
+        door = None
+
     city = request.POST['city']
     code_postal = request.POST['postal_code']
 

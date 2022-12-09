@@ -34,7 +34,7 @@ class Address(models.Model):
     number = models.IntegerField()
     block = models.IntegerField(null=True)
     floor = models.IntegerField(null=True)
-    door = models.CharField(max_length=1, blank=True)
+    door = models.CharField(max_length=3, blank=True, null=True)
     city = models.CharField(max_length=60)
     code_postal = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -46,7 +46,7 @@ class Address(models.Model):
             address+= ", Bloque " + str(self.block) + " "
         if self.floor:
             address += ", " + str(self.floor)  + "º "
-        if self.door != "":
+        if self.door != "" and self.door:
             address += self.door + " "
         return   address  + self.city + ", " + str(self.code_postal)
 
