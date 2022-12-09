@@ -10,11 +10,39 @@
 {% block content %}
 <section>
 
-    <div style="display: flex; justify-content: center;">
-        <a class="class-link" href="?order-by=collections" role="button">Ordenar por Colección</a>
-        <a class="class-link" href="?order-by=author" role="button">Ordenar por Autor</a>
-        <br><br>
+    <div class="filters-activation-button" id="filters-wrapper-menu-activation-button">
+        <a href="#"><img src="/static/images/filter-icon.png">Establecer filtros</a>
     </div>
+
+    <div class="filters-wrapper" id="filters-wrapper">
+        <div class="filters-wrapper-menu">
+            <div class="filters-wrapper-menu-header">
+                <a class="navbar-brand" href="{% url 'acme-nft:index' %}">Acme
+                    NFT</a>
+                <button type="button" class="btn-close" id="filters-wrapper-menu-close-button"></button>
+            </div>
+            <div class="filters-wrapper-menu-body">
+                <form action="{% url 'acme-nft:index' %}" method="GET">
+                    <div class="filters-wrapper-menu-body-section">
+                        <h4>Ordenar por:</h4>
+                        <div class="filters-wrapper-menu-body-section-content">
+                            <form class="form-check">
+                                <label style="margin-left: 20px; font-size:1em;"><input class="sort-filter-input" type="checkbox" name="author-filter" value="author" id="red" /> Autor</label><br>
+                                <label style="margin-left: 20px; font-size:1em;"><input class="sort-filter-input" type="checkbox" name="colection-filter" value="collection" id="yellow" /> Colección</label><br>
+                            </form>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="filters-wrapper-menu-footer">
+                <button type="button" class="class-link" id="apply-filters-button">Aplicar</button>
+            </div>
+        <br><br>
+        </div>
+    </div>
+
+    <div class="filters-background-div" id="filters-background"></div>
+
     <div class="main-content-container">
 
         <showcase>
@@ -36,7 +64,12 @@
             
                 <div class="class-card">
                     <div class="class-img-box">
-                        <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                        <img src="/static/{{product.image_url}}" {% if product.stock == 0 %} class="without-stock" {% endif %} alt="{{product.name}}"/>
+                        {% if product.stock == 0 %}
+                            <div class="no-stock">
+                                OUT OF STOCK
+                            </div>
+                        {% endif %}
                         <h2 style="text-align: center;">{{product.name}}</h2>
                     </div>
         

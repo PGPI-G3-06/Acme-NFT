@@ -36,6 +36,76 @@ function main(){
         });   
     }
 
+    // Filters button
+
+    let filtersButton = document.getElementById("filters-wrapper-menu-activation-button")
+    let filtersBackground = document.getElementById("filters-background");
+    let filtersWrapper = document.getElementById("filters-wrapper");
+    let closeMenuButton = document.getElementById("filters-wrapper-menu-close-button");
+
+    filtersButton.addEventListener("click", function(event){
+
+        filtersBackground.classList.toggle("filters-background-active");
+        filtersWrapper.classList.toggle("filters-active");
+    });
+
+    filtersBackground.addEventListener("click", function(event){
+        filtersBackground.classList.toggle("filters-background-active");
+        filtersWrapper.classList.toggle("filters-active");
+    });
+
+    closeMenuButton.addEventListener("click", function(event){
+        filtersBackground.classList.toggle("filters-background-active");
+        filtersWrapper.classList.toggle("filters-active");
+    });
+
+    // Filters
+
+    let urlSearchParams = new URLSearchParams(window.location.search);
+    let oldParams = Object.fromEntries(urlSearchParams.entries());
+    let newParams = {};
+
+    let sortFiltersInputs = document.getElementsByClassName("sort-filter-input");
+
+    for (let sortFilterInput of sortFiltersInputs) {
+        sortFilterInput.addEventListener("click", function(event){
+
+            for (let sortFilterInputToUncheck of sortFiltersInputs){
+
+                if(sortFilterInput.name != sortFilterInputToUncheck.name){
+                    sortFilterInputToUncheck.checked = false;   
+                }
+            }
+
+            if(sortFilterInput.checked){
+                newParams["order-by"] = sortFilterInput.value;
+            }else{
+                delete newParams["order-by"];
+            }
+
+        });   
+    }
+
+    let applyFiltersButton = document.getElementById("apply-filters-button");
+
+    applyFiltersButton.addEventListener("click", function(event){
+
+        let newLocation = window.location.pathname + "?";
+
+        for(let param in oldParams){
+            if(newParams[param]){
+                newParams[param] = oldParams[param];
+            }
+        }
+
+        for(let param in newParams){
+            newLocation += param + "=" + newParams[param] + "&";
+        }
+
+        window.location.href = newLocation;
+
+    });
+
 }
 
 function nextPage(minPages, maxPages){
