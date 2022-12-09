@@ -35,10 +35,10 @@ gateway = braintree.BraintreeGateway(
 
 MAX_PRODUCTS_PER_PAGE = 10
 
+
 # ------------------------------------- Render views -------------------------------------
 
 def index(request):
-    
     products = Product.objects.all()
     try:
         if request.GET['order-by'] == 'collections':
@@ -129,9 +129,9 @@ def product_detail(request, product_id):
                   context={"user": request.user, "product": product,
                            "comments": comments, "in_wishlist": in_wishlist})
 
+
 def wishlist(request):
-    
-    if not request.user.is_authenticated:     
+    if not request.user.is_authenticated:
         messages.error(request, 'Tienes que iniciar sesión primero')
         return HttpResponseRedirect(reverse("acme-nft:signin"))
 
@@ -158,15 +158,16 @@ def wishlist(request):
             products_to_list.append(products[i])
 
     return render(request, "wishlist.html", context={"user": request.user,
-                                                  "products": products_to_list,
-                                                  "total": len(products),
-                                                  "wishlist": products_to_list,
-                                                  "pages_range": range(0,
-                                                                       possible_pages),
-                                                  "current_page": page_number,
-                                                  "needs_pagination": possible_pages > 1,
-                                                  }
+                                                     "products": products_to_list,
+                                                     "total": len(products),
+                                                     "wishlist": products_to_list,
+                                                     "pages_range": range(0,
+                                                                          possible_pages),
+                                                     "current_page": page_number,
+                                                     "needs_pagination": possible_pages > 1,
+                                                     }
                   )
+
 
 def hello(request, user_id):
     user = get_object_or_404(User, pk=user_id)
@@ -456,6 +457,7 @@ def check_errors(block, city, code_postal, door, errors, floor, number,
         errors.append(city_length)
     return errors
 
+
 # ------------------------ Showcase ------------------------
 
 def showcase(request):
@@ -465,17 +467,18 @@ def showcase(request):
         "products_showcase": products_showcase,
     })
 
+
 def add_showcase(request, product_id):
     product = Product.objects.get(id=product_id)
 
     s_product = Product.objects.filter(is_showcase=True).count()
 
     if s_product < 7:
-
         product.is_showcase = True
         product.save()
 
     return HttpResponseRedirect(reverse("acme-nft:showcase"))
+
 
 def delete_showcase(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -484,8 +487,6 @@ def delete_showcase(request, product_id):
     product.save()
 
     return HttpResponseRedirect(reverse("acme-nft:showcase"))
-
-
 
 
 # -------------------------- Cart --------------------------
@@ -506,17 +507,17 @@ def add_to_cart(request, product_id):
         except ProductEntry.DoesNotExist:
             entry = ProductEntry(product=product, entry_type='CART', user=user,
                                  quantity=quantity)
-        
+
         if entry.quantity <= product.stock:
-            
+
             entry.save()
             messages.success(request, 'Producto añadido a la cesta')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        
+
         else:
             messages.error(request, 'La cantidad de producto a añadir debe ser menor o igual que el stock del producto')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        
+
     else:
         messages.error(request, 'La cantidad debe ser positiva')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -528,14 +529,27 @@ def cart_view(request, error=None):
         user = None
     entries = ProductEntry.objects.filter(user=user, entry_type='CART')
 
+    for entry in entries:
+        if entry.product.stock == 0:
+            entry.delete()
+
+            messages.error(request,
+                           'El producto ' + entry.product.name + ' no está disponible y ha sido eliminado de la cesta')
+        elif entry.quantity > entry.product.stock:
+            entry.quantity = entry.product.stock
+            entry.save()
+            messages.error(request, 'La cantidad de producto ' + entry.product.name + ' ha sido reducida a ' + str(
+                entry.product.stock) + ' unidades')
+
+    entries = ProductEntry.objects.filter(user=user, entry_type='CART')
+
     addresses = None
 
     if user:
         addresses = Address.objects.filter(user_id=user.id)
-    
+
     if error:
         messages.error(request, error)
-
 
     return render(request, "cart.html", {
         "cart": entries,
@@ -568,6 +582,19 @@ def resume_cart_view(request):
     products = ProductEntry.objects.filter(id__in=products_ids, user=user,
                                            entry_type='CART')
 
+    for entry in products:
+        if entry.product.stock == 0:
+            entry.delete()
+            messages.error(request,
+                           'El producto ' + entry.product.name + ' no está disponible y ha sido eliminado de la cesta')
+        elif entry.quantity > entry.product.stock:
+            entry.quantity = entry.product.stock
+            entry.save()
+            messages.error(request, 'La cantidad de producto ' + entry.product.name + ' ha sido reducida a ' + str(
+                entry.product.stock) + ' unidades')
+
+    products = ProductEntry.objects.filter(user=user, entry_type='CART')
+
     try:
         braintree_client_token = braintree.ClientToken.generate(
             {"customer_id": user.id})
@@ -585,7 +612,6 @@ def resume_cart_view(request):
 
 
 def payment(request):
-
     products_request = list(
         map(lambda x: int(x), request.POST.get('products').split(',')))
 
@@ -598,8 +624,6 @@ def payment(request):
         p.stock = p.stock - products_entry.get(product=p).quantity
         p.save()
 
-
-
     address = request.POST.get('address')
 
     ref_code = ''.join(
@@ -609,11 +633,11 @@ def payment(request):
     if request.POST.get('payment_method') == 'tarjeta':
 
         order_ = Order(ref_code=ref_code, payment_method=PaymentMethod.card.value,
-                   address=address, status=Status.sent.value)
+                       address=address, status=Status.sent.value)
 
     else:
         order_ = Order(ref_code=ref_code, payment_method=PaymentMethod.transference.value,
-                   address=address, status=Status.on_transit.value)
+                       address=address, status=Status.on_transit.value)
 
     order_.save()
 
@@ -627,8 +651,6 @@ def payment(request):
         first_name = request.POST['name']
         last_name = ''
         email = request.POST['email']
-
-
 
     if request.POST.get('pay') == 'TARJETA':
         nonce_from_the_client = request.POST['paymentMethodNonce']
@@ -649,8 +671,6 @@ def payment(request):
         })
 
     user = request.user
-
-
 
     if not user.is_authenticated:
         name = request.POST['name']
@@ -674,6 +694,7 @@ def payment(request):
     email.send()
 
     return HttpResponse('Ok')
+
 
 def edit_amount_cart(request, product_id):
     user = request.user
@@ -780,6 +801,7 @@ def order(request, order_id):
         "total": order.total(),
     })
 
+
 # ------------------------ Customer Service ------------------------
 def customer_service(request):
     return render(request, "customer-service.html")
@@ -796,7 +818,6 @@ def complaint(request):
         complaint.save()
         messages.success(request, 'Su reclamación ha sido procesada y se le hará llegar a la administración de la web')
         return HttpResponseRedirect(reverse("acme-nft:service"))
-
 
 
 def opinion(request):
@@ -864,8 +885,7 @@ def get_invoice_pdf(order_id, name=None, email=None):
 
     return f'invoices/{order_.ref_code}.pdf'
 
-    
-    
+
 # ------------------------ Suggestions ------------------------
 def sugesstions(request, product_id):
     product = Product.objects.get(pk=product_id)
@@ -874,8 +894,9 @@ def sugesstions(request, product_id):
 
     while len(suggestions) < 5:
         suggestions = suggestions | Product.objects.all().order_by('?').exclude(
-        pk=product_id)[:5-len(suggestions)]
+            pk=product_id)[:5 - len(suggestions)]
     return JsonResponse({'suggestions': list(suggestions.values())})
+
 
 def contact(request):
     if request.method == "POST":
@@ -891,11 +912,11 @@ def contact(request):
         return render(request, "contact.html")
 
 
-
 # ------------------------ Services term ------------------------
 
 def get_service_terms(request):
     return render(request, "service-terms.html")
+
 
 # ------------------------ admin ------------------------
 
@@ -997,4 +1018,3 @@ def change_order_status(request, order_id):
     order.save()
 
     return HttpResponseRedirect(reverse('acme-nft:admin'))
-

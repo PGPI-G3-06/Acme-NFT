@@ -4,12 +4,25 @@
 {% block extrahead %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
 
 {% endblock %}
 
 {% block content %}
     <div class="container">
+
+        <!-- Error Alert -->
+        {% if error %}
+
+            <div class="alert alert-danger alert-dismissible fade show">
+                <strong>Error!</strong> {{ error }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert"></button>
+            </div>
+
+        {% endif %}
+
         <h1 class="card-title">Resumen</h1>
         <div class="row">
             <div class="col">
@@ -44,15 +57,12 @@
                                 <td>{{ item.total }} €</td>
                                 <script>
 
-                                    console.log(typeof("{{ item.product.offer_price }}"));
+                                    console.log(typeof ("{{ item.product.offer_price }}"));
 
-                                    if ("{{ item.product.offer_price }}" !== "None")
-                                    {
+                                    if ("{{ item.product.offer_price }}" !== "None") {
                                         real_total +=
                                         {{ item.product.offer_price }} * {{ item.quantity }}
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         var total =
                                         {{ item.product.price }} * {{ item.quantity }}
                                         real_total += total
