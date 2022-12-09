@@ -1041,3 +1041,19 @@ def change_order_status(request, order_id):
     order.save()
 
     return HttpResponseRedirect(reverse('acme-nft:admin'))
+
+
+def search_order(request):
+    if request.method == 'POST':
+        ref_code = request.POST['order_code_ref']
+        order = Order.objects.filter(ref_code__icontains=ref_code)
+        if len(order) > 0:
+            return HttpResponseRedirect(reverse('acme-nft:order', args=(order[0].id,)))
+        else:
+            messages.error(request, 'El código de referencia no existe')
+            return HttpResponseRedirect(reverse("acme-nft:search_order"))
+
+    else:
+
+        return render(request, 'search-order.html')
+

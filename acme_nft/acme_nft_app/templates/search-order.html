@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+
+{% endblock %}
+
+{% block content %}
+
+<section>
+     <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center" style="color: white; margin: 20px; padding: 20px">Puede obtener la información de su pedido ingresando su código de referencia</h1>
+            </div>
+        </div>
+         <div class="row">
+            <form class="d-flex class-search-form" action="/search/order" method="POST">
+                {% csrf_token %}
+                <input class="form-control" type="text"
+                       placeholder="Introduzca el codigo de referencia (Debe de introducir los digitos del código, sin #)" aria-label="Search" name="order_code_ref" required>
+                <button class="search-button" type="submit">
+                    Buscar
+                </button>
+            </form>
+         </div>
+
+
+    </div>
+
+</section>
+
+
+
+{% endblock %}
