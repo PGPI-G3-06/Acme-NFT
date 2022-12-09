@@ -3,195 +3,197 @@
 
 {% block extrahead %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
     <script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
 
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="card-title">Resumen</h1>
-        <div class="row">
-            <div class="col">
-                <div class="div-resumen rounded">
-                    <table class="table rounded" aria-label="Tabla de resumen de pedidos">
-                        <thead class="head">
-                        <tr>
-                            <th scope="col">Producto</th>
-                            <th scope="col">Precio/ud</th>
-                            <th scope="col">Cantidad</th>
-                            <th scope="col">Total</th>
-                        </thead>
-                        <tbody>
-                        <script>
-                            let real_total = 0;
-                        </script>
-                        {% for item in products %}
+    <section>
+        <div class="container">
+            <h1 class="card-title">Resumen</h1>
+            <div class="row">
+                <div class="col">
+                    <div class="div-resumen rounded">
+                        <table class="table rounded" aria-label="Tabla de resumen de pedidos">
+                            <thead class="head">
                             <tr>
-                                <td>{{ item.product.name }}</td>
-                                <td>{{ item.product.price }}</td>
-                                <td>{{ item.quantity }}</td>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Precio/ud</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Total</th>
+                            </thead>
+                            <tbody>
+                            <script>
+                                let real_total = 0;
+                            </script>
+                            {% for item in products %}
+                                <tr>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.product.price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>
+                                        <script>
+                                            var total =
+                                            {{ item.product.price }} * {{ item.quantity }}
+                                            document.write(total.toFixed(2) + "€")
+                                            real_total += total
+                                        </script>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>
                                     <script>
-                                        var total =
-                                        {{ item.product.price }} * {{ item.quantity }}
-                                        document.write(total.toFixed(2) + "€")
-                                        real_total += total
+                                        document.write('<p class="card-title">' + real_total.toFixed(2) + "€" + '</p>')
                                     </script>
                                 </td>
-                            </tr>
-                        {% endfor %}
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <script>
-                                    document.write('<p class="card-title">' + real_total.toFixed(2) + "€" + '</p>')
-                                </script>
-                            </td>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-lg-5">
-            <div class="col">
-                <div class="div-resumen rounded">
-                    <table class="table rounded" aria-label="Tabla de resumen de pagos y envio">
-                        <thead class="head">
-                        <tr>
-                            <th scope="col">Método de pago</th>
-                            <th scope="col">Dirección de facturación</th>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{ pay }}</td>
-                            <td>{{ address }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col mt-lg-5">
-                <button type="button" class="btn btn-primary"
-                        onclick="window.location.href='{% url 'acme-nft:cart' %}'">
-                    Retroceder
-                </button>
-                <button type="submit" class="btn btn-primary float-end"
-                        data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Pagar y confirmar compra
-                </button>
-            </div>
-        </div>
-
-
-        <div id="exampleModal" class="modal fade" tabindex="-1"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <div class="modal-header">
-                        <h1 style="color: var(--main-color)">Tarjeta de
-                            pago</h1>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+            </div>
+            <div class="row mt-lg-5">
+                <div class="col">
+                    <div class="div-resumen rounded">
+                        <table class="table rounded" aria-label="Tabla de resumen de pagos y envio">
+                            <thead class="head">
+                            <tr>
+                                <th scope="col">Método de pago</th>
+                                <th scope="col">Dirección de facturación</th>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>{{ pay }}</td>
+                                <td>{{ address }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mt-lg-5">
+                    <button type="button" class="btn btn-primary"
+                            onclick="window.location.href='{% url 'acme-nft:cart' %}'">
+                        Retroceder
+                    </button>
+                    <button type="submit" class="btn btn-primary float-end"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Pagar y confirmar compra
+                    </button>
+                </div>
+            </div>
 
-                    <div class="modal-body">
-                        <form id="form" class="needs-validation"
-                              style="display: none">
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <input class="form-control" type="text"
-                                           id="cardholder-name"
-                                           placeholder="Nombre del titular de la tarjeta"
-                                           required>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <input class="form-control" type="number"
-                                           id="cardholder-number"
-                                           placeholder="Número de la tarjeta"
-                                           required>
-                                    <div class="invalid-feedback">
-                                        Tarjeta incorrecta.
+
+            <div id="exampleModal" class="modal fade" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h1 style="color: var(--main-color)">Tarjeta de
+                                pago</h1>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="form" class="needs-validation"
+                                style="display: none">
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <input class="form-control" type="text"
+                                            id="cardholder-name"
+                                            placeholder="Nombre del titular de la tarjeta"
+                                            required>
                                     </div>
                                 </div>
-
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <select class="form-select" name="month"
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <input class="form-control" type="number"
+                                            id="cardholder-number"
+                                            placeholder="Número de la tarjeta"
                                             required>
-                                        <option value="01">Enero</option>
-                                        <option value="02">Febrero</option>
-                                        <option value="03">Marzo</option>
-                                        <option value="04">Abril</option>
-                                        <option value="05">Mayo</option>
-                                        <option value="06">Junio</option>
-                                        <option value="07">Julio</option>
-                                        <option value="08">Agosto</option>
-                                        <option value="09">Septiembre</option>
-                                        <option value="10">Octubre</option>
-                                        <option value="11">Noviembre</option>
-                                        <option value="12">Diciembre</option>
-                                    </select>
+                                        <div class="invalid-feedback">
+                                            Tarjeta incorrecta.
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div class="col">
-                                    <select class="form-select" name="year">
-                                        <option value="2021">2022</option>
-                                        <option value="2022">2023</option>
-                                        <option value="2023">2024</option>
-                                        <option value="2024">2025</option>
-                                        <option value="2025">2026</option>
-                                        <option value="2026">2027</option>
-                                        <option value="2027">2028</option>
-                                        <option value="2028">2029</option>
-                                        <option value="2029">2030</option>
-                                        <option value="2030">2031</option>
-                                        <option value="2031">2032</option>
-                                        <option value="2032">2033</option>
-                                    </select>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <select class="form-select" name="month"
+                                                required>
+                                            <option value="01">Enero</option>
+                                            <option value="02">Febrero</option>
+                                            <option value="03">Marzo</option>
+                                            <option value="04">Abril</option>
+                                            <option value="05">Mayo</option>
+                                            <option value="06">Junio</option>
+                                            <option value="07">Julio</option>
+                                            <option value="08">Agosto</option>
+                                            <option value="09">Septiembre</option>
+                                            <option value="10">Octubre</option>
+                                            <option value="11">Noviembre</option>
+                                            <option value="12">Diciembre</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select" name="year">
+                                            <option value="2021">2022</option>
+                                            <option value="2022">2023</option>
+                                            <option value="2023">2024</option>
+                                            <option value="2024">2025</option>
+                                            <option value="2025">2026</option>
+                                            <option value="2026">2027</option>
+                                            <option value="2027">2028</option>
+                                            <option value="2028">2029</option>
+                                            <option value="2029">2030</option>
+                                            <option value="2030">2031</option>
+                                            <option value="2031">2032</option>
+                                            <option value="2032">2033</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control" type="number"
+                                            id="cardholder-cvv"
+                                            placeholder="CVV">
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <input class="form-control" type="number"
-                                           id="cardholder-cvv"
-                                           placeholder="CVV">
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <button type="submit"
+                                                class="btn btn-primary float-end"
+                                                id="submit-button">
+                                            Confirmar compra
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <button type="submit"
-                                            class="btn btn-primary float-end"
-                                            id="submit-button">
-                                        Confirmar compra
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <form autocomplete="off">
-                            <div class="braintree-notifications"></div>
-                            <div id="braintree-dropin"></div>
-                            <input style="background-color: var(--main-color);"
-                                   id="paga"
-                                   class="btn btn-success btn-lg"
-                                   type="button"
-                                   value="Pagar"/>
-                        </form>
+                            </form>
+                            <form autocomplete="off">
+                                <div class="braintree-notifications"></div>
+                                <div id="braintree-dropin"></div>
+                                <input style="background-color: var(--main-color);"
+                                    id="paga"
+                                    class="btn btn-success btn-lg"
+                                    type="button"
+                                    value="Pagar"/>
+                            </form>
+
+                        </div>
+
 
                     </div>
 
-
                 </div>
-
             </div>
+
+
         </div>
-
-
-    </div>
-
+    </section>
     <script>
 
         const cardholderNumber = document.getElementById("cardholder-number");

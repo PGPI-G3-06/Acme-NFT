@@ -43,6 +43,14 @@
     --error-message-border-color: rgba(239, 80, 80, 1);
     --register-error-message-font-color: rgb(0, 0, 0);
     --register-error-message-background-color: rgba(255,255,255,0.5);
+
+    /* Profile */
+    --color-input: #303030;
+    --color-label: #5e5e5e;
+    --color-btn-disabled: #5757577e;
+    --color-error: #cc0033;
+    --color-error-background: #fce4e4;
+    --color-border-disabled: #706c6c;
 }
 
 *{

@@ -5,13 +5,13 @@ section{
     align-items: center;
     flex-direction: column;
     padding: 100px 20px;
-    min-height: 100vh;
+    min-height: 85vh;
     background:  #c8c8c8;
 }
 
 .main{
-	width: 550px;
-	height:700px;
+	min-width: 450px;
+	min-height: 600px;
 	overflow: hidden;
 	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
 	border-radius: 10px;
@@ -78,13 +78,14 @@ section{
     text-transform: uppercase;
 	margin: 20px;
 	padding: 10px;
-
 }
 
 .class-link:hover{
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
     transition: 0.5s all;
+    text-decoration: none;
+    color: inherit;
 
 }
 
