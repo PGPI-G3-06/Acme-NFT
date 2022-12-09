@@ -27,7 +27,11 @@
                             {% csrf_token %} 
                             <span>Cantidad:<input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></span>
                         </form>
-                        <h2 id="price">{{ product.price }} €</h2>
+                        {% if product.offer_price %}
+                            <h2 id="old-price">{{ product.price|floatformat:2 }} €</h2> <h2 id="offer-price">{{ product.offer_price }} €</h2>
+                        {% else %}
+                            <h2 id="price">{{ product.price|floatformat:2 }} €</h2>
+                        {% endif %}
                     </div>
                     <div class="desc-section">
                         <div id="cart-error" style="display: none;">

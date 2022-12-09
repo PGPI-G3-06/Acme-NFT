@@ -81,7 +81,14 @@
                                                     <input type="text" id="{{product_entry.product.id}}" 
                                                             class="qty quantity-field-{{product_entry.product.id}}" style="border: 1px solid grey; border-radius: 5px;" 
                                                             min="1" max="{{product_entry.product.stock}}" 
-                                                            value="{{product_entry.quantity}}" readonly/> x {{product_entry.product.price}} €</p>
+                                                            value="{{product_entry.quantity}}" readonly/>
+                                                            x 
+                                                            {% if product_entry.product.offer_price %}
+                                                                <span style="color: var(--offer-price-color);">{{product_entry.product.offer_price}} €</span>
+                                                            {% else %}
+                                                                {{product_entry.product.price}} €
+                                                            {% endif %}
+                                                            </p>
                                                     <button class="btn btn-outline-secondary"
                                                             onclick="upQuantity({{ product_entry.product.id }}, {{ product_entry.product.id }},{{ product_entry.product.price }},{{ product_entry.product.stock }})"
                                                             type="button"
@@ -92,7 +99,11 @@
                                                 </div>  
                                                 
                                                 <div class="prodTotal cartSection">
-                                                    <p class="total-{{product_entry.product.id }}-class">{{product_entry.product.price|mul:product_entry.quantity|floatformat:2}} €</p>
+                                                    {% if product_entry.product.offer_price %}
+                                                        <p class="total-{{product_entry.product.id }}-class">{{product_entry.product.offer_price|mul:product_entry.quantity|floatformat:2}} €</p>
+                                                    {% else %}
+                                                        <p class="total-{{product_entry.product.id }}-class">{{product_entry.product.price|mul:product_entry.quantity|floatformat:2}} €</p>
+                                                    {% endif %}
                                                 </div>
                                                     <div class="cartSection removeWrap">
                                                         <a href="#" class="remove" onclick="deleteProduct({{ product_entry.product.id }})">x</a>
