@@ -93,7 +93,7 @@ function main(){
         let newLocation = window.location.pathname + "?";
 
         for(let param in oldParams){
-            if(newParams[param]){
+            if(!newParams[param]){
                 newParams[param] = oldParams[param];
             }
         }
@@ -108,14 +108,28 @@ function main(){
 
 }
 
+// Tb arreglar con filtros lo de los botones de numeros --------------
+
 function nextPage(minPages, maxPages){
     let min = parseInt(minPages);
     let max = parseInt(maxPages)-1;
+
     if(window.location.search){
-        let page = new URL(location.href).searchParams.get('page')
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        let oldParams = Object.fromEntries(urlSearchParams.entries());
+        if (oldParams["page"]){
+            delete oldParams["page"];
+        }
+        let page = new URLSearchParams(window.location.search).get('page')
+        let newSearch = "?"
         if(page < max && page >= min){
             page++;
-            window.location.href = "?page=" + page;
+            for(let param in oldParams){
+                newSearch += param + "=" + oldParams[param] + "&";
+            }
+            newSearch +=  "page=" + page;
+
+            window.location.href = newSearch;
         }
     } else{
         min++;
@@ -126,13 +140,55 @@ function nextPage(minPages, maxPages){
 function previousPage(minPages, maxPages){
     let min = parseInt(minPages);
     let max = parseInt(maxPages)-1;
+
     if(window.location.search){
-        let page = new URL(location.href).searchParams.get('page')
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        let oldParams = Object.fromEntries(urlSearchParams.entries());
+        if (oldParams["page"]){
+            delete oldParams["page"];
+        }
+        let page = new URLSearchParams(window.location.search).get('page')
+        let newSearch = "?"
         if(page <= max && page > min){
             page--;
-            window.location.href = "?page=" + page;
+            for(let param in oldParams){
+                newSearch += param + "=" + oldParams[param] + "&";
+            }
+            newSearch +=  "page=" + page;
+
+            window.location.href = newSearch;
         }
     }
 }
+
+function moveToPage(i, minPages, maxPages){
+
+    let min = parseInt(minPages);
+    let max = parseInt(maxPages)-1;
+    let page = parseInt(i);
+
+    if(window.location.search){
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        let oldParams = Object.fromEntries(urlSearchParams.entries());
+
+        if (oldParams["page"]){
+            delete oldParams["page"];
+        }
+
+        let newSearch = "?"
+        if(page <= max && page >= min){
+            for(let param in oldParams){
+                newSearch += param + "=" + oldParams[param] + "&";
+            }
+            newSearch +=  "page=" + page;
+
+            window.location.href = newSearch;
+        }
+    }else{
+        window.location.href = window.location.pathname + "?page=" + i;
+    }
+
+}
+
 
 document.addEventListener("DOMContentLoaded", main);
