@@ -77,7 +77,7 @@
                                                 
                                                 <div class="d-flex flex-column w-100"> 
                                                     <p class="itemNumber">{{product_entry.product.author}}</p>
-                                                    <h3 class="dropdown-item-text">{{product_entry.product.name}}</h3>
+                                                    <h3 class="dropdown-item-text" style="padding: 0 !important;">{{product_entry.product.name}}</h3>
 
                                                     <div class="d-flex flex-row align-items-center w-100">
                                                         <button class="btn btn-outline-secondary"
@@ -161,7 +161,11 @@
                                     <img style="border-radius: 50px"
                                          width="30px" height="30px"
                                          alt="imagen de perfil"
-                                         src="{{ profile_pic }}"/> {{ request.user.username }}
+                                         {% if profile_pic %}
+                                         src="{{ profile_pic }}"
+                                         {% else %}
+                                         src="{% static 'images/profile.png' %}"
+                                         {% endif %}/> {{ request.user.username }}
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item"

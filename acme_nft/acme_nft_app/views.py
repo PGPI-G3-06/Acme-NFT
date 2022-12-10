@@ -340,7 +340,7 @@ def edit_user(request):
         if not email:
             email_errors.append(required_field)
         if not profile_pic:
-            profile_pic = "/static/images/profile.png"
+            profile_pic = "{% static 'images/profile.png' %}"
         
         if first_name and first_name[0].islower():
             name_errors.append("La primera letra del nombre debe ser mayúscula")
