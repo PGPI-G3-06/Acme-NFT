@@ -1,7 +1,16 @@
 .class-address-list{
 	overflow: scroll;
     overflow-x: hidden;
-	height: 60vh;
+	height: 65vh;
     scrollbar-width: none;
     -ms-overflow-style: none; 
+}
+
+.class-address-list::-webkit-scrollbar{
+    width: 7px;
+}
+
+.class-address-list::-webkit-scrollbar-thumb{
+    background: var(--main-color);
+	border-radius: 5px;
 }
