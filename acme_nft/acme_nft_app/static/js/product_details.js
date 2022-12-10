@@ -62,36 +62,38 @@ function main(){
             window.location.href='/wishlist/add/' + productId;
         
         });
-        
-        /* Load suggestions */
-
-        getSuggestions(productId).then(response => {
-            
-            let showcase = document.getElementsByTagName('showcase')[0];
-            let current_url = window.location.href;
-            let domain = current_url.split("/")[0] + "//" + current_url.split("/")[2];
-
-            for(let suggestion of response.suggestions){
-                
-                let showcaseElement = document.createElement('div');
-                showcaseElement.classList.add('showcase-element');
-
-                let elementImg = document.createElement('img');
-                elementImg.src = `/static/${suggestion.image_url}`;
-                elementImg.alt = suggestion.name;
-                showcaseElement.appendChild(elementImg);
-
-                let elementLink = document.createElement('a');
-                elementLink.href = domain + `/product/${suggestion.id}`;
-                elementLink.innerHTML = "Ver producto";
-                elementLink.classList.add('class-link');
-                showcaseElement.appendChild(elementLink);
-
-                showcase.appendChild(showcaseElement);
-
-            }
-        })
     }
+
+    /* Load suggestions */
+
+    let productId = window.location.pathname.split("/")[2];
+
+    getSuggestions(productId).then(response => {
+            
+        let showcase = document.getElementsByTagName('showcase')[0];
+        let current_url = window.location.href;
+        let domain = current_url.split("/")[0] + "//" + current_url.split("/")[2];
+
+        for(let suggestion of response.suggestions){
+            
+            let showcaseElement = document.createElement('div');
+            showcaseElement.classList.add('showcase-element');
+
+            let elementImg = document.createElement('img');
+            elementImg.src = `/static/${suggestion.image_url}`;
+            elementImg.alt = suggestion.name;
+            showcaseElement.appendChild(elementImg);
+
+            let elementLink = document.createElement('a');
+            elementLink.href = domain + `/product/${suggestion.id}`;
+            elementLink.innerHTML = "Ver producto";
+            elementLink.classList.add('class-link');
+            showcaseElement.appendChild(elementLink);
+
+            showcase.appendChild(showcaseElement);
+
+        }
+    })
 
     /* Cart functionality */
 

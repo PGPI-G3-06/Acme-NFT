@@ -43,21 +43,23 @@ function main(){
     let filtersWrapper = document.getElementById("filters-wrapper");
     let closeMenuButton = document.getElementById("filters-wrapper-menu-close-button");
 
-    filtersButton.addEventListener("click", function(event){
+    if(filtersButton != null){
+        filtersButton.addEventListener("click", function(event){
 
-        filtersBackground.classList.toggle("filters-background-active");
-        filtersWrapper.classList.toggle("filters-active");
-    });
-
-    filtersBackground.addEventListener("click", function(event){
-        filtersBackground.classList.toggle("filters-background-active");
-        filtersWrapper.classList.toggle("filters-active");
-    });
-
-    closeMenuButton.addEventListener("click", function(event){
-        filtersBackground.classList.toggle("filters-background-active");
-        filtersWrapper.classList.toggle("filters-active");
-    });
+            filtersBackground.classList.toggle("filters-background-active");
+            filtersWrapper.classList.toggle("filters-active");
+        });
+    
+        filtersBackground.addEventListener("click", function(event){
+            filtersBackground.classList.toggle("filters-background-active");
+            filtersWrapper.classList.toggle("filters-active");
+        });
+    
+        closeMenuButton.addEventListener("click", function(event){
+            filtersBackground.classList.toggle("filters-background-active");
+            filtersWrapper.classList.toggle("filters-active");
+        });
+    }
 
     // Filters
 
@@ -88,23 +90,25 @@ function main(){
 
     let applyFiltersButton = document.getElementById("apply-filters-button");
 
-    applyFiltersButton.addEventListener("click", function(event){
+    if(applyFiltersButton != null){
+        applyFiltersButton.addEventListener("click", function(event){
 
-        let newLocation = window.location.pathname + "?";
-
-        for(let param in oldParams){
-            if(!newParams[param]){
-                newParams[param] = oldParams[param];
+            let newLocation = window.location.pathname + "?";
+    
+            for(let param in oldParams){
+                if(!newParams[param]){
+                    newParams[param] = oldParams[param];
+                }
             }
-        }
-
-        for(let param in newParams){
-            newLocation += param + "=" + newParams[param] + "&";
-        }
-
-        window.location.href = newLocation;
-
-    });
+    
+            for(let param in newParams){
+                newLocation += param + "=" + newParams[param] + "&";
+            }
+    
+            window.location.href = newLocation;
+    
+        });
+    }
 
 }
 

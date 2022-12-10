@@ -10,7 +10,7 @@
 {% block content %}
 
     <section>
-        <div class="container mt-xl-5" id="cart-main">
+        <div class="container-fluid mt-xl-5" id="cart-main">
 
             <!-- Error Alert -->
             {% if error %}
@@ -24,7 +24,7 @@
             {% endif %}
 
 
-            <div class="container mt-xl-5">
+            <div class="container-fluid">
 
                 <form onsubmit="return checkSubmit()"
                       action="{% url 'acme-nft:resume_cart' %}" method="post">
@@ -87,7 +87,8 @@
                                                            aria-describedby="button-addon1"
                                                            value="{{ item.quantity }}"
                                                            min="1"
-                                                           max="{{ item.product.stock }}">
+                                                           max="{{ item.product.stock }}"
+                                                           style="text-align: center;">
                                                     <button class="btn btn-outline-secondary"
                                                             onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.price }},{{ item.product.stock }})"
                                                             type="button"
@@ -111,7 +112,8 @@
                                                            aria-describedby="button-addon1"
                                                            value="{{ item.quantity }}"
                                                            min="1"
-                                                           max="{{ item.product.stock }}">
+                                                           max="{{ item.product.stock }}"
+                                                           style="text-align: center;">
                                                     <button class="btn btn-outline-secondary"
                                                             onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.offer_price }},{{ item.product.stock }})"
                                                             type="button"
