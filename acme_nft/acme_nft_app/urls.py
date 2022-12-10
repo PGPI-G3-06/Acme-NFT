@@ -31,7 +31,7 @@ urlpatterns = [
     path("comments/add/<int:product_id>", views.add_comment, name="add_comment"),
     
     # Address
-    path("address/show/<int:user_id>", views.show_adrress, name="show_address"),
+    path("address", views.show_adrress, name="show_address"),
     path("address/new", views.new_address, name="new_address"),
     path("address/delete/<int:address_id>", views.delete_address, name="delete_address"),
     path("address/update/<int:address_id>", views.update_address, name="update_address"),

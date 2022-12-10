@@ -77,7 +77,7 @@
                                                 
                                                 <div class="d-flex flex-column w-100"> 
                                                     <p class="itemNumber">{{product_entry.product.author}}</p>
-                                                    <h3 class="dropdown-item-text">{{product_entry.product.name}}</h3>
+                                                    <h3 class="dropdown-item-text" style="padding: 0 !important;">{{product_entry.product.name}}</h3>
 
                                                     <div class="d-flex flex-row align-items-center w-100">
                                                         <button class="btn btn-outline-secondary"
@@ -161,14 +161,18 @@
                                     <img style="border-radius: 50px"
                                          width="30px" height="30px"
                                          alt="imagen de perfil"
-                                         src="{{ profile_picture }}"/> {{ request.user.username }}
+                                         {% if profile_pic %}
+                                         src="{{ profile_pic }}"
+                                         {% else %}
+                                         src="{% static 'images/profile.png' %}"
+                                         {% endif %}/> {{ request.user.username }}
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item"
                                            href="{% url 'acme-nft:profile' %}">Perfil</a>
                                     </li>
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:show_address' user.id %}">Direcciones</a>
+                                           href="{% url 'acme-nft:show_address' %}">Direcciones</a>
                                     </li>
                                     <li><a class="dropdown-item"
                                            href="{% url 'acme-nft:orders' %}">Historial</a>
@@ -203,14 +207,14 @@
                             <div class="d-flex justify-content-between">
                                 <li class="nav-item">
                                     <button type="button" class="btn class-btn"
-                                            onclick="window.location.href='/signin'">
+                                            onclick="window.location.href='{% url 'acme-nft:signin' %}'">
                                         Iniciar sesión
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button"
                                             class="btn class-btn-reversed"
-                                            onclick="window.location.href='/signup'">
+                                            onclick="window.location.href='{% url 'acme-nft:signup' %}'">
                                         Registrarse
                                     </button>
                                 </li>

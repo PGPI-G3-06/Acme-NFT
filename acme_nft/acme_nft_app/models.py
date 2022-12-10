@@ -30,6 +30,7 @@ class RarityType(models.TextChoices):
 
 
 class Address(models.Model):
+    title = models.CharField(max_length=32, default="Nueva Dirección")
     street_name = models.CharField(max_length=60)
     number = models.IntegerField()
     block = models.IntegerField(null=True)
@@ -150,7 +151,7 @@ class ProductEntry(models.Model):
         return f'user_id: {self.user.id}, product_id: {self.product.id}, entry_type: {self.entry_type}'
 
 class ProfilePicture(models.Model):
-    image = models.ImageField(upload_to='profile_pictures', default='static/images/profile.png')
+    image = models.ImageField(upload_to='profile_pictures', null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

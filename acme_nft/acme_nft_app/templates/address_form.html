@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+	<link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+	<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/address.css' %}">
+	<script type="text/javascript" src="{% static 'js/address.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<section>
+	<body>
+		<div class="main">
+			<div class="class-profile-form">
+				{% if type == "NEW" %}
+				<form class="class-form" action="{% url 'acme-nft:new_address' %}" method="POST">
+				{% else %}
+				<form class="class-form" action="{% url 'acme-nft:update_address' id %}" method="POST">
+				{% endif %}
+					{% csrf_token %}
+					<div class="d-flex justify-content-center align-items-center">
+						{% if type == "NEW" %}
+						<h1>Crea una nueva dirección</h1>
+						{% else %}
+						<h1>Actualiza tu dirección</h1>
+						{% endif %}
+					</div>
+					{% if title_errors %}
+					<div class="class-form-group class-error-form" id="title_form">
+					{% else %}
+					<div class="class-form-group" id="title_form">
+					{% endif %}
+						<input class="class-form-input" type="text" id="title" name="title" placeholder=" " value="{{ title }}" required>
+						<label for="title" class="class-form-label">Título:</label>
+						{% if title_errors %}
+							{% for error in title_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if street_name_errors %}
+					<div class="class-form-group class-error-form" id="street_name_form">
+					{% else %}
+					<div class="class-form-group" id="street_name_form">
+					{% endif %}
+						<input class="class-form-input" type="text" id="street_name" name="street_name" placeholder=" " value="{{ street_name }}" required>
+						<label for="street_name" class="class-form-label">Dirección:</label>
+						{% if street_name_errors %}
+							{% for error in street_name_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if number_errors %}
+					<div class="class-form-group class-error-form" id="number_form">
+					{% else %}
+					<div class="class-form-group" id="number_form">
+					{% endif %}
+						<input class="class-form-input" type="text" id="number" name="number" placeholder=" " value="{{ number }}" required>
+						<label for="number" class="class-form-label">Número:</label>
+						{% if number_errors %}
+							{% for error in number_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if block_errors %}
+					<div class="class-form-group class-error-form" id="block_form">
+					{% else %}
+					<div class="class-form-group" id="block_form">
+					{% endif %}
+						<input class="class-form-input"type="text" id="block" name="block" placeholder=" " value="{{ a_block }}" >
+						<label for="block" class="class-form-label">Bloque:</label>
+						{% if block_errors %}
+							{% for error in block_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if floor_errors %}
+					<div class="class-form-group class-error-form" id="floor_form">
+					{% else %}
+					<div class="class-form-group" id="floor-form">
+					{% endif %}
+						<input class="class-form-input" type="floor" id="floor" name="floor" placeholder=" " value="{{ floor }}" >
+						<label for="floor" class="class-form-label">Piso:</label>
+						{% if floor_errors %}
+							{% for error in floor_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if door_errors %}
+					<div class="class-form-group class-error-form" id="door_form">
+					{% else %}
+					<div class="class-form-group" id="door-form">
+					{% endif %}
+						<input class="class-form-input" type="door" id="door" name="door" placeholder=" " value="{{ door }}" >
+						<label for="door" class="class-form-label">Puerta:</label>
+						{% if door_errors %}
+							{% for error in door_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if city_errors %}
+					<div class="class-form-group class-error-form" id="city_form">
+					{% else %}
+					<div class="class-form-group" id="city-form">
+					{% endif %}
+						<input class="class-form-input" type="city" id="city" name="city" placeholder=" " required="" value="{{ city }}" required>
+						<label for="city" class="class-form-label">Ciudad:</label>
+						{% if city_errors %}
+							{% for error in city_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if code_postal_errors %}
+					<div class="class-form-group class-error-form" id="code_postal_form">
+					{% else %}
+					<div class="class-form-group" id="code_postal-form">
+					{% endif %}
+						<input class="class-form-input" type="code_postal" id="code_postal" name="code_postal" placeholder=" " value="{{ code_postal }}" required>
+						<label for="code_postal" class="class-form-label">Código postal:</label>
+						{% if code_postal_errors %}
+							{% for error in code_postal_errors %}
+								<span class="class-error-message">{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					<div class="d-flex align-items-center class-profile-div-btn">
+						<button id="profile_btn" class="class-link class-profile-btn" type="submit">Actualizar datos</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</section>
+{% endblock %}

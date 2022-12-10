@@ -18,7 +18,12 @@
 						<h1>Edita tu perfil</h1>
 					</div>
 					<div class="d-flex justify-content-center align-items-center">
-						<img alt="Foto de perfil" id="profile_pic_img" class="class-profile-img" src="{{ profile_picture }}">
+						<img alt="Foto de perfil" id="profile_pic_img" class="class-profile-img" 
+						{% if profile_pic %}
+						src="{{ profile_pic }}"
+						{% else %}
+						src="{% static 'images/profile.png' %}"
+						{% endif %}/>
 					</div>
 					{% if profile_pic_errors %}
 					<div class="class-form-group class-error-form" id="profile_pic_form">
