@@ -1,9 +1,12 @@
+th, td{
+    text-align: center;
+}
+
 .cart {
     border: 1px solid var(--main-color);
     height: auto;
     overflow-y: scroll;
     max-height: 30em;
-    max-width: 35em;
     background-color: var(--main-button-background-color) !important;
 }
 

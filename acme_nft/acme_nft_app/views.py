@@ -1045,6 +1045,11 @@ def get_service_terms(request):
 def get_returns_policy(request):
     return render(request, "returns-policy.html")
 
+# ------------------------ Data Protection Policy ------------------------
+
+def get_data_protection_policy(request):
+    return render(request, "data-protection-policy.html")
+
 # ------------------------ admin ------------------------
 
 class AdminListProducts(ListView):
