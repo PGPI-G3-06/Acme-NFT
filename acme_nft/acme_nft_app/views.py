@@ -499,7 +499,10 @@ def address_form(request, user, address=None):
             floor = None
         if not door:
             door = None
-            
+        
+        if title and len(title) > 32:
+            title_length = "El título no puede tener más de 32 caracteres"
+            title_errors.append(title_length)
         if street_name and len(street_name) > 60:
             street_name_length = "El nombre de la calle no puede tener más de 60 caracteres"
             street_name_errors.append(street_name_length)
