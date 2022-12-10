@@ -20,8 +20,12 @@
       <div class="d-flex flex-column align-items-center class-address-list">
         {% if list_address %}
           {% for address in list_address %}
-            {% if address == first %}
+            {% if address == first and address == last %}
+            <div class="card mt-3 mb-5">
+            {% elif address == first %}
             <div class="card mt-3">
+            {% elif address == last %}
+            <div class="card mt-5 mb-5">
             {% else %}
             <div class="card mt-5">
             {% endif %}

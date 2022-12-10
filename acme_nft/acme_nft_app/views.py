@@ -405,9 +405,11 @@ def show_adrress(request):
     user = User.objects.get(username=request.user)
     list_address = user.address_set.all()
     first = list_address[0] if list_address else None
+    last = list_address[len(list_address)-1] if list_address else None
     return render(request, "address.html", context={
         "list_address": list_address,
-        "first": first
+        "first": first,
+        "last": last,
         })
 
 
@@ -698,6 +700,15 @@ def cart_view(request, error=None):
     if not user.is_authenticated:
         user = None
     entries = ProductEntry.objects.filter(user=user, entry_type='CART')
+    
+    title_errors = ADDRESS_ERRORS[user.username+'title_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'title_errors'] else []
+    street_name_errors = ADDRESS_ERRORS[user.username+'street_name_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'street_name_errors'] else []
+    number_errors = ADDRESS_ERRORS[user.username+'number_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'number_errors'] else []
+    block_errors = ADDRESS_ERRORS[user.username+'block_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'block_errors'] else []
+    floor_errors = ADDRESS_ERRORS[user.username+'floor_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'floor_errors'] else []
+    door_errors = ADDRESS_ERRORS[user.username+'door_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'door_errors'] else []
+    city_errors = ADDRESS_ERRORS[user.username+'city_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'city_errors'] else []
+    code_postal_errors = ADDRESS_ERRORS[user.username+'code_postal_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'code_postal_errors'] else []
 
     for entry in entries:
         if entry.product.stock == 0:
@@ -720,6 +731,70 @@ def cart_view(request, error=None):
 
     if error:
         messages.error(request, error)
+        
+    if request.method == "GET":
+        title = ""
+        street_name = ""
+        number = ""
+        block = ""
+        floor = ""
+        door = ""
+        city = ""
+        code_postal = ""
+        
+        if ADDRESS_ERRORS:
+            title = ADDRESS_ERRORS[user.username+'title']
+            street_name = ADDRESS_ERRORS[user.username+'street_name']
+            number = ADDRESS_ERRORS[user.username+'number']
+            block = ADDRESS_ERRORS[user.username+'block']
+            floor = ADDRESS_ERRORS[user.username+'floor']
+            door = ADDRESS_ERRORS[user.username+'door']
+            city = ADDRESS_ERRORS[user.username+'city']
+            code_postal = ADDRESS_ERRORS[user.username+'code_postal']
+            
+            del ADDRESS_ERRORS[user.username+'title']
+            del ADDRESS_ERRORS[user.username+'street_name']
+            del ADDRESS_ERRORS[user.username+'number']
+            del ADDRESS_ERRORS[user.username+'block']
+            del ADDRESS_ERRORS[user.username+'floor']
+            del ADDRESS_ERRORS[user.username+'door']
+            del ADDRESS_ERRORS[user.username+'city']
+            del ADDRESS_ERRORS[user.username+'code_postal']
+            
+            del ADDRESS_ERRORS[user.username+'title_errors']
+            del ADDRESS_ERRORS[user.username+'street_name_errors']
+            del ADDRESS_ERRORS[user.username+'number_errors']
+            del ADDRESS_ERRORS[user.username+'block_errors']
+            del ADDRESS_ERRORS[user.username+'floor_errors']
+            del ADDRESS_ERRORS[user.username+'door_errors']
+            del ADDRESS_ERRORS[user.username+'city_errors']
+            del ADDRESS_ERRORS[user.username+'code_postal_errors']
+            
+        address_errors = False
+        if title_errors or street_name_errors or number_errors or block_errors or floor_errors or door_errors or city_errors or code_postal_errors:
+            address_errors = True
+        
+        return render(request, "cart.html", context={
+            "cart": entries,
+            "addresses": addresses,
+            'title': title,
+            'street_name': street_name,
+            'number': number,
+            'a_block': block,
+            'floor': floor,
+            'door': door,
+            'city': city,
+            'code_postal': code_postal,
+            'title_errors': title_errors,
+            'street_name_errors': street_name_errors,
+            'number_errors': number_errors,
+            'block_errors': block_errors,
+            'floor_errors': floor_errors,
+            'door_errors': door_errors,
+            'city_errors': city_errors,
+            'code_postal_errors': code_postal_errors,
+            'address_errors': str(address_errors),
+        })
 
     return render(request, "cart.html", {
         "cart": entries,
@@ -899,31 +974,104 @@ def add_address_in_cart(request):
     if not user.is_authenticated:
         user = None
 
-    street_name = request.POST['street_name']
-    number = request.POST['number']
-    floor = request.POST['floor']
+    title_errors = ADDRESS_ERRORS[user.username+'title_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'title_errors'] else []
+    street_name_errors = ADDRESS_ERRORS[user.username+'street_name_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'street_name_errors'] else []
+    number_errors = ADDRESS_ERRORS[user.username+'number_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'number_errors'] else []
+    block_errors = ADDRESS_ERRORS[user.username+'block_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'block_errors'] else []
+    floor_errors = ADDRESS_ERRORS[user.username+'floor_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'floor_errors'] else []
+    door_errors = ADDRESS_ERRORS[user.username+'door_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'door_errors'] else []
+    city_errors = ADDRESS_ERRORS[user.username+'city_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'city_errors'] else []
+    code_postal_errors = ADDRESS_ERRORS[user.username+'code_postal_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'code_postal_errors'] else []
+    
+    if request.method == "POST":
 
-    if floor == '':
-        floor = None
+        address_attrs = request.POST
+        title = str(address_attrs['title']).strip()
+        street_name = str(address_attrs['street_name']).strip()
+        number = str(address_attrs['number']).strip()
+        block = str(address_attrs['block']).strip()
+        floor = str(address_attrs['floor']).strip()
+        door = str(address_attrs['door']).strip()
+        city = str(address_attrs['city']).strip()
+        code_postal = str(address_attrs['code_postal']).strip()
 
-    block = request.POST['block']
+        required_field = "Este campo es obligatorio"
+        if not title:
+            title_errors.append(required_field)
+        if not street_name:
+            street_name_errors.append(required_field)
+        if not number:
+            number_errors.append(required_field)
+        if not city:
+            city_errors.append(required_field)
+        if not code_postal:
+            code_postal_errors.append(required_field)
+        if not block:
+            block = None
+        if not floor:
+            floor = None
+        if not door:
+            door = None
+        
+        if title and len(title) > 32:
+            title_length = "El título no puede tener más de 32 caracteres"
+            title_errors.append(title_length)
+        if street_name and len(street_name) > 60:
+            street_name_length = "El nombre de la calle no puede tener más de 60 caracteres"
+            street_name_errors.append(street_name_length)
+        if door and len(door) > 3:
+            door_length = "La puerta no puede tener más de 3 caracteres"
+            door_errors.append(door_length)
+        if code_postal and code_postal.isdigit() == False:
+            code_postal_digit = "El código postal debe ser un número"
+            code_postal_errors.append(code_postal_digit)
+        if block and block.isdigit() == False:
+            block_digit = "El bloque debe ser un número"
+            block_errors.append(block_digit)
+        if floor and floor.isdigit() == False:
+            floor_digit = "El piso debe ser un número"
+            floor_errors.append(floor_digit)
+        if number and number.isdigit() == False:
+            number_digit = "El número debe ser un número"
+            number_errors.append(number_digit)
+        if city and len(city) > 60:
+            city_length = "El nombre de la ciudad no puede tener más de 60 caracteres"
+            city_errors.append(city_length)
 
-    if block == '':
-        block = None
+        if title_errors or street_name_errors or number_errors or block_errors or floor_errors or door_errors or city_errors or code_postal_errors:
+            ADDRESS_ERRORS[user.username+'title_errors'] = title_errors
+            ADDRESS_ERRORS[user.username+'street_name_errors'] = street_name_errors
+            ADDRESS_ERRORS[user.username+'number_errors'] = number_errors
+            ADDRESS_ERRORS[user.username+'block_errors'] = block_errors
+            ADDRESS_ERRORS[user.username+'floor_errors'] = floor_errors
+            ADDRESS_ERRORS[user.username+'door_errors'] = door_errors
+            ADDRESS_ERRORS[user.username+'city_errors'] = city_errors
+            ADDRESS_ERRORS[user.username+'code_postal_errors'] = code_postal_errors
+            ADDRESS_ERRORS[user.username+'title'] = title
+            ADDRESS_ERRORS[user.username+'street_name'] = street_name
+            ADDRESS_ERRORS[user.username+'number'] = number
+            ADDRESS_ERRORS[user.username+'block'] = block
+            ADDRESS_ERRORS[user.username+'floor'] = floor
+            ADDRESS_ERRORS[user.username+'door'] = door
+            ADDRESS_ERRORS[user.username+'city'] = city
+            ADDRESS_ERRORS[user.username+'code_postal'] = code_postal
+            return HttpResponseRedirect(reverse("acme-nft:cart"))
+        
+        new_address = None
+        
+        new_address = Address(user_id=user.id, title=title, street_name=street_name,
+                            number=number, block=block, floor=floor,
+                            door=door, city=city, code_postal=code_postal)
+        try:
+            new_address.save()
+            messages.success(request, "Dirección registrada correctamente")
+        except Exception:
+            messages.error(request, "Ha ocurrido un error al guardar la dirección")
+    
+        return HttpResponseRedirect(reverse("acme-nft:cart"))
+    else:
 
-    door = request.POST['door']
-
-    if door == '':
-        door = None
-
-    city = request.POST['city']
-    code_postal = request.POST['postal_code']
-
-    Address.objects.create(user=user, street_name=street_name, number=number,
-                           floor=floor, block=block, door=door, city=city,
-                           code_postal=code_postal)
-
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(reverse("acme-nft:cart"))
 
 
 # ------------------------ Wishlist ------------------------

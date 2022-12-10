@@ -4,25 +4,15 @@
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/address.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 
     <section>
         <div class="container-fluid mt-xl-5" id="cart-main">
-
-            <!-- Error Alert -->
-            {% if error %}
-
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <strong>Error!</strong> {{ error }}
-                    <button type="button" class="btn-close"
-                            data-bs-dismiss="alert"></button>
-                </div>
-
-            {% endif %}
-
 
             <div class="container-fluid">
 
@@ -197,7 +187,7 @@
                                                     class="btn btn-primary"
 
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">
+                                                    data-bs-target="#addressModal">
                                                 Añade una dirección
                                             </button>
 
@@ -324,91 +314,133 @@
                     {% endif %}
 
                 </form>
-
-                <div class="modal fade" id="exampleModal"
+                <div class="modal fade" id="addressModal"
                      tabindex="-1"
-                     aria-labelledby="exampleModalLabel"
+                     aria-labelledby="addressModalLabel"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title"
-                                    id="exampleModalLabel">
+                                    id="addressModalLabel">
                                     Crea una nueva dirección</h5>
                                 <button type="button"
                                         class="btn-close"
                                         data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
-                            <form id="address-form" method="post"
-                                  action="{% url 'acme-nft:add_address_in_cart' %}">
-
-                                {% csrf_token %}
-                                <div class="modal-body">
-
-
-                                    <div class="form-group">
-                                        <label for="street-name"
-                                               class="col-form-label">Calle:</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="street-name"
-                                               required="required"
-                                               name="street_name">
-                                        <div class="invalid-feedback">
-                                            Por favor, introduce una calle.
-                                        </div>
-                                        <label for="number"
-                                               class="col-form-label">Número:</label>
-                                        <input type="number"
-                                               class="form-control"
-                                               id="number"
-                                               required="required"
-                                               name="number">
-                                        <label for="block"
-                                               class="col-form-label">Bloque:</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="block"
-                                               name="block">
-                                        <label for="floor"
-                                               class="col-form-label">Piso:</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="floor"
-                                               name="floor">
-                                        <label for="door"
-                                               class="col-form-label">Puerta:</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="door"
-                                               name="door">
-                                        <label for="postal-code"
-                                               class="col-form-label">Código
-                                            postal:</label>
-                                        <input type="number"
-                                               class="form-control"
-                                               id="postal-code"
-                                               required="required"
-                                               name="postal_code">
-                                        <label for="city"
-                                               class="col-form-label">Ciudad:</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="city"
-                                               required="required"
-                                               name="city">
-
+                            <div class="class-profile-form">
+                                <form class="class-form" action="{% url 'acme-nft:add_address_in_cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    {% if title_errors %}
+                                    <div class="class-form-group class-error-form" id="title_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="title_form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="text" id="title" name="title" placeholder=" " value="{{ title }}" required>
+                                        <label for="title" class="class-form-label">Título:</label>
+                                        {% if title_errors %}
+                                            {% for error in title_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
-
-
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="submit"
-                                           class="btn btn-primary"
-                                           placeholder="Añadir dirección">
-                                </div>
-                            </form>
+                                    {% if street_name_errors %}
+                                    <div class="class-form-group class-error-form" id="street_name_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="street_name_form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="text" id="street_name" name="street_name" placeholder=" " value="{{ street_name }}" required>
+                                        <label for="street_name" class="class-form-label">Dirección:</label>
+                                        {% if street_name_errors %}
+                                            {% for error in street_name_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if number_errors %}
+                                    <div class="class-form-group class-error-form" id="number_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="number_form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="text" id="number" name="number" placeholder=" " value="{{ number }}" required>
+                                        <label for="number" class="class-form-label">Número:</label>
+                                        {% if number_errors %}
+                                            {% for error in number_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if block_errors %}
+                                    <div class="class-form-group class-error-form" id="block_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="block_form">
+                                    {% endif %}
+                                        <input class="class-form-input"type="text" id="block" name="block" placeholder=" " value="{{ a_block }}" >
+                                        <label for="block" class="class-form-label">Bloque:</label>
+                                        {% if block_errors %}
+                                            {% for error in block_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if floor_errors %}
+                                    <div class="class-form-group class-error-form" id="floor_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="floor-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="floor" id="floor" name="floor" placeholder=" " value="{{ floor }}" >
+                                        <label for="floor" class="class-form-label">Piso:</label>
+                                        {% if floor_errors %}
+                                            {% for error in floor_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if door_errors %}
+                                    <div class="class-form-group class-error-form" id="door_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="door-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="door" id="door" name="door" placeholder=" " value="{{ door }}" >
+                                        <label for="door" class="class-form-label">Puerta:</label>
+                                        {% if door_errors %}
+                                            {% for error in door_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if city_errors %}
+                                    <div class="class-form-group class-error-form" id="city_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="city-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="city" id="city" name="city" placeholder=" " required="" value="{{ city }}" required>
+                                        <label for="city" class="class-form-label">Ciudad:</label>
+                                        {% if city_errors %}
+                                            {% for error in city_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if code_postal_errors %}
+                                    <div class="class-form-group class-error-form" id="code_postal_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="code_postal-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="code_postal" id="code_postal" name="code_postal" placeholder=" " value="{{ code_postal }}" required>
+                                        <label for="code_postal" class="class-form-label">Código postal:</label>
+                                        {% if code_postal_errors %}
+                                            {% for error in code_postal_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex align-items-center class-profile-div-btn">
+                                        <button id="profile_btn" class="class-link class-profile-btn" type="submit">Actualizar datos</button>
+                                    </div>
+                                </form>
+                            </div>
 
                         </div>
 
@@ -426,6 +458,11 @@
 
         </div>
     </section>
-
+    <script>
+        if("{{ address_errors }}" == "True"){
+            let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addressModal'))
+            modal.show();
+        }
+    </script>
 
 {% endblock %}
