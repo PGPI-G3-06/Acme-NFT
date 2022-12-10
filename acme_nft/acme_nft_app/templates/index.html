@@ -107,9 +107,9 @@
                       </li>
                       {% for i in pages_range %}
                           {% if i == current_page %}
-                          <li class="class-page"><a href="?page={{i}}" class="active">{{ i | addition:1 }}</a></li>
+                          <li class="class-page" style="cursor: pointer;"><a onclick="moveToPage({{i}}, {{pages_range.start}}, {{pages_range.stop}})" class="active">{{ i | addition:1 }}</a></li>
                           {% else %}
-                          <li class="class-page"><a href="?page={{i}}">{{ i | addition:1 }}</a></li>
+                          <li class="class-page" style="cursor: pointer;"><a onclick="moveToPage({{i}}, {{pages_range.start}}, {{pages_range.stop}})">{{ i | addition:1 }}</a></li>
                           {% endif %}
                       {% endfor %}
                       <li class="d-flex justify-content-center align-items-center">

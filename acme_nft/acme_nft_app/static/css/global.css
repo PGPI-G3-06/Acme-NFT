@@ -103,6 +103,10 @@ showcase::-webkit-scrollbar-thumb{
 	border-radius: 5px;
 }
 
+.name-text-field{
+    text-transform: capitalize !important;
+}
+
 .without-stock{
     filter: grayscale(100%);
 }
