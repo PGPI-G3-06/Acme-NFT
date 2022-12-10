@@ -30,6 +30,7 @@ class RarityType(models.TextChoices):
 
 
 class Address(models.Model):
+    title = models.CharField(max_length=32)
     street_name = models.CharField(max_length=60)
     number = models.IntegerField()
     block = models.IntegerField(null=True)

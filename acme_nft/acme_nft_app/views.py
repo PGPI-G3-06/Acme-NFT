@@ -139,8 +139,7 @@ def product_detail(request, product_id):
 
 def wishlist(request):
     if not request.user.is_authenticated:
-        messages.error(request, 'Tienes que iniciar sesión primero')
-        return HttpResponseRedirect(reverse("acme-nft:signin"))
+        return is_authenticated(request)
 
     products = Product.objects.filter(productentry__user=request.user, productentry__entry_type='WISHLIST').distinct()
     products_to_list = []
@@ -189,6 +188,10 @@ def error(request):
 # ------------------------------------- API views -------------------------------------
 
 # ------------------------ Login page ------------------------
+
+def is_authenticated(request):  
+    messages.error(request, "Debes estar registrado para acceder a esta página")
+    return HttpResponseRedirect(reverse("acme-nft:signup"))
 
 def login(request):
     user = authenticate(username=request.POST['username'], password=request.POST['password'])
@@ -268,8 +271,7 @@ def signup(request):
 def edit_user(request):
     
     if not request.user.is_authenticated:
-        messages.error(request, "Debes estar registrado para acceder a esta página")
-        return HttpResponseRedirect(reverse("acme-nft:signup"))
+        return is_authenticated(request)
     
     user = User.objects.get(username=request.user)
     profile_picture, _ = ProfilePicture.objects.get_or_create(user=user)
@@ -394,8 +396,11 @@ def edit_user(request):
 
 # ------------------------ Address ------------------------
 
-def show_adrress(request, user_id):
-    user = User.objects.get(id=user_id)
+def show_adrress(request):
+    if not request.user.is_authenticated:
+        return is_authenticated(request)
+    
+    user = User.objects.get(username=request.user)
     list_address = user.address_set.all()
     return render(request, "show_address.html",
                   context={"list_address": list_address})
@@ -442,8 +447,7 @@ def new_address(request):
                               number=number, block=block, floor=floor,
                               door=door, city=city, code_postal=code_postal)
             address.save()
-            return HttpResponseRedirect(
-                reverse("acme-nft:show_address", args=(request.user.id,)))
+            return HttpResponseRedirect(reverse("acme-nft:show_address"))
     else:
         return render(request, "new_address.html")
 
@@ -451,8 +455,7 @@ def new_address(request):
 def delete_address(request, address_id):
     address = Address.objects.get(id=address_id)
     address.delete()
-    return HttpResponseRedirect(
-        reverse("acme-nft:show_address", args=(request.user.id,)))
+    return HttpResponseRedirect(reverse("acme-nft:show_address"))
 
 
 def update_address(request, address_id):
@@ -502,8 +505,7 @@ def update_address(request, address_id):
             address.code_postal = code_postal
             address.save()
 
-            return HttpResponseRedirect(
-                reverse("acme-nft:show_address", args=(request.user.id,)))
+            return HttpResponseRedirect(reverse("acme-nft:show_address"))
     else:
         address = Address.objects.get(id=address_id)
         street_name = address.street_name

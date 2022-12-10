@@ -11,14 +11,13 @@
 <section>
 
     <div class="filters-activation-button" id="filters-wrapper-menu-activation-button">
-        <a href="#"><img src="/static/images/filter-icon.png">Establecer filtros</a>
+        <a style="cursor:pointer"><img alt="Filtros" src={% static 'images/filter-icon.png' %}>Establecer filtros</a>
     </div>
 
     <div class="filters-wrapper" id="filters-wrapper">
         <div class="filters-wrapper-menu">
             <div class="filters-wrapper-menu-header">
-                <a class="navbar-brand" href="{% url 'acme-nft:index' %}">Acme
-                    NFT</a>
+                <a class="navbar-brand" href="{% url 'acme-nft:index' %}">Acme NFT</a>
                 <button type="button" class="btn-close" id="filters-wrapper-menu-close-button"></button>
             </div>
             <div class="filters-wrapper-menu-body">

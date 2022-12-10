@@ -1,36 +1,109 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block extrahead %}
-    <link rel="stylesheet" href="{% static 'css/address.css' %}">
+{% block extrahead %}	
+  <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  <link rel="stylesheet" href="{% static 'css/address.css' %}">
+  <script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
 {% endblock %}
 
 {% block content %}
   <section>
-    <div class="list_address">
-      <div class="container">
-        <label for="chk" aria-hidden="true">Sus direcciones registradas son: </label>
-        <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
-          {% for address in list_address %}
-          <div class="address">
-            <div class="card w-75">
-              <div class="card-body">
-                <h5 class="card-title">{{ address }}</h5>
-                <div style="display: flex; justify-content: center;">
-                  <a class="class-link" href="{% url 'acme-nft:update_address' address.id %}">Editar dirección</a>
-                  <a class="class-link" href="{% url 'acme-nft:delete_address' address.id %}">Eliminar dirección</a>
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1>Mis direcciones:</h1>
+        <div class="d-flex justify-content-center align-items-center">
+          <a class="class-link" href="{% url 'acme-nft:new_address' %}" role="button">Crear nueva</a>
+        </div>
+      </div>
+      <div class="d-flex flex-column align-items-center class-address-list">
+        {% for address in list_address %}
+          <br>
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-start align-items-center w-100">
+                <h3 class="card-title">{{ address.title }}</h3>
+              </div>
+              <div class="d-flex justify-content-around align-items-center w-100 pt-3">
+                <span style="padding-right: 15%">Dirección:</span>
+                <strong>C/{{ address.street_name }}, nº{{ address.number }}, bloque {{address.block}}, {{ address.floor }}º{{ address.door }}</strong>
+              </div>
+              <div class="d-flex justify-content-between align-items-center w-100 pt-2">
+                <div class="d-flex justify-content-between align-items-center w-100" style="padding-right: 10%">
+                  <span>Ciudad:</span>
+                  <strong class="pr-1">{{ address.city }}</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-100" style="padding-left: 10%">
+                  <span>Código postal:</span>
+                  <strong>{{ address.code_postal }}</strong>
                 </div>
               </div>
-                
+              <div class="d-flex justify-content-center align-items-center pt-3">
+                <button type="button" class="class-link" onclick="window.location.href='{% url 'acme-nft:update_address' address.id %}'">Editar dirección</button>
+                <button type="button" class="class-link" onclick="{% url 'acme-nft:delete_address' address.id %}">Eliminar dirección</button>
+              </div>
             </div>
           </div>
           <br>
+
           <br>
-          {% endfor %}
-          <div style="display: flex; justify-content: center;">
-            <a class="class-link" href="{% url 'acme-nft:new_address' %}" role="button">Crear un nueva dirección</a>
-            <br><br>
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-start align-items-center w-100">
+                <h3 class="card-title">{{ address.title }}</h3>
+              </div>
+              <div class="d-flex justify-content-around align-items-center w-100 pt-3">
+                <span style="padding-right: 15%">Dirección:</span>
+                <strong>C/{{ address.street_name }}, nº{{ address.number }}, bloque {{address.block}}, {{ address.floor }}º{{ address.door }}</strong>
+              </div>
+              <div class="d-flex justify-content-between align-items-center w-100 pt-2">
+                <div class="d-flex justify-content-between align-items-center w-100" style="padding-right: 10%">
+                  <span>Ciudad:</span>
+                  <strong class="pr-1">{{ address.city }}</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-100" style="padding-left: 10%">
+                  <span>Código postal:</span>
+                  <strong>{{ address.code_postal }}</strong>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center align-items-center pt-3">
+                <button type="button" class="class-link" onclick="window.location.href='{% url 'acme-nft:update_address' address.id %}'">Editar dirección</button>
+                <button type="button" class="class-link" onclick="{% url 'acme-nft:delete_address' address.id %}">Eliminar dirección</button>
+              </div>
+            </div>
           </div>
+          <br>
+
+          <br>
+          <div class=" card">
+            <div class="card-body">
+              <div class="d-flex justify-content-start align-items-center w-100">
+                <h3 class="card-title">{{ address.title }}</h3>
+              </div>
+              <div class="d-flex justify-content-around align-items-center w-100 pt-3">
+                <span style="padding-right: 15%">Dirección:</span>
+                <strong>C/{{ address.street_name }}, nº{{ address.number }}, bloque {{address.block}}, {{ address.floor }}º{{ address.door }}</strong>
+              </div>
+              <div class="d-flex justify-content-between align-items-center w-100 pt-2">
+                <div class="d-flex justify-content-between align-items-center w-100" style="padding-right: 10%">
+                  <span>Ciudad:</span>
+                  <strong class="pr-1">{{ address.city }}</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-100" style="padding-left: 10%">
+                  <span>Código postal:</span>
+                  <strong>{{ address.code_postal }}</strong>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center align-items-center pt-3">
+                <button type="button" class="class-link" onclick="window.location.href='{% url 'acme-nft:update_address' address.id %}'">Editar dirección</button>
+                <button type="button" class="class-link" onclick="{% url 'acme-nft:delete_address' address.id %}">Eliminar dirección</button>
+              </div>
+            </div>
+          </div>
+          <br>
+        {% endfor %}
+      </div>
     </div>
 </section>
 {% endblock %}
