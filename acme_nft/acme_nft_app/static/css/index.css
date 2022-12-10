@@ -168,13 +168,19 @@ section{
 
 .class-card .class-img-box{
 
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     padding: 20px;
     transition: 0.5s ease-in-out;
+
+}
+
+.class-card:hover .class-img-box .no-stock{
+
+    opacity: 0;
+    visibility: hidden;
 
 }
 
@@ -195,10 +201,8 @@ section{
 }
 
 .class-card .class-img-box h2{
-
     opacity: 1;
     visibility: visible;
-
 }
 
 .class-card:hover .class-img-box img{
@@ -449,5 +453,27 @@ section{
 .cart-icon{
     height: 30px;
     width: 30px;
+
+}
+
+.form-control{
+    height: 40px;
+    border-radius: 40px;
+}
+.search-button{
+    height: 40px;
+    border-radius: 40px;
+    border: 2px solid  var(--main-button-hover-dark-color);
+    background: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #111;
+    text-transform: uppercase;
+}
+
+.search-button:hover{
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    transition: 0.5s all;
 
 }

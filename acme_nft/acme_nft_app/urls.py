@@ -58,8 +58,10 @@ urlpatterns = [
     path("error", views.error, name="error"),
     path("profile", views.edit_user, name="profile"),
     path("services", views.get_service_terms, name="service_terms"),
+    path("search/order", views.search_order, name="search_order"),
     path("returns", views.get_returns_policy, name="return_policy"),
     path("data-protection", views.get_data_protection_policy, name="data_protection_policy"),
+
 
     # Admin
     path("admins/products", views.AdminListProducts.as_view(), name="admin"),

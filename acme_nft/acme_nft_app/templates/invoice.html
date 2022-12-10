@@ -77,8 +77,15 @@
                         {% for item in products %}
                             <tr style="border: 1px solid black; rgb(84, 22, 183)">
                                 <td style="border: 1px solid black; rgb(84, 22, 183)">{{ item.product.name }}</td>
-                                <td style="border: 1px solid black; rgb(84, 22, 183)">{{ item.product.price }} €
-                                </td>
+                                {% if item.product.offer_price != None %}
+
+                                    <td>{{ item.product.offer_price|floatformat:2 }}€</td>
+
+                                {% else %}
+
+                                    <td>{{ item.product.price|floatformat:2 }}€</td>
+
+                                {% endif %}
                                 <td style="border: 1px solid black; rgb(84, 22, 183)">{{ item.quantity }}</td>
                                 <td style="border: 1px solid black; rgb(84, 22, 183)">
                                     {{ item.total }} €
@@ -86,10 +93,11 @@
                             </tr>
                         {% endfor %}
                         <tr>
-                            <td style="color: white"> _ </td>
-                            <td style="color: white"> _ </td>
-                            <<td style="color: white"> _ </td>
-                            <td style="border: 1px solid black; rgb(84, 22, 183)">{{ total }}</td>
+                            <td style="color: white"> _</td>
+                            <td style="color: white"> _</td>
+                            <
+                            <td style="color: white"> _</td>
+                            <td style="border: 1px solid black; rgb(84, 22, 183)">{{ total }} €</td>
                         </tbody>
                     </table>
                 </div>

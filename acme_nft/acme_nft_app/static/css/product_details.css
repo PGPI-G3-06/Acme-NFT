@@ -33,6 +33,24 @@
     border-radius: 15px;
 }
 
+#price, #old-price, #offer-price{
+    font-family: 'Lucida Sans';
+}
+
+#price{
+    font-weight: bolder;
+}
+
+#old-price{
+    text-decoration: line-through;
+    color: var(--old-price-color);
+}
+
+#offer-price{
+    color: var(--offer-price-color);
+    font-weight: bolder;
+}
+
 .desc-div{
     display: flex;
     flex-direction: column;
@@ -63,18 +81,6 @@
 
 .desc-section h4{
     text-align: center;
-}
-
-.desc-section #cart-error{
-    border-radius: 15px;
-    border: solid 2px var(--error-message-border-color);
-    background-color: var(--error-message-background-color);
-    padding: 20px;
-    text-align: center;
-}
-
-.desc-section #cart-error span{
-    font-size: 1rem !important;
 }
 
 #wishlist-form{

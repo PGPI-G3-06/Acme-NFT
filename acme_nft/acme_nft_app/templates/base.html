@@ -54,6 +54,9 @@
                     </form>
                 </div>
                 <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-between">
+                        <a class="btn class-btn" href="{% url 'acme-nft:search_order'  %}">Buscar Pedido</a>
+                    </div>
                     <ul class="navbar-nav w-100">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" role="button"
@@ -64,53 +67,78 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end cart-wrapper">
                                 {% for product_entry in products_in_cart %}
-                                    <li class="dropdown-item bg-transparent items odd product-{{product_entry.product.id}}-entry" style="outline: none !important;">
-        
-                                        <div class="infoWrap"> 
+                                    <li class="dropdown-item bg-transparent items odd product-{{ product_entry.product.id }}-entry"
+                                        style="outline: none !important;">
+
+                                        <div class="infoWrap">
                                             <div class="cartSection">
+
                                                 <img src="/static/{{product_entry.product.image_url}}" alt="" class="itemImg" />
-                                                <p class="itemNumber">{{product_entry.product.author}}</p>
-                                                <h3 class="dropdown-item-text">{{product_entry.product.name}}</h3>
                                                 
-                                                <p> 
-                                                    <button class="btn btn-outline-secondary"
+                                                <div class="d-flex flex-column w-100"> 
+                                                    <p class="itemNumber">{{product_entry.product.author}}</p>
+                                                    <h3 class="dropdown-item-text">{{product_entry.product.name}}</h3>
+
+                                                    <div class="d-flex flex-row align-items-center w-100">
+                                                        <button class="btn btn-outline-secondary"
                                                             onclick="downQuantity({{ product_entry.product.id }},{{ product_entry.product.id }},{{ product_entry.product.price }}, {{ product_entry.product.stock }})"
                                                             type="button"
                                                             id="button-addon1">-
-                                                    </button>
-                                                    <input type="text" id="{{product_entry.product.id}}" 
-                                                            class="qty quantity-field-{{product_entry.product.id}}" style="border: 1px solid grey; border-radius: 5px;" 
-                                                            min="1" max="{{product_entry.product.stock}}" 
-                                                            value="{{product_entry.quantity}}" readonly/> x {{product_entry.product.price}} €</p>
-                                                    <button class="btn btn-outline-secondary"
-                                                            onclick="upQuantity({{ product_entry.product.id }}, {{ product_entry.product.id }},{{ product_entry.product.price }},{{ product_entry.product.stock }})"
-                                                            type="button"
-                                                            id="button-addon1">+
-                                                    </button>
-                                                
-                                                <p class="stockStatus"> In Stock</p>
-                                                </div>  
+
+                                                        </button>
+                                                        <div style="margin: 0 20px;">
+                                                            <input type="text" id="{{product_entry.product.id}}" 
+                                                                class="qty quantity-field-{{product_entry.product.id}}" style="border: 1px solid grey; border-radius: 5px;" 
+                                                                min="1" max="{{product_entry.product.stock}}" 
+                                                                value="{{product_entry.quantity}}" readonly/> 
+                                                                x 
+                                                                {% if product_entry.product.offer_price %}
+                                                                    <span style="color: var(--offer-price-color);">{{product_entry.product.offer_price}} €</span>
+                                                                {% else %}
+                                                                    {{product_entry.product.price}} €
+                                                                {% endif %}
+                                                        </div>
+                                                        <button class="btn btn-outline-secondary"
+                                                                onclick="upQuantity({{ product_entry.product.id }}, {{ product_entry.product.id }},{{ product_entry.product.price }},{{ product_entry.product.stock }})"
+                                                                type="button"
+                                                                id="button-addon1">+
+                                                        </button>
+                                                    
+                                                        {% if product_entry.product.stock == 0 %}
+                                                            <div class="no-stock">SIN STOCK</div>
+                                                        {% elif product_entry.product.stock < 5 %}
+                                                            <div class="not-much-stock">POCO STOCK</div>
+                                                        {% else %}
+                                                            <div class="enough-stock">EN STOCK</div>
+                                                        {% endif %}
+                                                    </div>
+            
+                                                </div> 
                                                 
                                                 <div class="prodTotal cartSection">
-                                                    <p class="total-{{product_entry.product.id }}-class">{{product_entry.product.price|mul:product_entry.quantity|floatformat:2}} €</p>
+                                                    {% if product_entry.product.offer_price %}
+                                                        <p class="total-{{product_entry.product.id }}-class">{{product_entry.product.offer_price|mul:product_entry.quantity|floatformat:2}} €</p>
+                                                    {% else %}
+                                                        <p class="total-{{product_entry.product.id }}-class">{{product_entry.product.price|mul:product_entry.quantity|floatformat:2}} €</p>
+                                                    {% endif %}
                                                 </div>
                                                     <div class="cartSection removeWrap">
                                                         <a href="#" class="remove" onclick="deleteProduct({{ product_entry.product.id }})">x</a>
                                                     </div>
                                                 </div>
                                     </li>
-                                    <li class="product-{{product_entry.product.id}}-entry">
+                                    <li class="product-{{ product_entry.product.id }}-entry">
                                         <hr class="dropdown-divider">
                                     </li>
                                     {% empty %}
                                     <li class="dropdown-item bg-transparent">
-        
-                                        <div class="infoWrap"> 
+
+                                        <div class="infoWrap">
                                             <div class="cartSection">
                                                 <h3 class="no-items">No hay productos en el carrito</h3>
                                             </div>
                                         </div>
-                                        
+
                                     </li>
 
                                     <li>
@@ -120,7 +148,7 @@
                                 <li class="dropdown-item bg-transparent">
                                     <div class="d-flex justify-content-center w-100">
                                         <a class="cart-redirection-button"
-                                       href="{% url 'acme-nft:cart' %}">Finalizar compra</a>
+                                           href="{% url 'acme-nft:cart' %}">Finalizar compra</a>
                                     </div>
                                 </li>
                             </ul>
@@ -133,7 +161,7 @@
                                     <img style="border-radius: 50px"
                                          width="30px" height="30px"
                                          alt="imagen de perfil"
-                                         src="{{ request.user.profilepicture_set.all.0.image.url }}"/> {{ request.user.username }}
+                                         src="{{ profile_picture }}"/> {{ request.user.username }}
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item"
@@ -146,11 +174,26 @@
                                            href="{% url 'acme-nft:orders' %}">Historial</a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'acme-nft:wishlist' %}">Lista de deseos</a>
+                                        <a class="dropdown-item" href="{% url 'acme-nft:wishlist' %}">Lista de
+                                            deseos</a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
+
+
+                                    {% if request.user.is_superuser %}
+                                        <li><a class="dropdown-item"
+                                               href="{% url 'acme-nft:admin' %}">Administrador de productos</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                               href="{% url 'acme-nft:admin_orders' %}">Administrador de pedidos</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                    {% endif %}
+
                                     <li><a class="dropdown-item"
                                            href="{% url 'acme-nft:signout' %}">Cerrar
                                         sesión</a></li>
@@ -182,14 +225,14 @@
 
 <!-- Error messages -->
 {% if messages %}
-<div class="class-alert">
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            <strong>{{ message }}</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-</div>
+    <div class="class-alert">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
 {% endif %}
 
 <!-- Content -->
