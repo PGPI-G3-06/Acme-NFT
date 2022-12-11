@@ -1,0 +1,40 @@
+version: "3.8.13"
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: ash -c "python manage.py makemigrations && 
+                    python manage.py migrate &&
+                    python manage.py initAdmin && 
+                    python manage.py populateDB"
+    volumes:
+      - static:/Acme-NFT/acme_nft/static
+
+    depends_on:
+
+      - db
+
+  db:
+
+    restart: always
+
+    container_name: acme_nft_db
+
+    image: postgres:alpine
+
+    volumes:
+
+      - db:/var/lib/postgresql/data
+
+    environment:
+
+      - POSTGRES_PASSWORD=postgres
+
+volumes:
+
+  static:
+    name: acme_nft_static
+
+  db:
+    name: acme_nft_db
