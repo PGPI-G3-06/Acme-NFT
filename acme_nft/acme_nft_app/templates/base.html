@@ -59,11 +59,19 @@
                     </div>
                     <ul class="navbar-nav w-100">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button"
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" role="button"
                                data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                                <img width="30px" height="30px"
-                                     alt="imagen de perfil"
-                                     src={% static 'images/cart.png' %}/>
+                               <div class="cart-icon-div" 
+                                    {% if products_in_cart|length < 10 %}
+                                        data-before="0{{products_in_cart|length}}"
+                                    {% else %}
+                                        data-before="{{products_in_cart|length}}"
+                                    {% endif %}>
+
+                                    <img width="30px" height="30px"
+                                        alt="imagen de perfil"
+                                        src={% static 'images/cart.png' %}/>
+                               </div> 
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end cart-wrapper">
                                 {% for product_entry in products_in_cart %}
@@ -245,9 +253,7 @@
 
 <!-- Footer -->
 <footer>
-
-
-    <p>
+    <div class="footer-content">
         <a class="footer-component" href="{% url 'acme-nft:service' %}">Atención al
             cliente</a>
 
@@ -255,7 +261,7 @@
 
         <a class="footer-component" href="{% url 'acme-nft:return_policy' %}">Política de devoluciones</a>
         <a class="footer-component" href="{% url 'acme-nft:data_protection_policy' %}">Protección de datos</a>
-    </p>
+    </div>
 
 </footer>
 </body>

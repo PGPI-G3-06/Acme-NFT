@@ -203,6 +203,16 @@ section{
 .class-card .class-img-box h2{
     opacity: 1;
     visibility: visible;
+    max-height: 50px;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+}
+
+.class-card .class-img-box h2::-webkit-scrollbar{
+    display: none;
 }
 
 .class-card:hover .class-img-box img{

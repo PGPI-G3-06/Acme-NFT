@@ -110,9 +110,38 @@ function main(){
         });
     }
 
+    // Responsive titles
+
+    let itemsTitles = document.getElementsByClassName("class-item-title");
+
+    for (let itemTitle of itemsTitles) {
+
+        itemTitle.addEventListener("scroll", scrollHandler);
+
+        itemTitle.scroll({
+            top: 1,
+            behavior: 'smooth'
+        });
+    }
+
 }
 
-// Tb arreglar con filtros lo de los botones de numeros --------------
+function scrollHandler(event){
+    setInterval(function() {
+        if(event.target.scrollTop >= event.target.scrollHeight-50 ){    
+            event.target.scroll({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }else{
+            event.target.scroll({
+                top: event.target.scrollTop + 1,
+                behavior: 'smooth'
+            });
+        }
+    }, 100);
+    event.target.removeEventListener("scroll", scrollHandler);
+}
 
 function nextPage(minPages, maxPages){
     let min = parseInt(minPages);

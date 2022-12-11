@@ -95,27 +95,27 @@
     padding: 2px 10px;
 }
 
-.common{
+.común{
     background-color: var(--common-background-color);
     border: 3px solid var(--common-border-color);
 }
 
-.rare{
+.raro{
     background-color: var(--rare-background-color);
     border: 3px solid var(--rare-border-color)
 }
 
-.epic{
+.épico{
     background-color: var(--epic-background-color);
     border: 3px solid var(--epic-border-color)
 }
 
-.legendary{
+.legendario{
     background-color: var(--legendary-background-color);
     border: 3px solid var(--legendary-border-color)
 }
 
-.mythic{
+.mítico{
     background-color: var(--mythic-background-color);
     border: 3px solid var(--mythic-border-color)
 }
@@ -364,6 +364,14 @@
     .comment-header{
         display: flex;
         flex-direction: row;
+    }
+
+    .comment-header h4{
+        font-size: 1em;
+    }
+
+    .comment-body p{
+        font-size: 1.2em;
     }
 }
 
