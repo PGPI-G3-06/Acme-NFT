@@ -5,3 +5,6 @@
 
 invoices/
 **/invoices/
+
+.scannerwork/
+.github/
