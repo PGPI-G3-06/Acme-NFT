@@ -299,17 +299,35 @@
 
                     {% endif %}
 
-                    {% if  addresses|length > 0 and cart|length > 0 %}
+                    {% if user.is_authenticated %}
+                        {% if  addresses|length > 0 and cart|length > 0 %}
 
-                        <div class="row">
-                            <div class="col">
-                                <button type="submit"
-                                        class="btn btn-primary btn-lg float-end mt-5 pe-5 ps-5"
-                                        style="background-color: var(--main-color);">
-                                    Resumen
-                                </button>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="submit"
+                                            class="btn btn-primary btn-lg float-end mt-5 pe-5 ps-5"
+                                            style="background-color: var(--main-color);">
+                                        Resumen
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+
+                        {% endif %}
+                    {% else %}
+
+                        {% if cart|length > 0 %}
+
+                            <div class="row">
+                                <div class="col">
+                                    <button type="submit"
+                                            class="btn btn-primary btn-lg float-end mt-5 pe-5 ps-5"
+                                            style="background-color: var(--main-color);">
+                                        Resumen
+                                    </button>
+                                </div>
+                            </div>
+
+                        {% endif %}
 
                     {% endif %}
 
