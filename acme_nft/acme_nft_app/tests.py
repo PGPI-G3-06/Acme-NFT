@@ -26,7 +26,7 @@ class LoginTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
-        user = User.objects.create_user(username="admin", password="admin")
+        User.objects.create_user(username="admin", password="admin")
 
     def test_login(self):
         response = self.client.post('/login', {'username': 'admin', 'password': 'admin'})
