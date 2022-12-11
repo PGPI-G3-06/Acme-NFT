@@ -7,8 +7,13 @@
 
 {% block content %}
 <section>
-	<div class="main">  	
-		<input type="checkbox" id="chk" aria-hidden="true">
+	<div class="main">
+		
+		{% if is_signin %}
+			<input type="checkbox" id="chk" aria-hidden="true" checked>
+		{% else %}
+			<input type="checkbox" id="chk">
+		{% endif %}
 
 			{% if are_errors %}
 				<div class="signup">
