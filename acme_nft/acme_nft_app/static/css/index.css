@@ -120,6 +120,31 @@ section{
     padding: 10px 20px;
 }
 
+.custom-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 57px;
+    padding: 10px 38px 10px 16px;
+    background: #fff url("select-arrows.svg") no-repeat right 16px center;
+    background-size: 10px;
+    transition: border-color .1s ease-in-out,box-shadow .1s ease-in-out;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+.custom-select:hover {
+    border: 1px solid #999;
+}
+.custom-select:focus {
+    border: 1px solid #999;
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.2);
+    outline: none;
+}
+/* remove default arrow in IE */
+select::-ms-expand {
+    display:none;
+}
+
 /* SHOWCASE */
 
 .showcase-element{
@@ -195,6 +220,8 @@ section{
     position: relative;
     max-width: 100%;
     max-height: 300px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
     margin: 0 0 20px;
     transition: 0.5s ease-in-out;
 
@@ -203,6 +230,16 @@ section{
 .class-card .class-img-box h2{
     opacity: 1;
     visibility: visible;
+    max-height: 50px;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+}
+
+.class-card .class-img-box h2::-webkit-scrollbar{
+    display: none;
 }
 
 .class-card:hover .class-img-box img{

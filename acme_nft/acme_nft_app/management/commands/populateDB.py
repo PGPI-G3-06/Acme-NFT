@@ -48,9 +48,9 @@ class Command(BaseCommand):
                     author.save()
                 
                 rarity = get_rarity(float(row["price"]), int(row["tokens"]), mean_price_per_stock)
-                
+                showcase = rarity == RarityType.mythic or rarity == RarityType.legendary
                 # Create and save the product
-                product = Product(name=row["name"], collection=row["title"], price=float(row["price"]), stock=int(row["tokens"]), image_url=row["path"].replace("./", ""), offer_price=None, rarity=rarity, author=author)
+                product = Product(name=row["name"], collection=row["title"], price=float(row["price"]), stock=int(row["tokens"]), image_url=row["path"].replace("./", ""), offer_price=None, rarity=rarity, author=author, showcase=showcase)
                 product.save()
         
             print("Done! Your product database is now populated with some initial data.")

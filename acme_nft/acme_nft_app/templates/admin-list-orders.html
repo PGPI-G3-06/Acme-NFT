@@ -12,7 +12,7 @@
 
     <div class="row">
         <div class="col">
-            <table class="table">
+            <table class="table" aria-label="admin orders">
                 <thead class="t-head">
                 <tr>
                     <th scope="col">Id</th>
@@ -38,9 +38,9 @@
                         {% endif %}
                         <td>{{ order.address }}</td>
                         <td>{{ order.date }}</td>
-                        <td>{{ order.total }}</td>
+                        <td>{{ order.total|floatformat:2 }} €</td>
 
-                        {% if order.get_status_display == 'ENVIADO' %}
+                        {% if order.get_status_display == 'ENTREGADO' %}
 
                             <td>{{ order.get_status_display }}</td>
 
@@ -50,8 +50,8 @@
 
                             <td>
                                 <select onchange="changeStatus({{ order.id }})" class="form-select" name="status">
-                                    <option value="EN TRÁNSITO">EN TRÁNSITO</option>
-                                    <option onclick="console.log('cambiado')" value="ENVIADO">ENVIADO</option>
+                                    <option value="PENDIENTE DE PAGO">PENDIENTE DE PAGO</option>
+                                    <option value="ENTREGADO">ENTREGADO</option>
                                 </select>
                             </td>
 

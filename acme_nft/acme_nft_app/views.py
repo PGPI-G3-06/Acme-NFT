@@ -45,15 +45,22 @@ def index(request):
     products = Product.objects.all()
     
     try:
+        if str(request.GET['collection']):
+            products = products.filter(collection=str(request.GET['collection']).strip())
+
+    except KeyError:
+        pass
+    
+    try:
         if str(request.GET['order-by']).strip() == 'collection':
-            products = Product.objects.order_by('collection')
+            products = products.order_by('collection')
 
     except KeyError:
         pass
     
     try:
         if str(request.GET['order-by']).strip() == 'author':
-            products = Product.objects.order_by('author__name')
+            products = products.order_by('author__name')
 
     except KeyError:
         pass
@@ -61,9 +68,9 @@ def index(request):
     try:
         search_param = str(request.GET['buscar']).strip()
         if search_param != '':
-            products = Product.objects.all().filter(
-                name__icontains=search_param) | Product.objects.all().filter(
-                collection__icontains=search_param) | Product.objects.all().filter(
+            products = products.filter(
+                name__icontains=search_param) | products.filter(
+                collection__icontains=search_param) | products.filter(
                 author__name__icontains=search_param)
         else:
             return HttpResponseRedirect(reverse('acme-nft:index'))
@@ -100,6 +107,10 @@ def index(request):
                 wishlist.append(entry.product_id)
                 
     showcase_products = Product.objects.filter(showcase=True)
+    
+    # Load collections
+    
+    collections = Product.objects.values('collection').distinct()
 
     return render(request, "index.html", context={"user": request.user,
                                                   "products": products_to_list,
@@ -109,6 +120,7 @@ def index(request):
                                                                        possible_pages),
                                                   "current_page": page_number,
                                                   "needs_pagination": possible_pages > 1,
+                                                  "collections": collections,
                                                   }
                   )
 
@@ -117,7 +129,7 @@ def signin(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("acme-nft:index"))
     else:
-        return render(request, "login.html", context={})
+        return render(request, "login.html", context={"is_signin": True})
 
 
 def product_detail(request, product_id):
@@ -914,15 +926,20 @@ def payment(request):
     else:
         e = user.email
         pdf = get_invoice_pdf(order_)
+        
+    if user.is_authenticated:
+        full_name = user.first_name + ' ' + user.last_name
+    else:
+        full_name = str(request.POST['name']).strip()
 
-    if request.POST.get('payment_method') == 'TARJETA':
-        mensajito = f'Gracias por su compra, su pedido es {ref_code}'
+    if str(request.POST.get('payment_method')).strip().upper() == 'TARJETA':
+        message = f'Gracias por su compra, {full_name}, su pedido es el #{ref_code}.'
 
     else:
-        mensajito = f'Gracias por su compra, su pedido es {ref_code}. \n Reduerde que debe realizar el pago en la cuenta bancaria: ES6000491500051234567892 para que la compra y la factura sa valida.'
+        message = f'Gracias por su compra, {full_name}, su pedido es el #{ref_code}.\nRecuerde que debe realizar el pago en la cuenta bancaria: ES6000491500051234567892 para que la compra y la factura sean válidas.'
 
-    email = EmailMessage('Acme NFT',
-                         mensajito,
+    email = EmailMessage('Acme NFT: Factura de pedido #{}'.format(ref_code),
+                         message,
                          'no-replay-acmenftinc@gmail.com',
                          [e])
     email.attach_file(pdf)
@@ -962,7 +979,7 @@ def delete_from_cart(request, product_id):
 def add_address_in_cart(request):
     user = request.user
     if not user.is_authenticated:
-        user = None
+        return is_authenticated(request)
 
     title_errors = ADDRESS_ERRORS[user.username+'title_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'title_errors'] else []
     street_name_errors = ADDRESS_ERRORS[user.username+'street_name_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'street_name_errors'] else []
@@ -1133,12 +1150,12 @@ def order(request, order_id):
         messages.error(request, "No se ha encontrado la orden")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         
-    if order.user != None and not request.user.is_authenticated:
-        return is_authenticated(request)
-    
     products = ProductEntry.objects.filter(order_id=order_id)
     
-    if products and products[0].user.id != request.user.id:
+    if products and products[0].user != None and not request.user.is_authenticated:
+        return is_authenticated(request)
+    
+    if products and products[0].user != None and products[0].user.id != request.user.id:
         messages.error(request, "No se ha encontrado la orden")
         return HttpResponseRedirect(reverse("acme-nft:orders"))
     
@@ -1294,6 +1311,11 @@ def get_returns_policy(request):
 def get_data_protection_policy(request):
     return render(request, "data-protection-policy.html")
 
+# ------------------------ Delivery Protection Policy ------------------------
+
+def get_delivery_policy(request):
+    return render(request, "delivery.html")
+
 # ------------------------ admin ------------------------
 
 class AdminListProducts(ListView):
@@ -1394,3 +1416,21 @@ def change_order_status(request, order_id):
     order.save()
 
     return HttpResponseRedirect(reverse('acme-nft:admin'))
+
+class AdminListUsers(ListView):
+    model = User
+    template_name = 'admin-list-users.html'
+    context_object_name = 'users'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return User.objects.all().order_by('id')
+
+class AdminListComplaints(ListView):
+    model = Complaint
+    template_name = 'admin-list-complaints.html'
+    context_object_name = 'complaints'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Complaint.objects.all().order_by('id')

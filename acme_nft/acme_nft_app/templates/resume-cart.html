@@ -46,9 +46,6 @@
                                 <td>{{ item.quantity }}</td>
                                 <td>{{ item.total|floatformat:2 }} €</td>
                                 <script>
-
-                                    console.log(typeof ("{{ item.product.offer_price }}"));
-
                                     if ("{{ item.product.offer_price }}" !== "None") {
                                         real_total +=
                                         {{ item.product.offer_price }} * {{ item.quantity }}

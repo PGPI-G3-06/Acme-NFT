@@ -96,8 +96,16 @@
                 <div class="comments-list">
                     {% for comment in comments %}
                         <div class="comment">
-                            <div class="comment-header">
-                                <h4 class="comment-author" style="margin-right: 40px;">@{{ comment.user.username }}</h4>
+                            <div class="comment-header d-flex align-items-center">
+                                <img style="border-radius: 50px; margin-right: 5px;"
+                                         width="30px" height="30px"
+                                         alt="imagen de perfil"
+                                         {% if profile_pic %}
+                                         src="{{ profile_pic }}"
+                                         {% else %}
+                                         src="{% static 'images/profile.png' %}"
+                                         {% endif %}/>
+                                <h4 class="comment-author mb-0" style="margin-right: 40px;">@{{ comment.user.username }}</h4>
                                 <h4 class="comment-date">{{ comment.date }}</h4>
                             </div>
                             <div class="comment-body">

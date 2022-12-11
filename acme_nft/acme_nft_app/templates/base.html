@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{% static 'images/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/wrapped_cart.css' %}">
@@ -32,8 +33,7 @@
 <header id="header" style="position: sticky; z-index:100; top: 0; width: 100%">
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'acme-nft:index' %}">Acme
-                NFT</a>
+            <a class="navbar-brand" href="{% url 'acme-nft:index' %}"><img alt="Acme NFT" width="150px" src="{% static 'images/logo.png' %}"></a>
             <button class="navbar-toggler" type="button"
                     data-bs-toggle="collapse" data-bs-target="#navbarToggler"
                     aria-controls="navbarToggler" aria-expanded="false"
@@ -56,16 +56,19 @@
                 <div class="d-flex justify-content-end">
                     <ul class="navbar-nav w-100">
                         <li class="nav-item">
-                            <a class="btn class-btn" href="{% url 'acme-nft:search_order'  %}" title="Buscador de pedidos">
+                            <a class="btn class-btn-a" href="{% url 'acme-nft:search_order'  %}" title="Buscador de pedidos">
                                 <img alt="Búsqueda de pedidos" width="30px" height="30px" src="{% static 'images/order_search.png' %}">
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button"
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" role="button"
                                data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="Cesta de la compra">
-                                <img width="30px" height="30px"
-                                     alt="imagen de perfil"
-                                     src={% static 'images/cart.png' %}/>
+                               <div class="cart-icon-div" data-before="{{products_in_cart|length}}">
+
+                                    <img width="30px" height="30px"
+                                        alt="imagen de perfil"
+                                        src={% static 'images/cart.png' %}/>
+                               </div> 
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end cart-wrapper">
                                 {% for product_entry in products_in_cart %}
@@ -171,17 +174,24 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:profile' %}">Perfil</a>
+                                           href="{% url 'acme-nft:profile' %}">
+                                           <img height="20px" width="20px" src="{% static 'images/perfil-icon.png' %}" alt="Perfil"/>  Perfil
+                                        </a>
                                     </li>
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:show_address' %}">Direcciones</a>
+                                           href="{% url 'acme-nft:show_address' %}">
+                                           <img height="20px" width="20px" src="{% static 'images/address-icon.png' %}" alt="Direcciones"/> Direcciones
+                                        </a>
                                     </li>
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:orders' %}">Historial de pedidos</a>
+                                           href="{% url 'acme-nft:orders' %}"> 
+                                           <img height="20px" width="20px" src="{% static 'images/orders-icon.png' %}" alt="Historial de Pedidos"/> Historial de pedidos
+                                        </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'acme-nft:wishlist' %}">Lista de
-                                            deseos</a>
+                                        <a class="dropdown-item" href="{% url 'acme-nft:wishlist' %}">
+                                            <img height="20px" width="20px" src="{% static 'images/wishlist-icon.png' %}" alt="Lista de Deseos"/> Lista de deseos
+                                        </a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
@@ -195,27 +205,35 @@
                                         <li><a class="dropdown-item"
                                                href="{% url 'acme-nft:admin_orders' %}">Administrador de pedidos</a>
                                         </li>
+                                        <li><a class="dropdown-item"
+                                            href="{% url 'acme-nft:admin_users' %}">Administrador de usuarios</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                            href="{% url 'acme-nft:admin_complaints' %}">Administrador de reclamaciones</a>
+                                        </li>
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
                                     {% endif %}
 
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:signout' %}">Cerrar
-                                        sesión</a></li>
+                                           href="{% url 'acme-nft:signout' %}">
+                                           <img height="20px" width="20px" src="{% static 'images/logout-icon.png' %}" alt="Cerrar Sesión"/> Cerrar sesión
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         {% else %}
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <li class="nav-item">
                                     <button type="button" class="btn class-btn"
-                                            onclick="window.location.href='{% url 'acme-nft:signin' %}'">
+                                            style="min-width: 125px" onclick="window.location.href='{% url 'acme-nft:signin' %}'">
                                         Iniciar sesión
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button"
-                                            class="btn class-btn-reversed"
+                                            class="btn class-btn"
                                             onclick="window.location.href='{% url 'acme-nft:signup' %}'">
                                         Registrarse
                                     </button>
@@ -247,9 +265,7 @@
 
 <!-- Footer -->
 <footer>
-
-
-    <p>
+    <div class="footer-content">
         <a class="footer-component" href="{% url 'acme-nft:service' %}">Atención al
             cliente</a>
 
@@ -257,7 +273,8 @@
 
         <a class="footer-component" href="{% url 'acme-nft:return_policy' %}">Política de devoluciones</a>
         <a class="footer-component" href="{% url 'acme-nft:data_protection_policy' %}">Protección de datos</a>
-    </p>
+        <a class="footer-component" href="{% url 'acme-nft:delivery_policy' %}">Política de envío</a>
+    </div>
 
 </footer>
 </body>
