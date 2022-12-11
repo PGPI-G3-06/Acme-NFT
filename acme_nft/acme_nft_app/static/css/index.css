@@ -220,6 +220,8 @@ select::-ms-expand {
     position: relative;
     max-width: 100%;
     max-height: 300px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
     margin: 0 0 20px;
     transition: 0.5s ease-in-out;
 
