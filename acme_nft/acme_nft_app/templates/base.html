@@ -200,16 +200,24 @@
 
                                     {% if request.user.is_superuser %}
                                         <li><a class="dropdown-item"
-                                               href="{% url 'acme-nft:admin' %}">Administrador de productos</a>
+                                               href="{% url 'acme-nft:admin' %}">
+                                                <img height="20px" width="20px" src="{% static 'images/shield.png' %}" alt="Administrador de Productos"/> Administrador de productos
+                                            </a>
                                         </li>
                                         <li><a class="dropdown-item"
-                                               href="{% url 'acme-nft:admin_orders' %}">Administrador de pedidos</a>
+                                               href="{% url 'acme-nft:admin_orders' %}">
+                                                <img height="20px" width="20px" src="{% static 'images/shield.png' %}" alt="Administrador de Pedidos"/> Administrador de pedidos
+                                            </a>
                                         </li>
                                         <li><a class="dropdown-item"
-                                            href="{% url 'acme-nft:admin_users' %}">Administrador de usuarios</a>
+                                            href="{% url 'acme-nft:admin_users' %}">
+                                             <img height="20px" width="20px" src="{% static 'images/shield.png' %}" alt="Administrador de Usuarios"/> Administrador de usuarios
+                                            </a>
                                         </li>
                                         <li><a class="dropdown-item"
-                                            href="{% url 'acme-nft:admin_complaints' %}">Administrador de reclamaciones</a>
+                                            href="{% url 'acme-nft:admin_complaints' %}">
+                                             <img height="20px" width="20px" src="{% static 'images/shield.png' %}" alt="Administrador de Reclamaciones"/> Administrador de reclamaciones
+                                            </a>
                                         </li>
                                         <li>
                                             <hr class="dropdown-divider">
