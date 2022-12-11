@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mathfilters %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<section>
+
+    <div class="filters-activation-button" id="filters-wrapper-menu-activation-button">
+        <a style="cursor:pointer"><img alt="Filtros" src={% static 'images/filter-icon.png' %}>Establecer filtros</a>
+    </div>
+
+    <div class="filters-wrapper" id="filters-wrapper">
+        <div class="filters-wrapper-menu">
+            <div class="filters-wrapper-menu-header">
+                <a class="navbar-brand" href="{% url 'acme-nft:index' %}">Acme NFT</a>
+                <button type="button" class="btn-close" id="filters-wrapper-menu-close-button"></button>
+            </div>
+            <div class="filters-wrapper-menu-body">
+                <form action="{% url 'acme-nft:index' %}" method="GET">
+                    <div class="filters-wrapper-menu-body-section">
+                        <h4>Ordenar por:</h4>
+                        <div class="filters-wrapper-menu-body-section-content">
+                            <form class="form-check">
+                                <label style="margin-left: 20px; font-size:1em;"><input class="sort-filter-input" type="checkbox" name="author-filter" value="author" id="red" /> Autor</label><br>
+                                <label style="margin-left: 20px; font-size:1em;"><input class="sort-filter-input" type="checkbox" name="colection-filter" value="collection" id="yellow" /> Colección</label><br>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="filters-wrapper-menu-body-section">
+                        <h4>Listar colección:</h4>
+                        <div class="filters-wrapper-menu-body-section-content">
+                            <select class="custom-select">
+                                <option>Elige una colección...</option>
+                                {% for collection in collections %}
+                                <option style="text-transform: capitalize;" >{{collection.collection}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="filters-wrapper-menu-footer">
+                <button type="button" class="class-link" id="apply-filters-button">Aplicar</button>
+            </div>
+        <br><br>
+        </div>
+    </div>
+
+    <div class="filters-background-div" id="filters-background"></div>
+
+    <div class="main-content-container">
+
+        <showcase>
+            {% for product in showcase_products %}
+
+                <div class="showcase-element"> 
+                 
+                    <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                    <a href="{% url 'acme-nft:product_detail' product.id %}" class="class-link">Ver producto</a>
+
+                </div>
+        
+            {% endfor %}
+        </showcase>
+
+        <div class="class-grid-container">
+
+            {% for product in products %}
+            
+                <div class="class-card">
+                    <div class="class-img-box">
+                        <img src="/static/{{product.image_url}}" {% if product.stock == 0 %} class="without-stock" {% endif %} alt="{{product.name}}"/>
+                        {% if product.stock == 0 %}
+                            <div class="no-stock">
+                                SIN STOCK
+                            </div>
+                        {% endif %}
+                        <h2 class="class-item-title" style="text-align: center; text-transform: capitalize;">{{product.name}}</h2>
+                    </div>
+        
+                    <div class="class-content">
+                        <a href="{% url 'acme-nft:product_detail' product.id %}" class="class-link">Ver producto</a>
+                        <div class="class-icons-row" {% if not user.is_authenticated %} style="display: flex; justify-content: center; align-items: center;" {% endif %}>
+                            {% if user.is_authenticated %}
+                            <div class="class-lista-deseos">
+                                {% if product.id in wishlist %}
+                                <img src="{% static 'images/heart-lleno.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img"></img>
+                                {% else %}
+                                <img src="{% static 'images/heart.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img"></img>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            <div class="class-carrito">
+                                <button type="button"
+                                        class="btn" 
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#add-to-cart-modal-{{product.id}}">
+                                        <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" width="30px" height="30px">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+        {% if needs_pagination %}
+          <div class="pagination-container">
+              <div class="pagination-box">
+                  <ul class="pagination">
+                      <li class="d-flex justify-content-center align-items-center">
+                          <button style="border:none" class="btn" onclick="previousPage({{pages_range.start}}, {{pages_range.stop}})">Anterior</button>
+                      </li>
+                      {% for i in pages_range %}
+                          {% if i == current_page %}
+                          <li class="class-page" style="cursor: pointer;"><a onclick="moveToPage({{i}}, {{pages_range.start}}, {{pages_range.stop}})" class="active">{{ i | addition:1 }}</a></li>
+                          {% else %}
+                          <li class="class-page" style="cursor: pointer;"><a onclick="moveToPage({{i}}, {{pages_range.start}}, {{pages_range.stop}})">{{ i | addition:1 }}</a></li>
+                          {% endif %}
+                      {% endfor %}
+                      <li class="d-flex justify-content-center align-items-center">
+                          <button style="border:none" class="btn" onclick="nextPage({{pages_range.start}}, {{pages_range.stop}})">Siguiente</button>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+        {% endif %}
+
+        {% for product in products %}
+              <div class="modal fade" id="add-to-cart-modal-{{product.id}}">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title"
+                                  id="add-to-cart-modal-label">
+                                  Añadir {{product.name}} al carrito</h5>
+                              <button type="button"
+                                      class="btn-close"
+                                      data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                          </div>
+                          <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="add-cart-{{product.id}}" class="modal-form" method="POST">
+                              {% csrf_token %} 
+                              <label for="quantity">Cantidad: <input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></label>
+
+                              <input type="submit"
+                                  class="add-to-cart-btn"
+                                  value="Añadir al carrito">
+
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          {% endfor %}
+    </div>
+</section>
+{% endblock %}

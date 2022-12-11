@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}	
+  <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  <link rel="stylesheet" href="{% static 'css/address.css' %}">
+  <script type="text/javascript" src="{% static 'js/address.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <section>
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1>Mis direcciones:</h1>
+        <div class="d-flex justify-content-center align-items-center">
+          <a class="class-link" href="{% url 'acme-nft:new_address' %}" role="button">Crear nueva</a>
+        </div>
+      </div>
+      <div class="d-flex flex-column align-items-center class-address-list">
+        {% if list_address %}
+          {% for address in list_address %}
+            {% if address == first and address == last %}
+            <div class="card mt-3 mb-5">
+            {% elif address == first %}
+            <div class="card mt-3">
+            {% elif address == last %}
+            <div class="card mt-5 mb-5">
+            {% else %}
+            <div class="card mt-5">
+            {% endif %}
+              <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center w-100">
+                  <h3 class="card-title">{{ address.title }}</h3>
+                </div>
+                <div class="d-flex align-items-center w-100 pt-3">
+                  <span style="padding-right: 2.5%">Dirección:</span>
+                  {% if not address.floor and not address.block and not address.door %}
+                    <strong>{{ address.street_name }}, nº{{ address.number }}</strong>
+                  {% elif not address.door and not address.floor %}
+                    <strong>{{ address.street_name }}, nº{{ address.number }}, bloque {{address.block}}</strong>
+                  {% elif not address.door and not address.block %}
+                    <strong>{{ address.street_name }}, nº{{ address.number }}, {{ address.floor }}º</strong>
+                  {% elif not address.floor and not address.block %}
+                    <strong>{{ address.street_name }}, nº{{ address.number }}, {{ address.door }}</strong>
+                  {% elif not address.floor %}
+                    <strong>{{ address.street_name }}, nº{{ address.number }}, bloque {{address.block}}, {{ address.door }}</strong>
+                  {% elif not address.block %}
+                    <strong>{{ address.street_name }}, nº{{ address.number }}, {{ address.floor }}º, {{ address.door }}</strong>
+                  {% elif not address.door %}
+                    <strong>{{ address.street_name }}, nº{{ address.number }}, bloque {{address.block}}, {{ address.floor }}º</strong>
+                  {% else %}
+                  <strong>{{ address.street_name }}, nº{{ address.number }}, bloque {{address.block}}, {{ address.floor }}º{{ address.door }}</strong>
+                  {% endif %}
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-100 pt-2">
+                  <div class="d-flex justify-content-between align-items-center w-100" style="padding-right: 10%">
+                    <span>Ciudad:</span>
+                    <strong class="pr-1">{{ address.city }}</strong>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center w-100" style="padding-left: 10%">
+                    <span>Código postal:</span>
+                    <strong>{{ address.code_postal }}</strong>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center pt-3">
+                  <button type="button" class="class-link" onclick="window.location.href='{% url 'acme-nft:update_address' address.id %}'">Editar dirección</button>
+                  <button type="button" class="class-link" onclick="deleteAddress('{% url 'acme-nft:delete_address' address.id %}')">Eliminar dirección</button>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="d-flex justify-content-center align-items-center w-100">
+            <h3>No tienes ninguna dirección registrada actualmente</h3>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+</section>
+{% endblock %}

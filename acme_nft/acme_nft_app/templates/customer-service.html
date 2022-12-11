@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+
+
+<link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+<script type="text/javascript" src="{% static 'js/customer_service.js' %}"></script>
+
+
+{% endblock %}
+
+{% block content %}
+<section>
+
+    <div class="container">
+        <h1 class="service-title">Atención al cliente</h1>
+        <br>
+
+        <div class="row">
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                  <img src="{% static 'images/communication.png' %}" class="card-img-top" alt="Imagen de comunicaciones">
+                  <div class="card-body">
+                    <h5 class="card-title">Comunicaciones</h5>
+                    <p class="card-text">Contacta con nosotros para cualquier duda o queja que le surja.</p>
+                    <a href="{% url 'acme-nft:contact' %}" class="class-link">Contactar</a>
+                  </div>
+                </div>
+            </div>
+            <br>
+            <div class="col">
+              <div class="card" style="width: 18rem;">
+                <img src="{% static 'images/opinion.png'%}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Opiniones</h5>
+                  <p class="card-text">Nos interasa saber como ha sido tu experienacía con nosotros, dejanos tu opinión y ayudanos a mejorar.</p>
+                  <a href="{% url 'acme-nft:opinions' %}" class="class-link">Opinar</a>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="col">
+              <div class="card" style="width: 18rem;">
+                <img src="{% static 'images/complaint.png'%}" class="card-img-top" alt="Imagen de reclamación">
+                <div class="card-body">
+                  <h5 class="card-title">Reclamaciones</h5>
+
+                    {% if user.is_authenticated %}
+                        <p class="card-text">Si no estas satisfecho con tu compra o con el servicio proporcionado, puedes realizar una reclamación.</p>
+                        <button class="class-link complaint-button" id="modal-btn" data-bs-toggle="modal" data-bs-target="#complaint-modal">Reclamación</button>
+                    {% else %}
+                        <p class="card-text">Para poder realizar una reclamación debe estar registrado</p>
+                        <a href="{% url 'acme-nft:signup' %}" class="class-link">Registrarse</a>
+                    {% endif %}
+                    <div class="modal fade" id="complaint-modal" tabindex="-1" aria-labelledby="complaint-modal" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="service-title"id="exampleModalLabel">Escriba su reclamación</h1>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/complaint" method="POST" id="post-complaint-form">
+                            {% csrf_token %}
+                            <input id="complaint-title" class="form-control" type="text" placeholder="Título de la reclamación" name="title">
+                            <textarea id="complaint-input" name="complaint" placeholder="Escribe tu reclamación..."></textarea>
+                            <button class="class-link publish-complaint-button">Publicar</button>
+                          </form>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  <br>
+    <br>
+</section>
+
+
+{% endblock %}
+

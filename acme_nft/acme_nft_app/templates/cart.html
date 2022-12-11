@@ -1,0 +1,486 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/address.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <section>
+        <div class="container-fluid mt-xl-5" id="cart-main">
+        
+            <div class="container-fluid">
+
+                <form onsubmit="return checkSubmit()"
+                      action="{% url 'acme-nft:resume_cart' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="card-title">Carrito</h1>
+                            <div class="cart rounded mb-xl-3 custom-scrollbar table-wrapper-scroll-y checkbox-group required">
+                                <table class="table table-responsive-sm table-striped"
+                                       aria-describedby="Tabla de resumen de productos">
+                                    <thead class="head">
+                                    <tr class="separator-line">
+                                        <th scope="col">#</th>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Precio/ud</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Eliminar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% for item in cart %}
+
+                                        <tr class="product-{{ item.product.id }}-entry">
+                                        <th scope="row">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   value="{{ item.id }}"
+                                                   name="productos"
+                                                   id="flexCheckDefault"
+                                                   checked="checked"
+                                                   data-grouprequired="productos">
+                                        </th>
+                                        <td>{{ item.product.name }}</td>
+                                        {% if item.product.offer_price != None %}
+
+                                            <td>{{ item.product.offer_price|floatformat:2 }}€</td>
+
+                                        {% else %}
+
+                                            <td>{{ item.product.price|floatformat:2 }}€</td>
+
+                                        {% endif %}
+                                        <td>
+                                            <div class="input-group mb-3">
+
+                                                {% if item.product.offer_price == None %}
+
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.price }}, {{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">-
+                                                    </button>
+                                                    <input id="{{ item.product.id }}"
+                                                           type="number"
+                                                           class="form-control quantity-field-{{ item.product.id }}"
+                                                           placeholder=""
+                                                           aria-label="Example text with button addon"
+                                                           aria-describedby="button-addon1"
+                                                           value="{{ item.quantity }}"
+                                                           min="1"
+                                                           max="{{ item.product.stock }}"
+                                                           style="text-align: center;">
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.price }},{{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">+
+
+                                                    </button>
+
+                                                {% else %}
+
+
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="downQuantity({{ item.product.id }},{{ item.product.id }},{{ item.product.offer_price }}, {{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">-
+                                                    </button>
+                                                    <input id="{{ item.product.id }}"
+                                                           type="number"
+                                                           class="form-control quantity-field-{{ item.product.id }}"
+                                                           placeholder=""
+                                                           aria-label="Example text with button addon"
+                                                           aria-describedby="button-addon1"
+                                                           value="{{ item.quantity }}"
+                                                           min="1"
+                                                           max="{{ item.product.stock }}"
+                                                           style="text-align: center;">
+                                                    <button class="btn btn-outline-secondary"
+                                                            onclick="upQuantity({{ item.product.id }}, {{ item.product.id }},{{ item.product.offer_price }},{{ item.product.stock }})"
+                                                            type="button"
+                                                            id="button-addon1">+
+
+                                                    </button>
+
+                                                {% endif %}
+
+                                            </div>
+                                        </td>
+                                        <td style="width: 19%" class=" total-{{ item.product.id }}-class">{{ item.total|floatformat:2 }}
+                                            €
+                                        </td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-danger"
+                                                    onclick="deleteProduct({{ item.product.id }})">
+                                                Eliminar
+                                            </button>
+                                        </td>
+
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <h1 class="card-title">Pago</h1>
+                                    <div class="div-pagos rounded mb-xl-3">
+                                        <table class="table"
+                                               aria-describedby="Tabla de tipo de pagos">
+                                            <thead class="head">
+                                            <tr class="separator-line">
+                                                <th scope="col">#</th>
+
+                                                <th scope="col">Tipo de pago</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">
+                                                    <input class="form-check-input"
+                                                           type="radio"
+                                                           value="transferencia"
+                                                           name="pagos"
+                                                           id="transferencia"
+                                                           required="required">
+                                                </th>
+                                                <td>Transferencia <div style="font-size: 12px">(Informacion en el correo tras la compra)</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input class="form-check-input"
+                                                           type="radio"
+                                                           value="tarjeta"
+                                                           name="pagos"
+                                                           id="tarjeta"
+                                                           required="required">
+                                                </td>
+                                                <td>Tarjeta</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h1 class="card-title">Dirección</h1>
+
+                                            <button type="button"
+                                                    class="btn btn-primary"
+
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#addressModal">
+                                                Añade una dirección
+                                            </button>
+
+                                        </div>
+
+                                        <div class="div-pagos rounded mb-xl-3">
+                                            <table class="table"
+                                                   aria-describedby="Table de direcciones">
+                                                <thead class="head">
+                                                <tr class="separator-line">
+                                                    <th scope="col">#</th>
+
+                                                    <th scope="col">Dirección</th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% for address in addresses %}
+
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <input class="form-check-input"
+                                                                   type="radio"
+                                                                   value="{{ address.id }}"
+                                                                   name="envios"
+                                                                   id="{{ address.id }}"
+                                                                   required>
+                                                        </th>
+                                                        <td>{{ address }}</td>
+                                                    </tr>
+
+                                                {% endfor %}
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+                    {% if not user.is_authenticated %}
+
+                        <h1 class="card-title">Datos</h1>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+
+                                    <label for="nombre" class="form-label">Nombre
+                                        y
+                                        Apellidos</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="nombre"
+                                           name="nombre"
+                                           placeholder="Nombre, Apellidos"
+                                           required>
+                                </div>
+                                <div class="mb-3">
+
+                                    <label for="email"
+                                           class="form-label">Email</label>
+
+                                    <input type="email"
+                                           class="form-control"
+                                           id="email"
+                                           name="email"
+                                           placeholder="email"
+                                           required>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="direccion"
+                                           class="form-label">Dirección</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="direccion"
+                                           name="direccion"
+                                           placeholder="Calle, nº(piso, puerta, escalera), localidad, provincia"
+                                           required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="codigo-postal"
+
+                                           class="form-label">Código
+                                        postal</label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           id="codigo-postal"
+                                           name="codigo-postal"
+                                           placeholder="Código postal"
+                                           required>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        {% if  addresses|length > 0 and cart|length > 0 %}
+
+                            <div class="row">
+                                <div class="col">
+                                    <button type="submit"
+                                            class="btn btn-primary btn-lg float-end mt-5 pe-5 ps-5"
+                                            style="background-color: var(--main-color);">
+                                        Resumen
+                                    </button>
+                                </div>
+                            </div>
+
+                        {% endif %}
+                    {% else %}
+
+                        {% if cart|length > 0 %}
+
+                            <div class="row">
+                                <div class="col">
+                                    <button type="submit"
+                                            class="btn btn-primary btn-lg float-end mt-5 pe-5 ps-5"
+                                            style="background-color: var(--main-color);">
+                                        Resumen
+                                    </button>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                </form>
+                <div class="modal fade" id="addressModal"
+                     tabindex="-1"
+                     aria-labelledby="addressModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title"
+                                    id="addressModalLabel">
+                                    Crea una nueva dirección</h5>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="class-profile-form">
+                                <form class="class-form" action="{% url 'acme-nft:add_address_in_cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    {% if title_errors %}
+                                    <div class="class-form-group class-error-form" id="title_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="title_form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="text" id="title" name="title" placeholder=" " value="{{ title }}" required>
+                                        <label for="title" class="class-form-label">Título:</label>
+                                        {% if title_errors %}
+                                            {% for error in title_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if street_name_errors %}
+                                    <div class="class-form-group class-error-form" id="street_name_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="street_name_form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="text" id="street_name" name="street_name" placeholder=" " value="{{ street_name }}" required>
+                                        <label for="street_name" class="class-form-label">Dirección:</label>
+                                        {% if street_name_errors %}
+                                            {% for error in street_name_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if number_errors %}
+                                    <div class="class-form-group class-error-form" id="number_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="number_form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="text" id="number" name="number" placeholder=" " value="{{ number }}" required>
+                                        <label for="number" class="class-form-label">Número:</label>
+                                        {% if number_errors %}
+                                            {% for error in number_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if block_errors %}
+                                    <div class="class-form-group class-error-form" id="block_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="block_form">
+                                    {% endif %}
+                                        <input class="class-form-input"type="text" id="block" name="block" placeholder=" " value="{{ a_block }}" >
+                                        <label for="block" class="class-form-label">Bloque:</label>
+                                        {% if block_errors %}
+                                            {% for error in block_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if floor_errors %}
+                                    <div class="class-form-group class-error-form" id="floor_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="floor-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="floor" id="floor" name="floor" placeholder=" " value="{{ floor }}" >
+                                        <label for="floor" class="class-form-label">Piso:</label>
+                                        {% if floor_errors %}
+                                            {% for error in floor_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if door_errors %}
+                                    <div class="class-form-group class-error-form" id="door_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="door-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="door" id="door" name="door" placeholder=" " value="{{ door }}" >
+                                        <label for="door" class="class-form-label">Puerta:</label>
+                                        {% if door_errors %}
+                                            {% for error in door_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if city_errors %}
+                                    <div class="class-form-group class-error-form" id="city_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="city-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="city" id="city" name="city" placeholder=" " required="" value="{{ city }}" required>
+                                        <label for="city" class="class-form-label">Ciudad:</label>
+                                        {% if city_errors %}
+                                            {% for error in city_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% if code_postal_errors %}
+                                    <div class="class-form-group class-error-form" id="code_postal_form">
+                                    {% else %}
+                                    <div class="class-form-group" id="code_postal-form">
+                                    {% endif %}
+                                        <input class="class-form-input" type="code_postal" id="code_postal" name="code_postal" placeholder=" " value="{{ code_postal }}" required>
+                                        <label for="code_postal" class="class-form-label">Código postal:</label>
+                                        {% if code_postal_errors %}
+                                            {% for error in code_postal_errors %}
+                                                <span class="class-error-message">{{error}}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex align-items-center class-profile-div-btn">
+                                        <button id="profile_btn" class="class-link class-profile-btn" type="submit">Actualizar datos</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit"
+                               class="btn btn-primary"
+                               placeholder="Añadir dirección">
+                    </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </section>
+    <script>
+        if("{{ address_errors }}" == "True"){
+            let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addressModal'))
+            modal.show();
+        }
+    </script>
+
+{% endblock %}

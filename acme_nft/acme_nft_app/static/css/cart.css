@@ -1,0 +1,81 @@
+th, td{
+    text-align: center;
+}
+
+.cart {
+    border: 1px solid var(--main-color);
+    height: auto;
+    overflow-y: scroll;
+    max-height: 30em;
+    background-color: var(--main-button-background-color) !important;
+}
+
+.div-pagos {
+    border: 1px solid var(--main-color);
+    height: auto;
+    width: auto;
+    background-color: var(--main-button-background-color);
+}
+
+.div-resumen {
+    border: 1px solid var(--main-color);
+    height: auto;
+    width: auto;
+    background-color: var(--main-button-background-color);
+}
+
+.cart-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 20%;
+    width: 100%;
+    border-bottom: 1px solid var(--main-color);
+}
+
+.separator-line {
+    border-bottom: 1px solid var(--main-color);
+}
+
+.head {
+    background-color: var(--main-color);
+    color: white;
+    font-weight: bold;
+}
+
+.custom-scrollbar {
+    position: relative;
+    max-height: 20em;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+.cart-resumen {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 20%;
+    width: 100%;
+    border-bottom: 1px solid var(--main-color);
+}
+
+.card-title {
+    font-weight: bold;
+    color: var(--main-color);
+    padding: 3px;
+
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}

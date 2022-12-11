@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/product_details.css' %}"
+          xmlns="http://www.w3.org/1999/html">
+    <script type="text/javascript" src="{% static 'js/product_details.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="product-detail-page">
+        <div class="details-container">
+            <div class="img-and-desc-div">
+                <div class="img-div">
+                    <img src="/static/{{ product.image_url }}" {% if product.stock == 0 %} class="without-stock" {% endif %} alt="{{product.name}}">
+                </div>
+                <div class="desc-div">
+                    <div class="desc-section" style="flex-direction: column">
+                        <h1>{{ product.name }}</h1>
+                        <h4 class="rarity-text {{product.rarity.lower}}">Rareza: {{ product.rarity }}</h4>
+                        <h4 class="colecction-text">Colección: {{ product.collection }}</h4>
+                        <h4 class="author-text">Autor: {{ product.author.name }}</h4>
+                    </div>
+                    <div class="desc-section">
+                        <form action="{% url 'acme-nft:add_to_cart' product.id %}" id="cart-form" method="POST">
+                            {% csrf_token %} 
+                            <span>Cantidad:<input class="input-cantidad" id="quantity" type="number" value="1" min="1" max="{{product.stock}}" name="quantity"></input></span>
+                        </form>
+                        {% if product.offer_price %}
+                            <h2 id="old-price">{{ product.price|floatformat:2 }} €</h2> <h2 id="offer-price">{{ product.offer_price }} €</h2>
+                        {% else %}
+                            <h2 id="price">{{ product.price|floatformat:2 }} €</h2>
+                        {% endif %}
+                    </div>
+                    <div class="desc-section">
+                        {% if product.stock == 0 %}
+                            <div class="no-stock">¡NO TENEMOS STOCK DE ESTE PRODUCTO!</div>
+                        {% elif product.stock == 1 %}
+                            <div class="not-much-stock">ÚLTIMA UNIDAD, ¡DATE PRISA!</div>
+                        {% elif product.stock < 5 %}
+                            <div class="not-much-stock">SOLO QUEDAN {{product.stock}} UNIDADES, ¡DATE PRISA!</div>
+                        {% else %}
+                            <div class="enough-stock">¡EN STOCK!</div>
+                        {% endif %}
+                    </div>
+                    <div class="desc-section" id="buttons-section">
+                        {% if user.is_authenticated %}
+                        <button id="wishlist-button">
+                            Añadir a lista de deseos
+                            {% if in_wishlist %}
+                                <img src="{% static 'images/heart-lleno.png'%}" alt="heart-lleno" id="product-{{product.id}}-img" class="heart-icon">
+                            {% else %}
+                                <img src="{% static 'images/heart.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img" class="heart-icon"></img>
+                            {% endif %}
+                        </button>
+                        {% endif %}
+                        <button id="add-to-cart-btn">
+                            Añadir al carrito <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" height="25px" width="25px">
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="showcase-title">Otros productos que podrían interesarte</h3>
+
+            <showcase>
+                {% for product in showcase_products %}
+
+                    <div class="showcase-element"> 
+                    
+                        <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
+                        <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+
+                    </div>
+            
+                {% endfor %}
+            </showcase>
+
+            <div class="comments-div">
+                {% if user.is_authenticated %}
+                <button class="new-comment-button">Añade tu comentario</button>
+                {% endif %}
+                <div class="modal-background"></div>
+                <div id="modal-flip-from-left" class="modal">
+                    <div class="face-3d back-3d"></div>
+                    <div class="face-3d front-3d">
+                      <h2>¡Escribe tu comentario!</h2>
+                      <form action="{% url 'acme-nft:add_comment' product.id %}" method="POST" id="post-comment-form">
+                        {% csrf_token %}
+                        <textarea id="comment-input" name="comment" value="" placeholder="Escribe tu comentario..."></textarea>
+                        <button class="publish-comment-button">Publicar</button>
+                      </form>
+                    </div>
+                </div>
+                <div class="comments-list">
+                    {% for comment in comments %}
+                        <div class="comment">
+                            <div class="comment-header d-flex align-items-center">
+                                <img style="border-radius: 50px; margin-right: 5px;"
+                                         width="30px" height="30px"
+                                         alt="imagen de perfil"
+                                         {% if profile_pic %}
+                                         src="{{ profile_pic }}"
+                                         {% else %}
+                                         src="{% static 'images/profile.png' %}"
+                                         {% endif %}/>
+                                <h4 class="comment-author mb-0" style="margin-right: 40px;">@{{ comment.user.username }}</h4>
+                                <h4 class="comment-date">{{ comment.date }}</h4>
+                            </div>
+                            <div class="comment-body">
+                                <p class="comment-text">{{ comment.text }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="no-comment">
+                            <h3>No hay comentarios, ¡sé el primero en comentar!</h3>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

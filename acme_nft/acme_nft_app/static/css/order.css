@@ -1,0 +1,27 @@
+.class-orders-list{
+	overflow: scroll;
+    overflow-x: hidden;
+	height: 32.5vh;
+    scrollbar-width: none;
+    -ms-overflow-style: none; 
+}
+
+.class-order-details{
+	background-color: var(--main-button-background-color);
+}
+
+.class-order-product-title{
+	width: 175px;
+	word-wrap: break-word;
+}
+
+.class-order-product-price{
+	width: 100px;
+	text-align: right;
+}
+
+@media screen and (max-width: 991px) {
+	.class-search-order-form{
+		flex-direction: column;
+	}
+}

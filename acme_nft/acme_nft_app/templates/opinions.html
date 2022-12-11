@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/opinions.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+    <script type="text/javascript" src="{% static 'js/opinion.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<section>
+
+    <div class="container d-flex flex-column justify-content-center align-items-center">
+
+        <h1 class="service-title">Opiniones de la web</h1>
+        <br>
+        <br>
+        {% if user.is_authenticated %}
+            <h3 class="opinion-title">Dejamos tu opinión!!</h3>
+
+            <button class="class-link" id="modal-btn" data-bs-toggle="modal" data-bs-target="#opinion-modal">Escribe tu opinión</button>
+            <!-- Modal -->
+            <div class="modal fade" id="opinion-modal" tabindex="-1" aria-labelledby="opinion-modal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="service-title">Escriba su opinion</h1>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/opinion" method="POST" id="post-opinion-form">
+                    {% csrf_token %}
+                    <input id="opinion-title" class="form-control" type="text" placeholder="Título de la opinión" name="title">
+                    <textarea id="opinion-input" name="opinion" value="" placeholder="Escribe tu opinión..."></textarea>
+                    <button class="class-link publish-opinion-button">Publicar</button>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% else %}
+        <div>
+            <h4>Para poder opinar debe estar registrado</h4>
+            <a href="{% url 'acme-nft:signup' %}" class="class-link">Registrarse</a>
+        </div>
+
+
+        {% endif %}
+        </div>
+
+        <div class="container" id="opinions">
+            {% for opinion in opinions %}
+
+                  <div class="card">
+                      <div class="card-header">
+                        {{ opinion.user.username }} ({{ opinion.date }})
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title">{{ opinion.title }}</h5>
+                        <p>{{ opinion.description }}</p>
+                      </div>
+                    </div>
+                    <br>
+            {% empty %}
+                <h4 class="card-text">No hay opiniones. Se el primero en comementar!</h4>
+            {% endfor %}
+        </div>
+
+
+</section>
+{% endblock %}
+

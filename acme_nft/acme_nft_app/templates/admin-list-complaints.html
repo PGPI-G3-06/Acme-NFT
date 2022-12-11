@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <script src="{% static 'js/admin.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <table class="table" aria-label="Tabla de Reclamaciones">
+                <thead class="t-head">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Usuario</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for complaint in complaints %}
+
+                    <tr>
+                        <th scope="row">{{ complaint.id }}</th>
+                        <td>{{ complaint.title }}</td>
+                        <td>{{ complaint.description }}</td>
+                        <td>{{ complaint.date }}</td>
+                        {% if complaint.user.username != None %}
+                            <td>{{ complaint.user.username }}</td>
+                        {% else %}
+                            <td>Usuario no registrado</td>
+                        {% endif %}
+                    </tr>
+
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

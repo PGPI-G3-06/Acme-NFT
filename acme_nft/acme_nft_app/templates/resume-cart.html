@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="container">
+
+        <h1 class="card-title">Resumen</h1>
+        <div class="row">
+            <div class="col">
+                <div class="div-resumen rounded">
+                    <table class="table rounded" aria-label="Tabla de resumen de pedidos">
+                        <thead class="head">
+                        <tr>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Precio/ud</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Total</th>
+                        </thead>
+                        <tbody>
+                        <script>
+                            let real_total = 0;
+                        </script>
+                        {% for item in products %}
+                            <tr>
+                                <td class="name-text-field">{{ item.product.name }}</td>
+
+                                {% if item.product.offer_price != None %}
+
+                                    <td>{{ item.product.offer_price|floatformat:2 }} €</td>
+
+                                {% else %}
+
+                                    <td>{{ item.product.price|floatformat:2 }} €</td>
+
+                                {% endif %}
+
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.total|floatformat:2 }} €</td>
+                                <script>
+                                    if ("{{ item.product.offer_price }}" !== "None") {
+                                        real_total +=
+                                        {{ item.product.offer_price }} * {{ item.quantity }}
+                                    } else {
+                                        var total =
+                                        {{ item.product.price }} * {{ item.quantity }}
+                                        real_total += total
+                                    }
+                                </script>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <script>
+                                    document.write('<p class="card-title">' + real_total.toFixed(2) + "€" + '</p>')
+                                </script>
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-lg-5">
+            <div class="col">
+                <div class="div-resumen rounded">
+                    <table class="table rounded" aria-label="Tabla de resumen de pagos y envio">
+                        <thead class="head">
+                        <tr>
+                            <th scope="col">Método de pago</th>
+                            <th scope="col">Dirección de facturación</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="name-text-field">{{ pay }}</td>
+                            <td>{{ address }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col mt-lg-5">
+                <button type="button" class="btn btn-primary"
+                        onclick="window.location.href='{% url 'acme-nft:cart' %}'">
+                    Retroceder
+                </button>
+
+                {% if pay == 'tarjeta' %}
+
+                    <button type="submit" class="btn btn-primary float-end"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Pagar y confirmar compra
+                    </button>
+
+                {% else %}
+
+                    <button type="submit" class="btn btn-primary float-end"
+                            onclick="transfer()">
+                        Pagar y confirmar compra
+
+                    </button>
+
+                    <script>
+
+
+                        function transfer() {
+                            $.ajax({
+                                url: "{% url 'acme-nft:payment' %}",
+                                type: "POST",
+                                data: {
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                    'products': productsEntriesIds.toString(),
+                                    'address': '{{ address }}',
+                                    'payment_method': '{{ pay }}',
+                                    'email': '{{ email }}',
+                                    'name': '{{ name }}',
+                                },
+                            }).done(function (data) {
+                                alert('Compra realizada con éxito')
+                                window.location.href = "{% url 'acme-nft:index' %}"
+                            });
+                        }
+
+
+                    </script>
+
+
+                {% endif %}
+
+            </div>
+        </div>
+
+
+        <div id="exampleModal" class="modal fade" tabindex="-1"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div id="wait">
+
+                    </div>
+
+                    <div class="modal-header">
+                        <h1 style="color: var(--main-color)">Tarjeta de
+                            pago</h1>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="form" class="needs-validation"
+                              style="display: none">
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <input class="form-control" type="text"
+                                           id="cardholder-name"
+                                           placeholder="Nombre del titular de la tarjeta"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <input class="form-control" type="number"
+                                           id="cardholder-number"
+                                           placeholder="Número de la tarjeta"
+                                           required>
+                                    <div class="invalid-feedback">
+                                        Tarjeta incorrecta.
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <select class="form-select" name="month"
+                                            required>
+                                        <option value="01">Enero</option>
+                                        <option value="02">Febrero</option>
+                                        <option value="03">Marzo</option>
+                                        <option value="04">Abril</option>
+                                        <option value="05">Mayo</option>
+                                        <option value="06">Junio</option>
+                                        <option value="07">Julio</option>
+                                        <option value="08">Agosto</option>
+                                        <option value="09">Septiembre</option>
+                                        <option value="10">Octubre</option>
+                                        <option value="11">Noviembre</option>
+                                        <option value="12">Diciembre</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <select class="form-select" name="year">
+                                        <option value="2021">2022</option>
+                                        <option value="2022">2023</option>
+                                        <option value="2023">2024</option>
+                                        <option value="2024">2025</option>
+                                        <option value="2025">2026</option>
+                                        <option value="2026">2027</option>
+                                        <option value="2027">2028</option>
+                                        <option value="2028">2029</option>
+                                        <option value="2029">2030</option>
+                                        <option value="2030">2031</option>
+                                        <option value="2031">2032</option>
+                                        <option value="2032">2033</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="number"
+                                           id="cardholder-cvv"
+                                           placeholder="CVV">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <button type="submit"
+                                            class="btn btn-primary float-end"
+                                            id="submit-button">
+                                        Confirmar compra
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <form autocomplete="off">
+                            <div class="braintree-notifications"></div>
+                            <div id="braintree-dropin"></div>
+                            <input style="background-color: var(--main-color);"
+                                   id="paga"
+                                   class="btn btn-success btn-lg"
+                                   type="button"
+                                   value="Pagar"/>
+                        </form>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</section>
+    <script>
+
+        const cardholderNumber = document.getElementById("cardholder-number");
+        cardholderNumber.addEventListener('keypress', validateCreditCardNumber);
+
+        const visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+        const mastPattern = /^(?:5[1-5][0-9]{14})$/;
+        const amexPattern = /^(?:3[47][0-9]{13})$/;
+        const discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+
+        function validateCreditCardNumber() {
+
+            const ccNum = document.getElementById("cardholder-number").value;
+
+            const isVisa = visaPattern.test(ccNum) === true;
+            const isMast = mastPattern.test(ccNum) === true;
+            const isAmex = amexPattern.test(ccNum) === true;
+            const isDisc = discPattern.test(ccNum) === true;
+
+            if (isVisa || isMast || isAmex || isDisc) {
+                cardholderNumber.classList.remove("is-invalid");
+
+            } else {
+                cardholderNumber.classList.add("is-invalid");
+                cardholderNumber.submit = false;
+            }
+        }
+
+        const braintree_client_token = "{{ braintree_client_token }}";
+        const button = document.getElementById('paga');
+
+
+        let productsEntriesIds = [];
+
+        {% for product in products %}
+            productsEntriesIds.push({{ product.id }});
+        {% endfor %}
+
+        const address = "{{ address }}";
+        const pay = "{{ pay }}";
+
+        braintree.dropin.create({
+            authorization: braintree_client_token,
+            container: '#braintree-dropin',
+            card: {
+                cardholderName: {
+                    required: false
+                }
+            },
+
+        }, function (createErr, instance) {
+            button.addEventListener('click', function () {
+                instance.requestPaymentMethod(function (err, payload) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'acme-nft:payment' %}',
+                        data: {
+                            'paymentMethodNonce': payload.nonce,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            'products': productsEntriesIds.toString(),
+                            'address': '{{ address }}',
+                            'payment_method': '{{ pay }}',
+                            'email': '{{ email }}',
+                            'name': '{{ name }}',
+                        },
+                        beforeSend: function () {
+                            let alert = `
+                                        <div class="alert alert-info" role="alert">
+                                          Validando su compra... Espere por favor.
+                                        </div>
+                                        `;
+
+                            document.getElementById('wait').innerHTML = alert;
+                        },
+                    }).done(function (result) {
+                        window.location.href = "{% url 'acme-nft:index' %}";
+                    });
+                });
+            });
+        });
+
+
+    </script>
+
+{% endblock %}

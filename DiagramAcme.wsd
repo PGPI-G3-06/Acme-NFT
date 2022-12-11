@@ -1,0 +1,103 @@
+@startuml Acme NFT
+
+class User {
+    name: String
+    surname: String
+    username: String
+    password: String
+    email: String
+}
+
+class ProductEntry {
+    quantity: Integer?
+    entryType: EntryType
+}
+
+note top of ProductEntry
+    If entryType is Wishlist, 
+    quantity should be null
+endnote
+
+note top of ProductEntry
+    If entryType is Order, 
+    order should not be null
+endnote
+
+enum EntryType {
+    CART
+    WISHLIST
+    ORDER
+
+}
+
+class Address {
+    title: String
+    streetName: String
+    number: Integer
+    block: Integer
+    floor: Integer
+    door: String
+    postalCode: Integer
+    city: String
+}
+
+class Product {
+    name: String
+    description: String
+    price : Double
+    stock: Integer
+    imageUrl: String
+    offert_price: Double?
+}
+
+class Category {
+    name: String
+}
+
+class Author {
+    name: String
+}
+
+class Order {
+    refCode: String
+    paymentMehtod: PaymentMethod
+    total: Double
+    date: Date
+    address: String
+    status: Status
+}
+
+enum PaymentMethod{
+    CASH_ON_DELIVERY
+    CARD
+}
+
+enum Status {
+    DELIVERED
+    TO_BE_PAID
+}
+
+class Opinion{
+    text: String
+    date: Date
+}
+
+class Complaint {
+    title: String
+    description: String
+    date: Date
+}
+
+
+User *-- Address
+Product "*" - "*" Category
+Product "*" -d- "*" Author
+User "1" - "*" ProductEntry
+ProductEntry "*" - "1" Product
+Order "1" -d- "*" ProductEntry
+User "1" -u- "*" Order
+Product "1" -d- "*" Opinion
+Opinion "*" - "1" User
+User "1" -l- "*" Complaint
+
+@enduml
