@@ -46,7 +46,8 @@ urlpatterns = [
 
     # Orders
     path("orders", views.orders, name="orders"),
-    path("order/<int:order_id>", views.order, name="order"),
+    path("orders/<int:order_id>", views.order, name="order"),
+    path("orders/search", views.search_order, name="search_order"),
 
     # Showcase
     path("showcase", views.showcase, name="showcase"),
@@ -54,11 +55,8 @@ urlpatterns = [
     path("showcase/delete/<int:product_id>", views.delete_showcase, name="delete_from_showcase"),
     
     # Others
-    path("hello/<int:user_id>", views.hello, name="hello"),
-    path("error", views.error, name="error"),
     path("profile", views.edit_user, name="profile"),
     path("services", views.get_service_terms, name="service_terms"),
-    path("search/order", views.search_order, name="search_order"),
     path("returns", views.get_returns_policy, name="return_policy"),
     path("data-protection", views.get_data_protection_policy, name="data_protection_policy"),
 

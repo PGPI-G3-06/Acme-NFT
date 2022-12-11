@@ -31,6 +31,7 @@ enum EntryType {
 }
 
 class Address {
+    title: String
     streetName: String
     number: Integer
     block: Integer
@@ -72,10 +73,8 @@ enum PaymentMethod{
 }
 
 enum Status {
-    RECEIVED
-    SENT
-    ON_TRANSIT
     DELIVERED
+    TO_BE_PAID
 }
 
 class Opinion{

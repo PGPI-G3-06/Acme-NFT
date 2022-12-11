@@ -50,7 +50,7 @@
                 <div class="showcase-element"> 
                  
                     <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
-                    <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+                    <a href="{% url 'acme-nft:product_detail' product.id %}" class="class-link">Ver producto</a>
 
                 </div>
         
@@ -73,7 +73,7 @@
                     </div>
         
                     <div class="class-content">
-                        <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+                        <a href="{% url 'acme-nft:product_detail' product.id %}" class="class-link">Ver producto</a>
                         <div class="class-icons-row">
                             {% if user.is_authenticated %}
                             <div class="class-lista-deseos">

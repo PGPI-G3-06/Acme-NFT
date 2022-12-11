@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-
-
+    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+    <link rel="stylesheet" href="{% static 'css/address.css' %}">
+    <link rel="stylesheet" href="{% static 'css/order.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -12,21 +12,22 @@
 <section>
      <div class="container">
 
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-center" style="color: white; margin: 20px; padding: 20px">Puede obtener la información de su pedido ingresando su código de referencia</h1>
-            </div>
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <h1 class="text-center">Bienvenido al buscador de pedidos</h1>
+            <h3 class="text-center">Ingrese el código de referencia en el buscador para encontrar su pedido</h3>
         </div>
-         <div class="row">
-            <form class="d-flex class-search-form" action="/search/order" method="POST">
+        <div class="d-flex justify-content-center align-items-center mt-5">
+            <form class="d-flex class-search-form class-search-order-form" action="{% url 'acme-nft:search_order' %}" method="POST">
                 {% csrf_token %}
-                <input class="form-control" type="text"
-                       placeholder="Introduzca el codigo de referencia (Debe de introducir los digitos del código, sin #)" aria-label="Search" name="order_code_ref" required>
-                <button class="search-button" type="submit">
-                    Buscar
+                <div class="d-flex justify-content-center align-items-center">
+                    <input class="form-control" style="min-width: 50vw" type="text"
+                       placeholder="Introduzca el código de referencia de su pedido" aria-label="Search" name="order_code_ref" required>
+                </div>
+                <button class="class-link" type="submit">
+                    Buscar pedido
                 </button>
             </form>
-         </div>
+        </div>
 
 
     </div>

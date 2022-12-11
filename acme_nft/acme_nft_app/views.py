@@ -43,31 +43,31 @@ ADDRESS_ERRORS = {}
 
 def index(request):
     products = Product.objects.all()
+    
     try:
-        if request.GET['order-by'] == 'collection':
+        if str(request.GET['order-by']).strip() == 'collection':
             products = Product.objects.order_by('collection')
 
     except KeyError:
         pass
     
     try:
-        if request.GET['order-by'] == 'author':
+        if str(request.GET['order-by']).strip() == 'author':
             products = Product.objects.order_by('author__name')
 
     except KeyError:
         pass
 
     try:
-        if request.GET['buscar'] != '':
+        search_param = str(request.GET['buscar']).strip()
+        if search_param != '':
             products = Product.objects.all().filter(
-                name__icontains=request.GET[
-                    'buscar']) | Product.objects.all().filter(
-                collection__icontains=request.GET[
-                    'buscar']) | Product.objects.all().filter(
-                author__name__icontains=request.GET['buscar'])
-
+                name__icontains=search_param) | Product.objects.all().filter(
+                collection__icontains=search_param) | Product.objects.all().filter(
+                author__name__icontains=search_param)
         else:
-            products = []
+            return HttpResponseRedirect(reverse('acme-nft:index'))
+
     except KeyError:
         pass
 
@@ -76,7 +76,7 @@ def index(request):
     wishlist = []
 
     try:
-        page_number = int(request.GET['page'])
+        page_number = int(str(request.GET['page']).strip())
     except KeyError:
         page_number = 0
 
@@ -174,16 +174,6 @@ def wishlist(request):
                                                      "needs_pagination": possible_pages > 1,
                                                      }
                   )
-
-
-def hello(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
-
-    return render(request, "hello.html", context={'user': user})
-
-
-def error(request):
-    return render(request, "error.html", context={})
 
 
 # ------------------------------------- API views -------------------------------------
@@ -331,13 +321,13 @@ def edit_user(request):
         profile_pic = str(user_attrs['profile_pic']).strip()
         
         required_field = "Este campo es obligatorio"
-        if not first_name:
+        if not first_name or first_name == '':
             name_errors.append(required_field)
-        if not surname:
+        if not surname or surname == '':
             surname_errors.append(required_field)
-        if not username:
+        if not username or username == '':
             username_errors.append(required_field)
-        if not email:
+        if not email or email == '':
             email_errors.append(required_field)
         if not profile_pic:
             profile_pic = ""
@@ -485,21 +475,21 @@ def address_form(request, user, address=None):
         code_postal = str(address_attrs['code_postal']).strip()
 
         required_field = "Este campo es obligatorio"
-        if not title:
+        if not title or title == '':
             title_errors.append(required_field)
-        if not street_name:
+        if not street_name or street_name == '':
             street_name_errors.append(required_field)
-        if not number:
+        if not number or number == '':
             number_errors.append(required_field)
-        if not city:
+        if not city or city == '':
             city_errors.append(required_field)
-        if not code_postal:
+        if not code_postal or code_postal == '':
             code_postal_errors.append(required_field)
-        if not block:
+        if not block or block == '':
             block = None
-        if not floor:
+        if not floor or floor == '':
             floor = None
-        if not door:
+        if not door or door == '':
             door = None
         
         if title and len(title) > 32:
@@ -878,11 +868,11 @@ def payment(request):
     if request.POST.get('payment_method') == 'tarjeta':
 
         order_ = Order(ref_code=ref_code, payment_method=PaymentMethod.card.value,
-                       address=address, status=Status.sent.value)
+                       address=address, status=Status.delivered.value)
 
     else:
         order_ = Order(ref_code=ref_code, payment_method=PaymentMethod.transference.value,
-                       address=address, status=Status.on_transit.value)
+                       address=address, status=Status.to_be_paid.value)
 
     order_.save()
 
@@ -996,21 +986,21 @@ def add_address_in_cart(request):
         code_postal = str(address_attrs['code_postal']).strip()
 
         required_field = "Este campo es obligatorio"
-        if not title:
+        if not title or title == '':
             title_errors.append(required_field)
-        if not street_name:
+        if not street_name or street_name == '':
             street_name_errors.append(required_field)
-        if not number:
+        if not number or number == '':
             number_errors.append(required_field)
-        if not city:
+        if not city or city == '':
             city_errors.append(required_field)
-        if not code_postal:
+        if not code_postal or code_postal == '':
             code_postal_errors.append(required_field)
-        if not block:
+        if not block or block == '':
             block = None
-        if not floor:
+        if not floor or floor == '':
             floor = None
-        if not door:
+        if not door or door == '':
             door = None
         
         if title and len(title) > 32:
@@ -1077,6 +1067,7 @@ def add_address_in_cart(request):
 # ------------------------ Wishlist ------------------------
 
 def add_to_wishlist(request, product_id):
+    
     try:
         user = request.user
         product = Product.objects.get(pk=product_id)
@@ -1114,22 +1105,67 @@ def add_comment(request, product_id):
 # ------------------------ Orders ------------------------
 
 def orders(request):
-    orders = Order.objects.filter(
-        productentry__user_id=request.user.id).order_by('-date').distinct()
+    if not request.user.is_authenticated:
+        return is_authenticated(request)
+    
+    delivered_orders = Order.objects.filter(productentry__user_id=request.user.id, status=Status.delivered).order_by('-date').distinct()
+    first_delivered = delivered_orders.first()
+    last_delivered = delivered_orders.last()
+    to_be_paid_orders = Order.objects.filter(productentry__user_id=request.user.id, status=Status.to_be_paid).order_by('-date').distinct()
+    first_to_be_paid = to_be_paid_orders.first()
+    last_to_be_paid = to_be_paid_orders.last()
 
-    return render(request, "show-orders.html", {
-        "orders": orders,
+    return render(request, "orders.html", {
+        "delivered_orders": delivered_orders,
+        "first_delivered": first_delivered,
+        "last_delivered": last_delivered,
+        "to_be_paid_orders": to_be_paid_orders,
+        "first_to_be_paid": first_to_be_paid,
+        "last_to_be_paid": last_to_be_paid,
     })
 
 
 def order(request, order_id):
-    order = Order.objects.get(pk=order_id)
+    
+    try:
+        order = Order.objects.get(id=order_id)
+    except Order.DoesNotExist:
+        messages.error(request, "No se ha encontrado la orden")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+    if order.user != None and not request.user.is_authenticated:
+        return is_authenticated(request)
+    
     products = ProductEntry.objects.filter(order_id=order_id)
+    
+    if products and products[0].user.id != request.user.id:
+        messages.error(request, "No se ha encontrado la orden")
+        return HttpResponseRedirect(reverse("acme-nft:orders"))
+    
     return render(request, "order-details.html", {
         "order": order,
         "products": products,
         "total": order.total(),
     })
+    
+def search_order(request):
+    if request.method == 'POST':
+        ref_code = str(request.POST['order_code_ref']).strip()
+        
+        if not ref_code or ref_code == '':
+            messages.error(request, 'Introduzca un código de referencia válido')
+            return HttpResponseRedirect(reverse("acme-nft:search_order"))
+        
+        ref_code = ref_code[1:] if ref_code[0] == '#' else ref_code
+        order = Order.objects.filter(ref_code=ref_code)
+        if order:
+            return HttpResponseRedirect(reverse('acme-nft:order', args=(order[0].id,)))
+        else:
+            messages.error(request, 'El código de referencia no existe')
+            return HttpResponseRedirect(reverse("acme-nft:search_order"))
+
+    else:
+        return render(request, 'search-order.html')
 
 
 # ------------------------ Customer Service ------------------------
@@ -1168,7 +1204,7 @@ def opinions(request):
     })
 
 
-# ------------------------ common ------------------------
+# ------------------------ Common ------------------------
 def bytes_to_dict(bytes_d):
     dict_str = bytes_d.decode('utf-8')
     return ast.literal_eval(dict_str)
@@ -1358,19 +1394,3 @@ def change_order_status(request, order_id):
     order.save()
 
     return HttpResponseRedirect(reverse('acme-nft:admin'))
-
-
-def search_order(request):
-    if request.method == 'POST':
-        ref_code = request.POST['order_code_ref']
-        order = Order.objects.filter(ref_code__icontains=ref_code)
-        if len(order) > 0:
-            return HttpResponseRedirect(reverse('acme-nft:order', args=(order[0].id,)))
-        else:
-            messages.error(request, 'El código de referencia no existe')
-            return HttpResponseRedirect(reverse("acme-nft:search_order"))
-
-    else:
-
-        return render(request, 'search-order.html')
-
