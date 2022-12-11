@@ -48,6 +48,7 @@ section{
     display: flex;
     justify-content: center;
     box-shadow: 0 10px 25px var(--main-color);
+    margin: 20px 0;
 }
 
 .card-title{

@@ -59,6 +59,7 @@ urlpatterns = [
     path("services", views.get_service_terms, name="service_terms"),
     path("returns", views.get_returns_policy, name="return_policy"),
     path("data-protection", views.get_data_protection_policy, name="data_protection_policy"),
+    path("delivery", views.get_delivery_policy, name="delivery_policy"),
 
 
     # Admin
@@ -67,6 +68,8 @@ urlpatterns = [
     path("admins/products/new", views.create_product, name="admin_new_product"),
     path("admins/orders", views.AdminListOrders.as_view(), name="admin_orders"),
     path("admins/orders/status/<int:order_id>", views.change_order_status, name="admin_order_status"),
+    path("admins/users", views.AdminListUsers.as_view(), name="admin_users"),
+    path("admins/complaints", views.AdminListComplaints.as_view(), name="admin_complaints"),
 
 
 ]

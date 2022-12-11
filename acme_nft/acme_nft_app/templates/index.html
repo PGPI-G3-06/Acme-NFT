@@ -85,7 +85,7 @@
         
                     <div class="class-content">
                         <a href="{% url 'acme-nft:product_detail' product.id %}" class="class-link">Ver producto</a>
-                        <div class="class-icons-row">
+                        <div class="class-icons-row" {% if not user.is_authenticated %} style="display: flex; justify-content: center; align-items: center;" {% endif %}>
                             {% if user.is_authenticated %}
                             <div class="class-lista-deseos">
                                 {% if product.id in wishlist %}
@@ -94,6 +94,7 @@
                                 <img src="{% static 'images/heart.png'%}" alt="Añadir a lista de deseos" id="product-{{product.id}}-img"></img>
                                 {% endif %}
                             </div>
+                            {% endif %}
                             <div class="class-carrito">
                                 <button type="button"
                                         class="btn" 
@@ -102,7 +103,6 @@
                                         <img src="{% static 'images/cart.png' %}" alt="Añadir al carrito" width="30px" height="30px">
                                 </button>
                             </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>

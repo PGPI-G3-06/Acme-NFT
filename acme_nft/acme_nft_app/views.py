@@ -1311,6 +1311,11 @@ def get_returns_policy(request):
 def get_data_protection_policy(request):
     return render(request, "data-protection-policy.html")
 
+# ------------------------ Delivery Protection Policy ------------------------
+
+def get_delivery_policy(request):
+    return render(request, "delivery.html")
+
 # ------------------------ admin ------------------------
 
 class AdminListProducts(ListView):
@@ -1411,3 +1416,21 @@ def change_order_status(request, order_id):
     order.save()
 
     return HttpResponseRedirect(reverse('acme-nft:admin'))
+
+class AdminListUsers(ListView):
+    model = User
+    template_name = 'admin-list-users.html'
+    context_object_name = 'users'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return User.objects.all().order_by('id')
+
+class AdminListComplaints(ListView):
+    model = Complaint
+    template_name = 'admin-list-complaints.html'
+    context_object_name = 'complaints'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Complaint.objects.all().order_by('id')
