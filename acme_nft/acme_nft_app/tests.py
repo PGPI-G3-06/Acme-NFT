@@ -69,8 +69,8 @@ class LoginTestCase(TestCase):
         data = {
             'profile_pic': '',
             'email': 'a@gmail.com',
-            'first_name': 'a',
-            'last_name': 'a',
+            'first_name': 'TestUser',
+            'last_name': 'Test',
             'username': 'admin',
         }
 
@@ -78,7 +78,7 @@ class LoginTestCase(TestCase):
 
         user = User.objects.get(username='admin')
 
-        self.assertEqual(str(user.email), 'a@a.com')
+        self.assertEqual(str(user.email), 'a@gmail.com')
 
 
 
