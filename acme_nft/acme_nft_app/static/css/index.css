@@ -120,6 +120,31 @@ section{
     padding: 10px 20px;
 }
 
+.custom-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 57px;
+    padding: 10px 38px 10px 16px;
+    background: #fff url("select-arrows.svg") no-repeat right 16px center;
+    background-size: 10px;
+    transition: border-color .1s ease-in-out,box-shadow .1s ease-in-out;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+.custom-select:hover {
+    border: 1px solid #999;
+}
+.custom-select:focus {
+    border: 1px solid #999;
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.2);
+    outline: none;
+}
+/* remove default arrow in IE */
+select::-ms-expand {
+    display:none;
+}
+
 /* SHOWCASE */
 
 .showcase-element{
@@ -463,27 +488,5 @@ section{
 .cart-icon{
     height: 30px;
     width: 30px;
-
-}
-
-.form-control{
-    height: 40px;
-    border-radius: 40px;
-}
-.search-button{
-    height: 40px;
-    border-radius: 40px;
-    border: 2px solid  var(--main-button-hover-dark-color);
-    background: white;
-    font-weight: bold;
-    letter-spacing: 1px;
-    color: #111;
-    text-transform: uppercase;
-}
-
-.search-button:hover{
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
-    transition: 0.5s all;
 
 }

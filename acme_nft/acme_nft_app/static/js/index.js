@@ -94,6 +94,7 @@ function main(){
         applyFiltersButton.addEventListener("click", function(event){
 
             let newLocation = window.location.pathname + "?";
+            let collectionFilter = document.querySelector(".custom-select").value;
     
             for(let param in oldParams){
                 if(!newParams[param]){
@@ -105,7 +106,11 @@ function main(){
                 newLocation += param + "=" + newParams[param] + "&";
             }
     
-            window.location.href = newLocation;
+            if(collectionFilter != "Elige una colección..."){
+                window.location.href = newLocation + "collection=" + collectionFilter;
+            }else{
+                window.location.href = newLocation;
+            }
     
         });
     }

@@ -18,8 +18,8 @@ class PaymentMethod(models.TextChoices):
     card = 'TARJETA'
 
 class Status(models.TextChoices):
-    sent = 'ENVIADO'
-    on_transit = 'EN TRÁNSITO'
+    delivered = 'ENTREGADO'
+    to_be_paid = 'PENDIENTE DE PAGO'
     
 class RarityType(models.TextChoices):
     common = 'COMÚM'

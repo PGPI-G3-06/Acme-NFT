@@ -31,6 +31,17 @@
                             </form>
                         </div>
                     </div>
+                    <div class="filters-wrapper-menu-body-section">
+                        <h4>Listar colección:</h4>
+                        <div class="filters-wrapper-menu-body-section-content">
+                            <select class="custom-select">
+                                <option>Elige una colección...</option>
+                                {% for collection in collections %}
+                                <option style="text-transform: capitalize;" >{{collection.collection}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="filters-wrapper-menu-footer">
@@ -50,7 +61,7 @@
                 <div class="showcase-element"> 
                  
                     <img src="/static/{{product.image_url}}" alt="{{product.name}}" />
-                    <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+                    <a href="{% url 'acme-nft:product_detail' product.id %}" class="class-link">Ver producto</a>
 
                 </div>
         
@@ -66,14 +77,14 @@
                         <img src="/static/{{product.image_url}}" {% if product.stock == 0 %} class="without-stock" {% endif %} alt="{{product.name}}"/>
                         {% if product.stock == 0 %}
                             <div class="no-stock">
-                                OUT OF STOCK
+                                SIN STOCK
                             </div>
                         {% endif %}
                         <h2 class="class-item-title" style="text-align: center; text-transform: capitalize;">{{product.name}}</h2>
                     </div>
         
                     <div class="class-content">
-                        <a href="/product/{{product.id}}" class="class-link">Ver producto</a>
+                        <a href="{% url 'acme-nft:product_detail' product.id %}" class="class-link">Ver producto</a>
                         <div class="class-icons-row">
                             {% if user.is_authenticated %}
                             <div class="class-lista-deseos">

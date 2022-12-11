@@ -3,6 +3,8 @@
 {% load mathfilters %}
 
 {% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+    <link rel="stylesheet" href="{% static 'css/address.css' %}">
     <link rel="stylesheet" href="{% static 'css/order.css' %}">
 {% endblock %}
 
@@ -12,61 +14,50 @@
 
     <div class="container">
 
-        <div class="row row-cols-3">
-            <div class="col"></div>
-            <div class="col"><label >Detalles del pedido</label></div>
-            <div class="col"></div>
-
-        </div>
-        <br>
-        <br>
-        <div class="row row-cols-3">
-            <div class="col"><h4 class="order-title">Pedido #{{ order.ref_code }}</h4></div>
-            <div class="col"></div>
-            <div class="col"><h4 class="order-status">Estado: {{ order.status }}</h4></div>
-            <div class="col"><h6>{{ order.date }}</h6></div>
-
-        </div>
-        <br>
-        <br>
-        <div class="row">
-            <div class="col">
-                <h4>Productos</h4>
+        <div class="main class-order-details">
+            <div class="d-flex justify-content-center align-items-center flex-column w-100 mt-3">
+                <div class="d-flex justify-content-center align-items-center mt-3 w-100">
+                    <h1>Detalles del pedido</h1>
+                </div>
+                <div class="d-flex justify-content-around align-items-center w-100 mt-5">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <h4>Pedido #{{ order.ref_code }}</h4>
+                        <span>{{ order.date }}</span>
+                    </div>
+                    <h4>Estado: {{ order.status }}</h4>
+                </div>
+                <div class="d-flex align-items-center flex-column w-100 mt-5">
+                    <h4>Productos</h4>
+                </div>
+                <div class="d-flex justify-content-center align-items-center flex-column w-100 mt-3">
+                    <div class="d-flex justify-content-between align-items-center w-75 mb-2">
+                        <strong>Nombre del producto</strong>
+                        <strong>Cantidad</strong>
+                        <strong>Precio</strong>
+                    </div>
+                    {% for entry in products %}
+                    <div class="d-flex justify-content-between align-items-center w-75">
+                        <span class="class-order-product-title">{{ entry.product.name }}</span>
+                        <span>{{ entry.quantity }}</span>
+                        <span class="class-order-product-price">{{ entry.product.price|floatformat:2 }} €</span>
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-end align-items-center w-75 mt-2">
+                        <strong>TOTAL: {{ total|floatformat:2 }} €</strong>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-around align-items-center w-100 mt-5 mb-5">
+                    <div class="d-flex align-items-center flex-column">
+                        <h4>Dirección de envío</h4>
+                        <span>{{ order.address }}</span>
+                    </div>
+                    <div class="d-flex align-items-center flex-column">
+                        <h4>Método de pago</h4>
+                        <span>{{ order.payment_method }}</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <br>
-        <div class="row row-cols-3">
-           <div class="col"><h6>Nombre del producto</h6></div>
-           <div class="col"><h6>Cantidad</h6></div>
-           <div class="col"><h6>Precio</h6></div>
-       </div>
-        {% for entry in products %}
-           <div class="row row-cols-3">
-                <div class="col">{{ entry.product.name}}</div>
-                <div class="col">{{ entry.quantity}}</div>
-                <div class="col">{{ entry.product.price}}</div>
-           </div>
-
-        {% endfor %}
-        <div class="row row-cols-3">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col">TOTAL: {{ total }}</div>
-       </div>
-        <br>
-        <br>
-        <div class="row row-cols-3">
-            <div class="col">
-                <h4>Dirección de envío</h4>
-                <h5>{{ order.address }}</h5>
-            </div>
-            <div class="col"></div>
-            <div class="col">
-                <h4>Método de pago</h4>
-                <h5>{{ order.payment_method }}</h5>
-            </div>
-        </div>
-
     </div>
 
 </section>
