@@ -33,10 +33,7 @@ function configureModalOpinionForm(){
 
         let complaintTitle = document.getElementById("opinion-title").value;
         let complaintText = document.getElementById("opinion-input").value;
-
-        console.log(complaintTitle.length);
-        console.log(complaintText.length);
-        console.log(complaintTitle.length >= 5 && complaintTitle.length <= 60 && complaintText.length >= 5);
+        
         if (complaintTitle.length >= 5 && complaintTitle.length <= 60 && complaintText.length >= 5){
             addComplaintForm.submit();
         }else{

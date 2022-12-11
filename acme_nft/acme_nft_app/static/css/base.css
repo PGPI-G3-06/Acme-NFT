@@ -1,38 +1,39 @@
 /* HEADER */
-.class-btn, .class-btn-reversed{
+.class-btn-a{
     justify-content: center;
     display: inline-block;
-    color: #fff;
-    background: #573b8a;
-    font-size: 1em;
-    font-weight: bold;
-    outline: none;
-    border-radius: 5px;
-    transition: .2s ease-in;
     cursor: pointer;
-    border: 1px solid #573b8a;
-    white-space: nowrap;
-    text-align: center;
-    margin-right: 5%;
-
 }
 
-.class-btn-reversed {
-    background: transparent;
-    color: #573b8a;
-    margin-left: 5%;
+.class-btn-a:hover{
+    border: none;
+    outline: none;
+}
+
+.class-btn-a:focus{
+    border: none;
+    outline: none;
+}
+
+.class-btn{
+	display: flex;
+	justify-content: center;
+	border: 2px solid  var(--main-button-hover-dark-color);
+    background: white;
+    border-radius: 40px;
+    color: #111;
+    text-align: center;
+    text-decoration: none;
+    word-wrap: nowrap !important;
 }
 
 .class-btn:hover{
-    background: #6d44b8;
-    color: #fff;
-    border: 1px solid #573b8a;
-}
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, rgb(124, 72, 209), rgb(173, 138, 229));
+    transition: 0.5s all;
+    text-decoration: none;
+    color: inherit;
 
-.class-btn-reversed:hover{
-    background: white;
-    color: #573b8a;
-    border: 1px solid #573b8a;
 }
 
 .class-alert{

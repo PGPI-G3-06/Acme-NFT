@@ -12,7 +12,6 @@ function addAddressSubmit(event) {
     let form = event.target;
     let formData = new FormData(form);
 
-    console.log(formData);
 }
 
 function checkSubmit(event) {
@@ -20,11 +19,6 @@ function checkSubmit(event) {
 
     let form = event.target;
     let formData = new FormData(form);
-
-    console.log(formData.get("productos"));
-
-    console.log(formData.get("direccion"));
-    console.log(formData.get("metodo_pago"));
 
 }
 

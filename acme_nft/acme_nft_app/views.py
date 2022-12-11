@@ -129,7 +129,7 @@ def signin(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("acme-nft:index"))
     else:
-        return render(request, "login.html", context={})
+        return render(request, "login.html", context={"is_signin": True})
 
 
 def product_detail(request, product_id):
@@ -926,15 +926,20 @@ def payment(request):
     else:
         e = user.email
         pdf = get_invoice_pdf(order_)
+        
+    if user.is_authenticated:
+        full_name = user.first_name + ' ' + user.last_name
+    else:
+        full_name = str(request.POST['name']).strip()
 
-    if request.POST.get('payment_method') == 'TARJETA':
-        mensajito = f'Gracias por su compra, su pedido es {ref_code}'
+    if str(request.POST.get('payment_method')).strip().upper() == 'TARJETA':
+        message = f'Gracias por su compra, {full_name}, su pedido es el #{ref_code}.'
 
     else:
-        mensajito = f'Gracias por su compra, su pedido es {ref_code}. \n Reduerde que debe realizar el pago en la cuenta bancaria: ES6000491500051234567892 para que la compra y la factura sa valida.'
+        message = f'Gracias por su compra, {full_name}, su pedido es el #{ref_code}.\nRecuerde que debe realizar el pago en la cuenta bancaria: ES6000491500051234567892 para que la compra y la factura sean válidas.'
 
-    email = EmailMessage('Acme NFT',
-                         mensajito,
+    email = EmailMessage('Acme NFT: Factura de pedido #{}'.format(ref_code),
+                         message,
                          'no-replay-acmenftinc@gmail.com',
                          [e])
     email.attach_file(pdf)
@@ -974,7 +979,7 @@ def delete_from_cart(request, product_id):
 def add_address_in_cart(request):
     user = request.user
     if not user.is_authenticated:
-        user = None
+        return is_authenticated(request)
 
     title_errors = ADDRESS_ERRORS[user.username+'title_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'title_errors'] else []
     street_name_errors = ADDRESS_ERRORS[user.username+'street_name_errors'] if ADDRESS_ERRORS and ADDRESS_ERRORS[user.username+'street_name_errors'] else []
