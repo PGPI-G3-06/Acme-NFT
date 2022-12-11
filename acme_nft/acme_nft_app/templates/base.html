@@ -174,17 +174,24 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:profile' %}">Perfil</a>
+                                           href="{% url 'acme-nft:profile' %}">
+                                           <img height="20px" width="20px" src="{% static 'images/perfil-icon.png' %}" alt="Perfil"/>  Perfil
+                                        </a>
                                     </li>
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:show_address' %}">Direcciones</a>
+                                           href="{% url 'acme-nft:show_address' %}">
+                                           <img height="20px" width="20px" src="{% static 'images/address-icon.png' %}" alt="Direcciones"/> Direcciones
+                                        </a>
                                     </li>
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:orders' %}">Historial de pedidos</a>
+                                           href="{% url 'acme-nft:orders' %}"> 
+                                           <img height="20px" width="20px" src="{% static 'images/orders-icon.png' %}" alt="Historial de Pedidos"/> Historial de pedidos
+                                        </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'acme-nft:wishlist' %}">Lista de
-                                            deseos</a>
+                                        <a class="dropdown-item" href="{% url 'acme-nft:wishlist' %}">
+                                            <img height="20px" width="20px" src="{% static 'images/wishlist-icon.png' %}" alt="Lista de Deseos"/> Lista de deseos
+                                        </a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
@@ -210,8 +217,10 @@
                                     {% endif %}
 
                                     <li><a class="dropdown-item"
-                                           href="{% url 'acme-nft:signout' %}">Cerrar
-                                        sesión</a></li>
+                                           href="{% url 'acme-nft:signout' %}">
+                                           <img height="20px" width="20px" src="{% static 'images/logout-icon.png' %}" alt="Cerrar Sesión"/> Cerrar sesión
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         {% else %}
@@ -264,6 +273,7 @@
 
         <a class="footer-component" href="{% url 'acme-nft:return_policy' %}">Política de devoluciones</a>
         <a class="footer-component" href="{% url 'acme-nft:data_protection_policy' %}">Protección de datos</a>
+        <a class="footer-component" href="{% url 'acme-nft:delivery_policy' %}">Política de envío</a>
     </div>
 
 </footer>

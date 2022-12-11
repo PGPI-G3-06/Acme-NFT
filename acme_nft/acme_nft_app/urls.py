@@ -59,6 +59,7 @@ urlpatterns = [
     path("services", views.get_service_terms, name="service_terms"),
     path("returns", views.get_returns_policy, name="return_policy"),
     path("data-protection", views.get_data_protection_policy, name="data_protection_policy"),
+    path("delivery", views.get_delivery_policy, name="delivery_policy"),
 
 
     # Admin

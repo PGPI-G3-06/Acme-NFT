@@ -1306,6 +1306,11 @@ def get_returns_policy(request):
 def get_data_protection_policy(request):
     return render(request, "data-protection-policy.html")
 
+# ------------------------ Delivery Protection Policy ------------------------
+
+def get_delivery_policy(request):
+    return render(request, "delivery.html")
+
 # ------------------------ admin ------------------------
 
 class AdminListProducts(ListView):
