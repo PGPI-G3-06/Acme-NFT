@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
+    <link rel="stylesheet" href="{% static 'css/address.css' %}">
+    <link rel="stylesheet" href="{% static 'css/order.css' %}">
+{% endblock %}
+
+{% block content %}
+  <section>
+    <div class="container">
+      <div class="d-flex justify-content-start align-items-center mt-5">
+        <h1>Mis pedidos pendientes de pago:</h1>
+      </div>
+      <div class="d-flex flex-column align-items-center class-orders-list">
+        {% if to_be_paid_orders %}
+          {% for order in to_be_paid_orders %}
+            {% if order == first and order == last %}
+            <div class="card mt-3 mb-5">
+            {% elif order == first_to_be_paid %}
+            <div class="card mt-3">
+            {% elif order == last_to_be_paid %}
+            <div class="card mt-5 mb-5">
+            {% else %}
+            <div class="card mt-5">
+            {% endif %}
+            <div class="card-body" style="min-width: 30vw">
+                <div class="d-flex justify-content-start align-items-center w-100">
+                  <h3 class="card-title">#{{ order.ref_code }}</h3>
+                </div>
+                <div class="d-flex align-items-center w-100 pt-3">
+                  <span style="padding-right: 2.5%">Dirección:</span>
+                  <strong>{{order.address}}</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-100 pt-2">
+                  <div class="d-flex justify-content-between align-items-center w-100" style="padding-right: 2%">
+                    <span style="padding-right: 2.5%">Fecha:</span>
+                    <strong>{{ order.date }}</strong>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center w-100" style="padding-left: 2%">
+                    <span style="padding-right: 2.5%">Método de pago:</span>
+                    <strong>{{ order.payment_method }}</strong>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center pt-3">
+                  <button type="button" class="class-link" onclick="window.location.href='{% url 'acme-nft:order' order.id %}'">Ver detalles</button>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="d-flex justify-content-center align-items-center w-100">
+            <h3>No tienes ningun pedido a pagar actualmente</h3>
+          </div>
+        {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-start align-items-center mt-5">
+            <h1>Mis pedidos entregados:</h1>
+        </div>
+        <div class="d-flex flex-column align-items-center class-orders-list">
+        {% if delivered_orders %}
+          {% for order in delivered_orders %}
+            {% if order == first and order == last %}
+            <div class="card mt-3 mb-5">
+            {% elif order == first_delivered %}
+            <div class="card mt-3">
+            {% elif order == last_delivered %}
+            <div class="card mt-5 mb-5">
+            {% else %}
+            <div class="card mt-5">
+            {% endif %}
+            <div class="card-body" style="min-width: 30vw">
+                <div class="d-flex justify-content-start align-items-center w-100">
+                  <h3 class="card-title">#{{ order.ref_code }}</h3>
+                </div>
+                <div class="d-flex align-items-center w-100 pt-3">
+                  <span style="padding-right: 2.5%">Dirección:</span>
+                  <strong>{{order.address}}</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-100 pt-2">
+                  <div class="d-flex justify-content-between align-items-center w-100">
+                    <span style="padding-right: 2.5%">Fecha:</span>
+                    <strong>{{ order.date }}</strong>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center w-100" style="padding-left: 4%">
+                    <span style="padding-right: 2.5%">Método de pago:</span>
+                    <strong>{{ order.payment_method }}</strong>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center pt-3">
+                  <button type="button" class="class-link" onclick="window.location.href='{% url 'acme-nft:order' order.id %}'">Ver detalles</button>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="d-flex justify-content-center align-items-center w-100">
+            <h3>No tienes ningun pedido entregado actualmente</h3>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+</section>
+{% endblock %}
