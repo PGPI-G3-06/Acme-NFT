@@ -48,7 +48,7 @@
 
                     {% if user.is_authenticated %}
                         <p class="card-text">Si no estas satisfecho con tu compra o con el servicio proporcionado, puedes realizar una reclamación.</p>
-                        <button class="class-link complaint-button" id="modal-btn" data-bs-toggle="modal" data-bs-target="#complaint-modal">Reclamación</button>
+                        <button class="class-link complaint-button" id="modal-btn" data-bs-toggle="modal" data-bs-target="#complaint-modal">Reclamar</button>
                     {% else %}
                         <p class="card-text">Para poder realizar una reclamación debe estar registrado</p>
                         <a href="{% url 'acme-nft:signup' %}" class="class-link">Registrarse</a>

@@ -82,7 +82,13 @@ section{
     flex-wrap: wrap;
 }
 
-
+.class-opinion-container{
+	gap: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap
+}
 
 
 

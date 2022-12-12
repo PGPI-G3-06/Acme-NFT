@@ -2,82 +2,83 @@
 {% load static %}
 
 {% block extrahead %}
-
+<link rel="stylesheet" href="{% static 'css/customer_service.css' %}">
 {% endblock %}
 
 {% block content %}
 
+    <section>
+        <div class="content pt-5 pb-5 pe-5 ps-5" style="background-color: var(--main-white);">
 
-    <div class="content pt-5 pb-5 pe-5 ps-5" style="background-color: var(--main-white);">
+            <div class="row mb-5">
+                <h1 style="color:var(--main-color)">Política de Envíos</h1>
+            </div>
 
-        <div class="row mb-5">
-            <h1 style="color:var(--main-color)">Política de Envíos</h1>
+            <div class="row">
+
+                <h4 style="color: var(--main-color)">¿CUÁNDO SERÁ PROCESADO MI PEDIDO?</h4>
+
+                <p>
+                    Todos los pedidos se manejan y se envían desde el propio sistema de Acme NFT.
+                    </br></br>
+                    Una vez finalizado el pago de su pedido, por favor, espere un tiempo adicional 
+                    hasta que le aparezca la notificación que garantiza que su pedido se ha procesado 
+                    con éxito y se encuentra listado en nuestros sistemas.
+                </p>
+
+                <h4 style="color: var(--main-color)">¿PUEDO SOLICITAR UN PEDIDO FUERA DE ESPAÑA?</h4>
+
+                <p>
+                    Gracias a nuestro modelo de negocio, ¡es posible realizar pedidos desde cualquier parte del mundo!
+                    Siempre que se disponga de conexión a internet.
+                </p>
+
+                <h4 style="color: var(--main-color)">¿CUÁNTO TIEMPO LLEVARÁ RECIBIR MI PEDIDO?</h4>
+
+                <p>
+                    Una vez realizado el pago, el envío de los productos es inmediato. 
+                    Recibirá en su correo electrónico, además de la factura de su pedido, 
+                    un enlace al portal donde descargar sus productos, así como una clave 
+                    personal e intransferible para poder acceder y garantizar la máxima seguridad 
+                    de la propiedad de los productos.
+                </p>
+
+                <h4 style="color: var(--main-color)">¿ME COBRARÁN IMPUESTOS Y ADUANAS?</h4>
+
+                <p>
+                    Jamás. Dado nuestro modelo de negocio, toda la gestión del pago y entrega 
+                    de los productos se realiza de manera online, tomando todas las medidas de 
+                    seguridad. Esto garantiza que todos los pedidos queden exentos de gastos de 
+                    envío.
+                </p>
+
+                <h4 style="color: var(--main-color)">¿QUÉ HAGO SI MI PEDIDO NO LLEGA?</h4>
+
+                <p>
+                    En este caso, puede contactar con nosotros desde la sección de Atención al Cliente. ¡Estaremos encantados de ayudarle!
+                </p>
+
+                <h4 style="color: var(--main-color)">ME HAN LLEGADO UNOS PRODUCTOS QUE NO SE CORRESPONDEN A LO QUE HE COMPRADO</h4>
+
+                <p>
+                    En Acme Inc. queremos garantizar su máxima satisfacción. Por favor, revise 
+                    nuestra política de devoluciones y póngase en contacto con nosotros.
+                </p>
+
+                <h4 style="color: var(--main-color)">¿PUEDO ENVIAR MI PEDIDO COMO REGALO?</h4>
+
+                <p>
+                    Actualmente no disponemos de una funcionalidad específica para enviar regalos. 
+                    Si bien es cierto que es posible enviar los productos a cualquier dirección de correo 
+                    electrónico, no es posible enviar un mensaje personalizado o sin factura, por lo que si
+                    prefieres que no se conozcan tus datos personales, recomendamos que envíes un nuevo correo al
+                    afortunado con sus regalos.
+                </p>
+
+            </div>
+
         </div>
-
-        <div class="row">
-
-            <h4 style="color: var(--main-color)">¿CUÁNDO SERÁ PROCESADO MI PEDIDO?</h4>
-
-            <p>
-                Todos los pedidos se manejan y se envían desde el propio sistema de Acme NFT.
-                </br></br>
-                Una vez finalizado el pago de su pedido, por favor, espere un tiempo adicional 
-                hasta que le aparezca la notificación que garantiza que su pedido se ha procesado 
-                con éxito y se encuentra listado en nuestros sistemas.
-            </p>
-
-            <h4 style="color: var(--main-color)">¿PUEDO SOLICITAR UN PEDIDO FUERA DE ESPAÑA?</h4>
-
-            <p>
-                Gracias a nuestro modelo de negocio, ¡es posible realizar pedidos desde cualquier parte del mundo!
-                Siempre que se disponga de conexión a internet.
-            </p>
-
-            <h4 style="color: var(--main-color)">¿CUÁNTO TIEMPO LLEVARÁ RECIBIR MI PEDIDO?</h4>
-
-            <p>
-                Una vez realizado el pago, el envío de los productos es inmediato. 
-                Recibirá en su correo electrónico, además de la factura de su pedido, 
-                un enlace al portal donde descargar sus productos, así como una clave 
-                personal e intransferible para poder acceder y garantizar la máxima seguridad 
-                de la propiedad de los productos.
-            </p>
-
-            <h4 style="color: var(--main-color)">¿ME COBRARÁN IMPUESTOS Y ADUANAS?</h4>
-
-            <p>
-                Jamás. Dado nuestro modelo de negocio, toda la gestión del pago y entrega 
-                de los productos se realiza de manera online, tomando todas las medidas de 
-                seguridad. Esto garantiza que todos los pedidos queden exentos de gastos de 
-                envío.
-            </p>
-
-            <h4 style="color: var(--main-color)">¿QUÉ HAGO SI MI PEDIDO NO LLEGA?</h4>
-
-            <p>
-                En este caso, puede contactar con nosotros desde la sección de Atención al Cliente. ¡Estaremos encantados de ayudarle!
-            </p>
-
-            <h4 style="color: var(--main-color)">ME HAN LLEGADO UNOS PRODUCTOS QUE NO SE CORRESPONDEN A LO QUE HE COMPRADO</h4>
-
-            <p>
-                En Acme Inc. queremos garantizar su máxima satisfacción. Por favor, revise 
-                nuestra política de devoluciones y póngase en contacto con nosotros.
-            </p>
-
-            <h4 style="color: var(--main-color)">¿PUEDO ENVIAR MI PEDIDO COMO REGALO?</h4>
-
-            <p>
-                Actualmente no disponemos de una funcionalidad específica para enviar regalos. 
-                Si bien es cierto que es posible enviar los productos a cualquier dirección de correo 
-                electrónico, no es posible enviar un mensaje personalizado o sin factura, por lo que si
-                prefieres que no se conozcan tus datos personales, recomendamos que envíes un nuevo correo al
-                afortunado con sus regalos.
-            </p>
-
-        </div>
-
-    </div>
+    </section>
 
 
 {% endblock %}

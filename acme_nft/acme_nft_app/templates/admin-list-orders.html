@@ -10,58 +10,60 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="col">
-            <table class="table" aria-label="admin orders">
-                <thead class="t-head">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Código de referencia</th>
-                    <th scope="col">Nombre de usuario</th>
-                    <th scope="col">Dirección de facturación</th>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Estado</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for order in orders %}
-
+    <section>
+        <div class="row w-100">
+            <div class="col">
+                <table class="table" aria-label="admin orders">
+                    <thead class="t-head">
                     <tr>
-                        <th scope="row">{{ order.id }}</th>
-                        <td>{{ order.ref_code }}</td>
-
-                        {% if order.productentry_set.all.0.user.username != None %}
-                            <td>{{ order.productentry_set.all.0.user.username }}</td>
-                        {% else %}
-                            <td>Usuario no registrado</td>
-                        {% endif %}
-                        <td>{{ order.address }}</td>
-                        <td>{{ order.date }}</td>
-                        <td>{{ order.total|floatformat:2 }} €</td>
-
-                        {% if order.get_status_display == 'ENTREGADO' %}
-
-                            <td>{{ order.get_status_display }}</td>
-
-                        {% else %}
-
-                            {% csrf_token %}
-
-                            <td>
-                                <select onchange="changeStatus({{ order.id }})" class="form-select" name="status">
-                                    <option value="PENDIENTE DE PAGO">PENDIENTE DE PAGO</option>
-                                    <option value="ENTREGADO">ENTREGADO</option>
-                                </select>
-                            </td>
-
-                        {% endif %}
-
+                        <th scope="col">Id</th>
+                        <th scope="col">Código de referencia</th>
+                        <th scope="col">Nombre de usuario</th>
+                        <th scope="col">Dirección de facturación</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Estado</th>
                     </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
 
-                {% endfor %}
-            </table>
+                        <tr>
+                            <th scope="row">{{ order.id }}</th>
+                            <td>{{ order.ref_code }}</td>
+
+                            {% if order.productentry_set.all.0.user.username != None %}
+                                <td>{{ order.productentry_set.all.0.user.username }}</td>
+                            {% else %}
+                                <td>Usuario no registrado</td>
+                            {% endif %}
+                            <td>{{ order.address }}</td>
+                            <td>{{ order.date }}</td>
+                            <td>{{ order.total|floatformat:2 }} €</td>
+
+                            {% if order.get_status_display == 'ENTREGADO' %}
+
+                                <td>{{ order.get_status_display }}</td>
+
+                            {% else %}
+
+                                {% csrf_token %}
+
+                                <td>
+                                    <select onchange="changeStatus({{ order.id }})" class="form-select" name="status">
+                                        <option value="PENDIENTE DE PAGO">PENDIENTE DE PAGO</option>
+                                        <option value="ENTREGADO">ENTREGADO</option>
+                                    </select>
+                                </td>
+
+                            {% endif %}
+
+                        </tr>
+
+                    {% endfor %}
+                </table>
+            </div>
         </div>
-    </div>
+    </section>
 
 {% endblock %}

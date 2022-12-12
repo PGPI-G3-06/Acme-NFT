@@ -17,7 +17,7 @@
         <br>
         <br>
         {% if user.is_authenticated %}
-            <h3 class="opinion-title">Dejamos tu opinión!!</h3>
+            <h3 class="opinion-title">Déjanos tu opinión!!</h3>
 
             <button class="class-link" id="modal-btn" data-bs-toggle="modal" data-bs-target="#opinion-modal">Escribe tu opinión</button>
             <!-- Modal -->
@@ -25,7 +25,7 @@
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="service-title">Escriba su opinion</h1>
+                    <h1 class="service-title">Escriba su opinión</h1>
                   </div>
                   <div class="modal-body">
                     <form action="/opinion" method="POST" id="post-opinion-form">
@@ -48,7 +48,7 @@
         {% endif %}
         </div>
 
-        <div class="container" id="opinions">
+        <div class="container class-opinion-container" id="opinions">
             {% for opinion in opinions %}
 
                   <div class="card">

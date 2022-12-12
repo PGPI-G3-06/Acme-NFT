@@ -1,3 +1,13 @@
+section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 85vh;
+    background:  white;
+    width: 100%;
+}
+
 .t-head{
     background-color: var(--main-color);
     border-bottom: 1px solid #ddd;
