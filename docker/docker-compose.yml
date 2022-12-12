@@ -1,19 +1,31 @@
-version: "3.8.13"
+version: "3.8"
 services:
   web:
+    container_name: acme_nft_web
+    image: acme_nft_web:latest
     build: .
-    ports:
-      - "8000:8000"
+
     command: ash -c "python manage.py makemigrations && 
                     python manage.py migrate &&
                     python manage.py initAdmin && 
-                    python manage.py populateDB"
+                    python manage.py populateDB &&
+                    gunicorn -w 5 acme_nft.wsgi --timeout=500 -b 0.0.0.0:5000"
+    expose:
+      - "5000"
     volumes:
       - static:/Acme-NFT/acme_nft/static
 
-    depends_on:
+    environment:
+      - POSTGRES_DB=acme_nft_db
+      - POSTGRES_USER=acme
+      - POSTGRES_PASSWORD=acme
 
+    depends_on:
       - db
+      - redis
+
+    networks:
+      - acme_nft
 
   db:
 
@@ -23,13 +35,52 @@ services:
 
     image: postgres:alpine
 
+    ports:
+        - "5432:5432"
+
     volumes:
 
       - db:/var/lib/postgresql/data
 
     environment:
+      - POSTGRES_DB=acme_nft_db
+      - POSTGRES_USER=acme
+      - POSTGRES_PASSWORD=acme
+    
+    networks:
+      - acme_nft
 
-      - POSTGRES_PASSWORD=postgres
+  redis:
+    container_name: acme_nft_redis
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - acme_nft
+
+  # nginx:
+  #     container_name: acme_nft_nginx
+  #     restart: always
+  #     image: acme_nft_nginx:latest
+  #     ports:
+  #       - "8000:80"
+  #     build:
+  #       context: .
+  #       dockerfile: Dockerfile-nginx
+  #     volumes:
+  #       - static:/Acme-NFT/acme_nft/static
+  #     depends_on:
+  #       - web
+  #     networks:
+  #       - acme_nft
+networks:
+    acme_nft:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: 10.5.0.0/16
 
 volumes:
 

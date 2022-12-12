@@ -29,8 +29,13 @@ RUN pip3 install ipython
 RUN pip3 install ez_setup
 RUN pip3 install --upgrade setuptools
 RUN pip3 install reportlab --use-deprecated=legacy-resolver
+RUN pip3 install psycopg2
 RUN pip3 install -r requirements.txt
 
 # Create static files
 
 RUN python manage.py collectstatic --noinput
+
+# Add settings
+
+ADD docker-settings.py /Acme-NFT/acme_nft/acme_nft/settings.py
