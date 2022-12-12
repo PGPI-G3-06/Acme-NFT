@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
-import random
 from pathlib import Path
 from ...models import Product, Author, RarityType
 

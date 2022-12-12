@@ -99,10 +99,10 @@ WSGI_APPLICATION = 'acme_nft.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['POSTGRES_DB'],
-        'USER': os.environ['POSTGRES_USER'],
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST': '0.0.0.0',
+        'NAME': 'acme_nft_db',
+        'USER': 'acme',
+        'PASSWORD': 'acme',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }

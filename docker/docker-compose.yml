@@ -1,26 +1,36 @@
 version: "3.8"
+
+networks:
+  acme_nft:
+    name: acme_nft
+    driver: bridge
 services:
   web:
     container_name: acme_nft_web
     image: acme_nft_web:latest
     build: .
-
-    command: ash -c "python manage.py makemigrations && 
-                    python manage.py migrate &&
-                    python manage.py initAdmin && 
-                    python manage.py populateDB &&
-                    gunicorn -w 5 acme_nft.wsgi --timeout=500 -b 0.0.0.0:5000"
+    restart: always
+    command: ash -c "python manage.py makemigrations &&
+                     python manage.py migrate &&
+                     python manage.py initAdmin && 
+                     python manage.py populateDB &&
+                     gunicorn -w 5 acme_nft.wsgi --timeout=500 -b 0.0.0.0:5000"
     expose:
       - "5000"
     volumes:
       - static:/Acme-NFT/acme_nft/static
 
     environment:
-      - POSTGRES_DB=acme_nft_db
-      - POSTGRES_USER=acme
-      - POSTGRES_PASSWORD=acme
+      DATABASE_URL: postgres://acme:acme@db:5432/acme_nft_db
+      POSTGRES_DB: acme_nft_db
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: acme
 
     depends_on:
+      - db
+      - redis
+
+    links:
       - db
       - redis
 
@@ -43,9 +53,9 @@ services:
       - db:/var/lib/postgresql/data
 
     environment:
-      - POSTGRES_DB=acme_nft_db
-      - POSTGRES_USER=acme
-      - POSTGRES_PASSWORD=acme
+      POSTGRES_DB: acme_nft_db
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: acme
     
     networks:
       - acme_nft
@@ -74,16 +84,8 @@ services:
   #       - web
   #     networks:
   #       - acme_nft
-networks:
-    acme_nft:
-      driver: bridge
-      ipam:
-        driver: default
-        config:
-          - subnet: 10.5.0.0/16
 
 volumes:
-
   static:
     name: acme_nft_static
 
