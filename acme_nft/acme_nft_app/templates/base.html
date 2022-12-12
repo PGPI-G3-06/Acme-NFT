@@ -98,9 +98,9 @@
                                                                 value="{{product_entry.quantity}}" readonly/> 
                                                                 x 
                                                                 {% if product_entry.product.offer_price %}
-                                                                    <span style="color: var(--offer-price-color);">{{product_entry.product.offer_price}} €</span>
+                                                                    <span style="color: var(--offer-price-color);">{{product_entry.product.offer_price|floatformat:2}} €</span>
                                                                 {% else %}
-                                                                    {{product_entry.product.price}} €
+                                                                    {{product_entry.product.price|floatformat:2}} €
                                                                 {% endif %}
                                                         </div>
                                                         <button class="btn btn-outline-secondary"
