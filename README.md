@@ -31,7 +31,7 @@ CONTAINER ID   IMAGE                   COMMAND                  CREATED         
 d33d79a6446d   postgres:alpine         "docker-entrypoint.s…"   21 minutes ago   Up 4 seconds   0.0.0.0:5432->5432/tcp   acme_nft_db
 ```
 
-En caso de ser así, el proyecto ya estará configurado de tal manera que, accediendo desde su navegador a <http://127.0.0.1:8000/>, puede navegar y utilizar el sistema de Acme-NFT.
+En caso de ser así, el proyecto ya estará configurado de tal manera que, accediendo desde su navegador a <http://127.0.0.1:8000/>, puede navegar y utilizar el sistema de Acme-NFT. (El usuario creado por defecto es un administrador con credenciales: admin/admin)
 
 ## He terminado mi sesión ¿como cierro los contenedores?
 
