@@ -1,10 +1,28 @@
 # Acme-NFT
 
+## ¿Cómo cargar la imagen del proyecto en el dispositivo?
+
+- Instalar [docker] y [git] en tu dispositivo
+
+- Descargar todas las partes de "acme_nft_web.zip"
+
+- Seleccionar todas las partes con el cursor y seleccionar: "Descomprimir"
+
+- Abra una terminal y diríjase al directorio de la carpeta descomprimida.
+
+- Una vez dentro de este directorio, lanze el siguiente comando:
+
+```sh
+docker load -i acme_nft_web.tar
+```
+
+Esto guardará la imagen del contenedor en su dispositivo y acelerará en gran medida el proceso de despliegue posteriormente.
 ## ¿Cómo puedo desplegar el proyecto localmente?
 
-Sólo debes seguir estos pasos:
+Sólo debe seguir estos pasos:
 
-- Instala [docker] y [git] en tu dispositivo
+- Instalar [docker] y [git] en tu dispositivo
+
 - Clona el repositorio en el directorio que desees con el comando:
 ```sh
 git clone https://github.com/PGPI-G3-06/Acme-NFT.git
@@ -14,7 +32,7 @@ git clone https://github.com/PGPI-G3-06/Acme-NFT.git
 ```sh
 cd Acme-NFT/docker/
 ```
-- Una vez dentro de este directorio, lanza el siguiente comando (el proceso puede tardar un rato):
+- Una vez dentro de este directorio, lanza el siguiente comando (el proceso puede tardar un rato, será más rápido si ha realizado los pasos de la primera sección):
 ```sh
 docker-compose up -d
 ```
@@ -32,7 +50,6 @@ d33d79a6446d   postgres:alpine         "docker-entrypoint.s…"   21 minutes ago
 ```
 
 En caso de ser así, el proyecto ya estará configurado de tal manera que, accediendo desde su navegador a <http://127.0.0.1:8000/>, puede navegar y utilizar el sistema de Acme-NFT. (El usuario creado por defecto es un administrador con credenciales: admin/admin)
-
 ## He terminado mi sesión ¿como cierro los contenedores?
 
 Para cerrar los contenedores, diríjase desde la consola al directorio "docker/" del repositorio (en el que estábamos antes), y ejecute:
