@@ -24,6 +24,7 @@ django-cors-headers==3.10.0
 django-extensions==3.2.1
 django-livereload-server==0.4
 django-mathfilters==1.0.0
+django-redis==5.2.0
 docker==6.0.1
 docker-compose==1.29.2
 dockerpty==0.4.1
