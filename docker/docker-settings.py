@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
+import django_redis
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = "http://10.5.0.1:8000"
+BASE_DIR = "http://127.0.0.1:8000"
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,8 +45,17 @@ MIDDLEWARE = [
     'livereload.middleware.LiveReloadScript',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:3030',
+    BASE_DIR,
+]
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
     'http://localhost:3030',
     BASE_DIR,
 ]
@@ -132,7 +142,10 @@ AUTH_PASSWORD_VALIDATORS = [
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
+        'LOCATION': 'redis://redis:6379/1',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
